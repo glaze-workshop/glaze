@@ -4,6 +4,10 @@ export interface RightBarProps {
 
 }
 const RightBar:FC<RightBarProps> = () => {
-  return <div>hi</div>
+  return (
+    <div className="w-80 border-l">
+      Right Bar
+    </div>
+  )
 }
 export default RightBar

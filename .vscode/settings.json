@@ -1,3 +1,4 @@
 {
-  "cSpell.words": ["STRIKETHROUGH"]
+  "cSpell.words": ["STRIKETHROUGH"],
+  "statsBar.enabled": false
 }

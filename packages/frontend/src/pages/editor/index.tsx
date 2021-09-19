@@ -1,11 +1,22 @@
 import React, { FC, memo } from 'react'
+import Center from './components/Center'
+import LeftBar from './components/LeftBar'
+import RightBar from './components/RightBar'
+import TopNav from './components/TopNav'
 
 const Editor:FC = () => {
-  return <div>
-    <div>
-      Top Bar
+  return (
+    <div className="h-screen flex flex-col">
+      <TopNav/>
+      <div className="flex flex-grow">
+        <LeftBar/>
+        <div className="flex-grow overflow-hidden">
+          <Center />
+        </div>
+        <RightBar/>
+      </div>
     </div>
-  </div>
+  )
 }
 
 export default memo(Editor)
