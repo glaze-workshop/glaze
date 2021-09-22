@@ -6,7 +6,7 @@
   "main": "index.js",
   "scripts": {
     "preinstall": "npx only-allow pnpm",
-    "serve": "pnpm serve --filter '*/frontend' --filter '*/types' --stream --parallel",
+    "serve": "pnpm serve --filter \"*/frontend\" --filter \"*/types\" --stream --parallel",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",

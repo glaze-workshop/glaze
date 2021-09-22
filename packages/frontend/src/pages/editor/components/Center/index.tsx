@@ -1,7 +1,7 @@
 import React, { FC, memo, useRef, useEffect, useCallback } from 'react'
-import * as PIXI from 'pixi.js'
-const app = new PIXI.Application({ width: 640, height: 360 })
-const style = new PIXI.TextStyle({
+import { Application, TextStyle, Text } from 'pixi.js'
+const app = new Application({ width: 640, height: 360 })
+const style = new TextStyle({
   fontFamily: 'Arial',
   fontSize: 36,
   fontStyle: 'italic',
@@ -19,11 +19,11 @@ const style = new PIXI.TextStyle({
   lineJoin: 'round'
 })
 
-const richText = new PIXI.Text('Rich text with a lot of options and across multiple lines', style)
+const richText = new Text('Rich text with a lot of options and across multiple lines', style)
 richText.x = 50
 richText.y = 220
 
-const skewStyle = new PIXI.TextStyle({
+const skewStyle = new TextStyle({
   fontFamily: 'Arial',
   dropShadow: true,
   dropShadowAlpha: 0.8,
@@ -39,7 +39,7 @@ const skewStyle = new PIXI.TextStyle({
   strokeThickness: 12
 })
 
-const skewText = new PIXI.Text('SKEW IS COOL', skewStyle)
+const skewText = new Text('SKEW IS COOL', skewStyle)
 skewText.skew.set(0.65, -0.3)
 skewText.anchor.set(0.5, 0.5)
 skewText.x = 300

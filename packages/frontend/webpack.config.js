@@ -36,7 +36,7 @@ const config = {
     // Learn more about plugins from https://webpack.js.org/configuration/plugins/
     new ForkTsCheckerWebpackPlugin({
       typescript: {
-        configFile: "./tsconfig.build.json",
+        configFile: './tsconfig.build.json',
         diagnosticOptions: {
           semantic: true,
           syntactic: true
@@ -56,7 +56,12 @@ const config = {
             loader: 'babel-loader',
             options: {
               presets: [
-                '@babel/preset-env',
+                ['@babel/preset-env', {
+                  targets: {
+                    browsers: ['last 2 versions']
+                  },
+                  modules: false
+                }],
                 '@babel/preset-react',
                 '@babel/preset-typescript'
               ],
@@ -91,6 +96,9 @@ const config = {
   },
   resolve: {
     extensions: ['.tsx', '.ts', '.js']
+  },
+  optimization: {
+    usedExports: true
   }
 }
 
