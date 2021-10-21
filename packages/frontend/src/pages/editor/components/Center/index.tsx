@@ -1,5 +1,10 @@
-import React, { FC, memo, useRef, useEffect, useCallback } from 'react'
+import React, { FC, memo, useRef, useEffect } from 'react'
 import { Application, TextStyle, Text } from 'pixi.js'
+import * as PIXI from 'pixi.js'
+
+(window as any).__PIXI_INSPECTOR_GLOBAL_HOOK__ &&
+    (window as any).__PIXI_INSPECTOR_GLOBAL_HOOK__.register({ PIXI: PIXI })
+
 const app = new Application({ width: 640, height: 360 })
 const style = new TextStyle({
   fontFamily: 'Arial',
