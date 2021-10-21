@@ -1,13 +1,12 @@
 // Generated using webpack-cli https://github.com/webpack/webpack-cli
-
-const path = require('path')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
-const MiniCssExtractPlugin = require('mini-css-extract-plugin')
-const WorkboxWebpackPlugin = require('workbox-webpack-plugin')
-// eslint-disable-next-line no-unused-vars
-const { Configuration, HotModuleReplacementPlugin } = require('webpack')
-const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
-const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin')
+import * as path from 'path'
+import HtmlWebpackPlugin = require('html-webpack-plugin')
+import MiniCssExtractPlugin= require('mini-css-extract-plugin')
+import WorkboxWebpackPlugin = require('workbox-webpack-plugin')
+import ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
+import { Configuration, HotModuleReplacementPlugin, ProvidePlugin } from 'webpack'
+import ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin')
+import 'webpack-dev-server'
 
 const isProduction = process.env.NODE_ENV === 'production'
 
@@ -15,8 +14,7 @@ const stylesHandler = isProduction
   ? MiniCssExtractPlugin.loader
   : 'style-loader'
 
-/** @type {Configuration} */
-const config = {
+const config: Configuration = {
   entry: './src/index.tsx',
   output: {
     path: path.resolve(__dirname, 'dist')
@@ -31,7 +29,9 @@ const config = {
     new HtmlWebpackPlugin({
       template: 'index.html'
     }),
-
+    new ProvidePlugin({
+      PIXI: 'pixi.js'
+    }),
     // Add your plugins here
     // Learn more about plugins from https://webpack.js.org/configuration/plugins/
     new ForkTsCheckerWebpackPlugin({
@@ -41,9 +41,9 @@ const config = {
           semantic: true,
           syntactic: true
         },
-        mode: 'write-references',
-        loader: { infrastructure: 'silent', issues: 'console', devServer: false }
-      }
+        mode: 'write-references'
+      },
+      logger: { infrastructure: 'silent', issues: 'console', devServer: false }
     })
   ],
   module: {
@@ -106,16 +106,16 @@ module.exports = () => {
   if (isProduction) {
     config.mode = 'production'
 
-    config.plugins.push(new MiniCssExtractPlugin())
+    config.plugins?.push(new MiniCssExtractPlugin())
 
-    config.plugins.push(new WorkboxWebpackPlugin.GenerateSW())
+    config.plugins?.push(new WorkboxWebpackPlugin.GenerateSW())
   } else {
     config.mode = 'development'
     config.devtool = 'eval-cheap-source-map'
 
-    config.plugins.push(new HotModuleReplacementPlugin())
+    config.plugins?.push(new HotModuleReplacementPlugin())
 
-    config.plugins.push(new ReactRefreshWebpackPlugin())
+    config.plugins?.push(new ReactRefreshWebpackPlugin())
   }
   return config
 }

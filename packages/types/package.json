@@ -5,6 +5,7 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
+    "dev": "npm run serve",
     "serve": "tsc -p tsconfig.build.json --watch",
     "build": "npm run clean && npm run compile",
     "clean": "rimraf -rf ./dist",
