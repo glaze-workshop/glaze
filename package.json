@@ -6,7 +6,7 @@
   "main": "index.js",
   "scripts": {
     "preinstall": "npx only-allow pnpm",
-    "dev": "ts-node scripts.ts -d",
+    "dev": "ts-node --skip-project scripts.ts -d",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",

@@ -6,11 +6,11 @@ import TopNav from './components/TopNav'
 
 const Editor:FC = () => {
   return (
-    <div className="h-screen flex flex-col">
+    <div className="h-screen flex flex-col overflow-hidden">
       <TopNav/>
-      <div className="flex flex-grow">
+      <div className="flex flex-grow h-full">
         <LeftBar/>
-        <div className="flex-grow overflow-hidden">
+        <div className="flex-grow overflow-hidden flex items-stretch">
           <Center />
         </div>
         <RightBar/>
