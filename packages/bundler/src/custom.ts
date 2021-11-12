@@ -1,6 +1,7 @@
 import { Configuration } from 'webpack'
 import { RollupWatchOptions } from 'rollup'
 import { FullPath } from './path.js'
+import { createRequire } from 'module'
 
 export interface CommonConfig {
   name: string
@@ -22,14 +23,21 @@ const defaultConfig: WebpackCustomConfig | RollupCustomConfig = {
   port: 12333
 }
 
-export const WebpackConfig: WebpackCustomConfig = await requireNullable(FullPath.glazeWebpackConfig) || defaultConfig
-export const RollupConfig: RollupCustomConfig = await requireNullable(FullPath.glazeRollupConfig) || defaultConfig
+export const WebpackConfig: WebpackCustomConfig = {
+  ...defaultConfig,
+  ...(await requireNullable(FullPath.glazeWebpackConfig))
+}
+
+export const RollupConfig: RollupCustomConfig = {
+  ...defaultConfig,
+  ...(await requireNullable(FullPath.glazeRollupConfig))
+}
 
 async function requireNullable (modulePath: string) { // force require
   try {
     const pkg = await import(modulePath)
     return pkg.default
   } catch (e) {
-    return false
+    return null
   }
 }

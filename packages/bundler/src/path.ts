@@ -8,8 +8,8 @@ export const resolveApp = (relativePath: string): string => path.resolve(appDire
 
 export const FullPath = {
   appPath: resolveApp('.'),
-  glazeWebpackConfig: resolveApp('tester.webpack.js'),
-  glazeRollupConfig: resolveApp('tester.rollup.js'),
+  glazeWebpackConfig: resolveApp('glaze.webpack.mjs'),
+  glazeRollupConfig: resolveApp('glaze.rollup.mjs'),
   defaultTsBuildPath: resolveApp('tsconfig.build.json'),
   appIndex: resolveApp('./src/index.ts'),
   appBuild: resolveApp('./dist'),

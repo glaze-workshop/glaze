@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { FC, Suspense } from 'react'
 import { Redirect, Route, Router, Switch } from 'react-router-dom'
 import history from '../utils/customHistory'
 
@@ -12,7 +12,9 @@ const RootPage: FC = () => {
           <Redirect to='/editor' />
         </Route>
         <Route path='/editor'>
-          <LazyEditor />
+          <Suspense fallback={'loading'}>
+            <LazyEditor />
+          </Suspense>
         </Route>
       </Switch>
     </Router>

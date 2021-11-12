@@ -33,3 +33,5 @@ if (options.rollup) {
 if (options.webpack) {
   webpackRun(env)
 }
+
+export type { WebpackCustomConfig, RollupCustomConfig } from './custom.js'

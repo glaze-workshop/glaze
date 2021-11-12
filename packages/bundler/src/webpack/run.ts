@@ -10,7 +10,11 @@ export async function run (env: EnvType) {
   const config = createConfigFile(env)
   const compiler = webpack(config)
   if (env === 'development') {
-    const server = new DevServer({ hot: true, port: WebpackConfig.port }, compiler)
+    const server = new DevServer({
+      hot: true,
+      port: WebpackConfig.port,
+      historyApiFallback: true
+    }, compiler)
     await server.start()
     console.log('dev server is running')
   } else {
