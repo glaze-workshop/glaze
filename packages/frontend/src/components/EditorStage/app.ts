@@ -1,6 +1,13 @@
 import { Application, Text, TextStyle } from 'pixi.js'
 
-export const PixiApplication = new Application({ width: 100, height: 100 })
+if (process.env.NODE_ENV === 'development') {
+  const PIXI = require('pixi.js');
+
+  (window as any).__PIXI_INSPECTOR_GLOBAL_HOOK__ &&
+    (window as any).__PIXI_INSPECTOR_GLOBAL_HOOK__.register({ PIXI: PIXI })
+}
+
+export const PixiApplication = new Application({ width: 100, height: 100, resolution: window.devicePixelRatio || 1, backgroundColor: 0 })
 PixiApplication.view.style.width = '100%'
 PixiApplication.view.style.height = '100%'
 

@@ -2,21 +2,19 @@
   "name": "@glaze/types",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/index.js",
+  "main": "dist/index.cjs.js",
+  "module": "dist/index.esm.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "dev": "npm run serve",
-    "serve": "tsc -p tsconfig.build.json --watch",
-    "build": "npm run clean && npm run compile",
-    "clean": "rimraf -rf ./dist",
-    "compile": "tsc -p tsconfig.build.json",
-    "prepare": "npm run build",
-    "test": "npm run build"
+    "dev": "pnpx @glaze/bundler -d -r",
+    "build": "pnpx @glaze/bundler -b -r",
+    "prepare": "npm run build"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "rimraf": "^3.0.2"
+    "rimraf": "^3.0.2",
+    "@glaze/bundler": "workspace:*"
   }
 }

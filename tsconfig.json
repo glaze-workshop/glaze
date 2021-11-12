@@ -5,6 +5,7 @@
     "baseUrl": ".",
     "paths": {
       "@glaze/*": ["packages/*/src"]
-    }
+    },
+    "moduleResolution": "node"
   }
 }

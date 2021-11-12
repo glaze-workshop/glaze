@@ -1,7 +1,8 @@
 import React, { FC } from 'react'
 import { Redirect, Route, Router, Switch } from 'react-router-dom'
-import Editor from './editor/index'
 import history from '../utils/customHistory'
+
+const LazyEditor = React.lazy(() => import('./editor/index'))
 
 const RootPage: FC = () => {
   return (
@@ -11,7 +12,7 @@ const RootPage: FC = () => {
           <Redirect to='/editor' />
         </Route>
         <Route path='/editor'>
-          <Editor />
+          <LazyEditor />
         </Route>
       </Switch>
     </Router>

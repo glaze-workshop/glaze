@@ -1,0 +1,14 @@
+{
+  "extends": "../../tsconfig.build.json",
+  "compilerOptions": {
+    "declaration": true,
+    "outDir": "./bin",
+    "moduleResolution": "node",
+    "typeRoots": [
+      "./src/external"
+    ]
+  },
+  "include": [
+    "src/**/*"
+  ]
+}

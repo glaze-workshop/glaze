@@ -1,0 +1,12 @@
+{
+  "extends": "../../tsconfig.json",
+  "include": [
+    "src"
+  ],
+  "compilerOptions": {
+    "typeRoots": [
+      "./src/external"
+    ],
+    "moduleResolution": "node"
+  }
+}

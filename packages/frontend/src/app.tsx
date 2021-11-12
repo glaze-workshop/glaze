@@ -2,6 +2,7 @@ import React, { FC } from 'react'
 import ReactDOM from 'react-dom'
 import RootPage from './pages/index'
 import './index.css'
+
 const App:FC = () => {
   return <RootPage />
 }
