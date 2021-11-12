@@ -2,7 +2,6 @@ import { EnvType } from '../type.js'
 import { createConfigFile } from './config.js'
 import Webpack from 'webpack'
 import DevServer from 'webpack-dev-server'
-import { promisify } from 'util'
 import { WebpackConfig } from '../custom.js'
 const { webpack } = Webpack
 
