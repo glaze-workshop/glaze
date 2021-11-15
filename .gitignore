@@ -122,3 +122,5 @@ pnpm-lock.yaml
 .idea
 
 .DS_Store
+
+.env

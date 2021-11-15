@@ -1,0 +1,12 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model glaze_user {
+  id BigInt @id(map: "glaze_user_pk") @unique(map: "glaze_user_id_uindex") @default(autoincrement())
+}
