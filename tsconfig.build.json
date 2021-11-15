@@ -10,7 +10,16 @@
     "allowJs": true,
     "jsx": "react",
     "strict": true,
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "strictNullChecks": false,
+    "noImplicitAny": false,
+    "strictBindCallApply": false,
+    "forceConsistentCasingInFileNames": false,
+    "noFallthroughCasesInSwitch": false
   },
   "exclude": ["node_modules/**", "dist/**"]
 }

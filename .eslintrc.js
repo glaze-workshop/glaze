@@ -2,7 +2,8 @@ module.exports = {
   env: {
     browser: true,
     es2021: true,
-    node: true
+    node: true,
+    jest: true
   },
   extends: [
     'plugin:react/recommended',
@@ -39,6 +40,12 @@ module.exports = {
         markers: ['#region', '#endregion', 'region', 'endregion']
       }
     }],
-    'react/jsx-indent': [2, 2]
+    'react/jsx-indent': [2, 2],
+
+    'no-useless-constructor': 0,
+    '@typescript-eslint/interface-name-prefix': 'off',
+    '@typescript-eslint/explicit-function-return-type': 'off',
+    '@typescript-eslint/explicit-module-boundary-types': 'off',
+    '@typescript-eslint/no-explicit-any': 'off'
   }
 }
