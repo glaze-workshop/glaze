@@ -123,4 +123,4 @@ pnpm-lock.yaml
 
 .DS_Store
 
-.env
+.vscode
