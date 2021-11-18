@@ -7,6 +7,15 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model glaze_user {
-  id BigInt @id(map: "glaze_user_pk") @unique(map: "glaze_user_id_uindex") @default(autoincrement())
+/// 用户表
+model GlazeUser {
+  id        BigInt    @id @default(autoincrement())
+  username  String    @unique @db.Text /// 用户名
+  phone     String?   @unique @db.Text /// 手机号
+  password  String    @db.Text /// 密码
+  avatar    String?   @db.Text /// 头像地址
+  nickname  String?   @db.Text /// 昵称
+  intro     String?   @db.Text /// 介绍
+  createdAt DateTime? @default(now()) @db.Timestamp(6) /// 创建时间
+  updatedAt DateTime? @updatedAt @db.Timestamp(6) /// 更新时间
 }

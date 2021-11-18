@@ -21,7 +21,9 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "prisma:init": "pnpm dlx prisma init",
     "prisma:pull": "pnpm dlx prisma db pull",
-    "prisma:generate": "pnpm dlx prisma generate"
+    "prisma:generate": "pnpm dlx prisma generate",
+    "prisma:push": "pnpm dlx prisma db push --accept-data-loss",
+    "prisma:migrate": "pnpm dlx prisma migrate dev"
   },
   "dependencies": {
     "@nestjs/common": "^8.0.0",
