@@ -1,6 +1,7 @@
 import React, { FC, Suspense } from 'react'
 import { BrowserRouter, Navigate, Route, Router, Routes } from 'react-router-dom'
-import history from '../utils/customHistory'
+import Login from './login'
+import Register from './register'
 
 const LazyEditor = React.lazy(() => import('./editor/index'))
 
@@ -14,6 +15,8 @@ const RootPage: FC = () => {
             <LazyEditor />
           </Suspense>
         }/>
+        <Route path='/login' element={<Login />} />
+        <Route path='/register' element={<Register />} />
       </Routes>
     </BrowserRouter>
   )
