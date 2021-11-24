@@ -2,7 +2,9 @@
   "name": "@glaze/common",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/index.cjs.js",
+  "module": "dist/index.esm.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "dev": "glaze-bundle -d -r",
     "build": "glaze-bundle -b -r",
@@ -11,13 +13,17 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "axios": "^0.24.0"
+    "axios": "^0.21.4"
   },
   "devDependencies": {
-    "@glaze/bundler": "workspace:*"
+    "@glaze/bundler": "workspace:*",
+    "yup": ">=0.32.11",
+    "i18next": ">=21.5.2",
+    "msw": ">=0.35.0"
   },
   "peerDependencies": {
-    "yup": "^0.32.11",
-    "i18next": "^21.5.2"
+    "yup": ">=0.32.11",
+    "i18next": ">=21.5.2",
+    "msw": ">=0.35.0"
   }
 }

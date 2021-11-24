@@ -58,13 +58,15 @@
     "webpack-bundle-analyzer": "^4.5.0",
     "mini-css-extract-plugin": "^2.4.4",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.1",
-    "resolve-url-loader": "^4.0.0"
+    "resolve-url-loader": "^4.0.0",
+    "copy-webpack-plugin": "^10.0.0"
   },
   "devDependencies": {
     "@types/rimraf": "^3.0.2",
     "@types/webpack-dev-server": "^4.3.1",
     "@types/mini-css-extract-plugin": "^2.4.0",
     "@types/webpack": "^5.28.0",
-    "@types/webpack-bundle-analyzer": "^4.4.1"
+    "@types/webpack-bundle-analyzer": "^4.4.1",
+    "@types/copy-webpack-plugin": "^6.4.3"
   }
 }

@@ -2,6 +2,7 @@ import { Configuration } from 'webpack'
 import { RollupWatchOptions } from 'rollup'
 import { FullPath } from './path.js'
 import { createRequire } from 'module'
+import { ProxyConfigArray, ProxyConfigMap } from 'webpack-dev-server'
 
 export interface CommonConfig {
   name: string
@@ -10,6 +11,7 @@ export interface CommonConfig {
 
 export interface WebpackCustomConfig extends CommonConfig {
   port: number
+  proxy?: ProxyConfigMap | ProxyConfigArray
   customConfig?: (options: Configuration) => Configuration
 }
 

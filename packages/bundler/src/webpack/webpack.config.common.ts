@@ -8,6 +8,7 @@ import ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin'
 import { createRequire } from 'module'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
+import CopyPlugin from 'copy-webpack-plugin'
 const require = createRequire(import.meta.url)
 const webpack = require('webpack')
 
@@ -88,12 +89,36 @@ export const createCommonConfig = (env: EnvType): WebpackConfiguration => {
       new webpack.ProvidePlugin({
         PIXI: 'pixi.js'
       }),
-      new HtmlWebpackPlugin({
-        template: 'index.html'
-      }),
+      new HtmlWebpackPlugin(Object.assign({
+        template: FullPath.appHtml,
+        inject: true
+      }, isEnvProduction
+        ? {
+            minify: {
+              removeComments: true,
+              collapseWhitespace: true,
+              removeRedundantAttributes: true,
+              useShortDoctype: true,
+              removeEmptyAttributes: true,
+              removeStyleLinkTypeAttributes: true,
+              keepClosingSlash: true,
+              minifyJS: true,
+              minifyCSS: true,
+              minifyURLs: true
+            }
+          }
+        : undefined)),
       isEnvDevelopment && new ReactRefreshWebpackPlugin(),
       isEnvProduction && new MiniCssExtractPlugin(),
-      isEnvProduction && new BundleAnalyzerPlugin({ analyzerMode: 'static' })
+      isEnvProduction && new BundleAnalyzerPlugin({ analyzerMode: 'static' }),
+      isEnvProduction && new CopyPlugin({
+        patterns: [{
+          from: FullPath.appPublic,
+          globOptions: {
+            ignore: [FullPath.appHtml]
+          }
+        }]
+      })
     ].filter(Boolean) as any[],
     module: {
       rules: [{

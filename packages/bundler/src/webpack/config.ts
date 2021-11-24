@@ -8,8 +8,8 @@ export function createConfigFile (env: 'production' | 'development'): Configurat
     entry: FullPath.appIndex,
     output: {
       path: FullPath.appBuild,
-      filename: 'dist/[name].js',
-      chunkFilename: 'dist/[name].chunk.js'
+      filename: '[name].js',
+      chunkFilename: '[name].chunk.js'
     },
     ...createCommonConfig(env)
   }

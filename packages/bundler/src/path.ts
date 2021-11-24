@@ -13,6 +13,8 @@ export const FullPath = {
   defaultTsBuildPath: resolveApp('tsconfig.build.json'),
   appIndex: resolveApp('./src/index.ts'),
   appBuild: resolveApp('./dist'),
+  appHtml: resolveApp('./public/index.html'),
+  appPublic: resolveApp('./public'),
   appSrc: resolveApp('src'),
 
   extensionPublic: resolveApp('./public/manifest.json'),

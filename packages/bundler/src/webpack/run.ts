@@ -3,6 +3,7 @@ import { createConfigFile } from './config.js'
 import Webpack from 'webpack'
 import DevServer from 'webpack-dev-server'
 import { WebpackConfig } from '../custom.js'
+import { FullPath } from '../path.js'
 const { webpack } = Webpack
 
 export async function run (env: EnvType) {
@@ -12,7 +13,11 @@ export async function run (env: EnvType) {
     const server = new DevServer({
       hot: true,
       port: WebpackConfig.port,
-      historyApiFallback: true
+      historyApiFallback: true,
+      static: {
+        directory: FullPath.appPublic
+      },
+      proxy: WebpackConfig.proxy
     }, compiler)
     await server.start()
     console.log('dev server is running')
