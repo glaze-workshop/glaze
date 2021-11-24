@@ -6,8 +6,8 @@
   "module": "dist/index.esm.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "dev": "pnpx @glaze/bundler -d -r",
-    "build": "pnpx @glaze/bundler -b -r",
+    "dev": "glaze-bundle -d -r",
+    "build": "glaze-bundle -b -r",
     "prepare": "npm run build"
   },
   "keywords": [],

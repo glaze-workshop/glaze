@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "npx @glaze/bundler -b -w",
-    "dev": "npx @glaze/bundler -d -w",
+    "build": "glaze-bundle -b -w",
+    "dev": "glaze-bundle -d -w",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook"
   },

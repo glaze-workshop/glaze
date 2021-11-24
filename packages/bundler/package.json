@@ -5,7 +5,9 @@
   "type": "module",
   "main": "./bin/index.js",
   "module": "./bin/index.js",
-  "bin": "./bin/index.js",
+  "bin": {
+    "glaze-bundle": "./bin/index.js"
+  },
   "scripts": {
     "prepare": "npm run build",
     "build": "tsc -p tsconfig.build.json"
@@ -25,7 +27,7 @@
     "rollup-plugin-peer-deps-external": "^2.2.4",
     "rollup-plugin-sourcemaps": "^0.6.3",
     "rollup-plugin-terser": "^7.0.2",
-    "rollup-plugin-typescript2": "^0.30.0",
+    "rollup-plugin-typescript2": "^0.31.0",
     "webpack": "^5.61.0",
     "webpackbar": "^5.0.0-3",
     "clean-webpack-plugin": "^4.0.0",

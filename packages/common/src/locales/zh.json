@@ -1,0 +1,7 @@
+{
+  "dto.auth.username": "用户名支持数字、大小写、-、_，长度在5-10之间",
+  "dto.auth.password": "密码支持数字、大小写、-、_，长度在5-10之间",
+  "dto.auth.password_again.same": "密码不一致",
+  "lang.zh": "中文",
+  "lang.en": "英文"
+}

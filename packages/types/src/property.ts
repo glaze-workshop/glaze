@@ -1,43 +1,43 @@
 /** An RGBA color */
 export interface Color {
   /** Red channel value, between 0 and 1 */
-  r: number;
+  r: number
 
   /** Green channel value, between 0 and 1 */
-  g: number;
+  g: number
 
   /** Blue channel value, between 0 and 1 */
-  b: number;
+  b: number
 
   /** Alpha channel value, between 0 and 1 */
-  a: number;
+  a: number
 }
 
 /** A rectangle that expresses a bounding box in absolute coordinates */
 export interface Rectangle {
   /** X coordinate of top left corner of the rectangle */
-  x: number;
+  x: number
 
   /** Y coordinate of top left corner of the rectangle */
-  y: number;
+  y: number
 
   /** Width of the rectangle */
-  width: number;
+  width: number
 
   /** Height of the rectangle */
-  height: number;
+  height: number
 }
 
 /** Information about the arc properties of an ellipse. 0° is the x axis and increasing angles rotate clockwise */
 export interface ArcData {
   /** Start of the sweep in radians */
-  startingAngle: number;
+  startingAngle: number
 
   /** End of the sweep in radians */
-  endingAngle: number;
+  endingAngle: number
 
   /** Inner radius value between 0 and 1 */
-  innerRadius: number;
+  innerRadius: number
 }
 
 /** Enum describing how layer blends with layers below */
@@ -83,67 +83,66 @@ export enum BlendMode {
 /** A 2d vector */
 export interface Vector {
   /** X coordinate of the vector */
-  x: number;
+  x: number
 
   /** Y coordinate of the vector */
-  y: number;
+  y: number
 }
 
 /** A width and a height */
 export interface Size {
   /** the width of a size */
-  width: number;
+  width: number
 
   /** the height of a size */
-  height: number;
+  height: number
 }
 
 /**
- * A 2D affine transformation matrix that can be used to 
- * calculate the affine transforms applied to a layer, 
+ * A 2D affine transformation matrix that can be used to
+ * calculate the affine transforms applied to a layer,
  * including scaling, rotation, shearing, and translation.
- * 
- * The form of the matrix is given as an array of 2 arrays of 3 numbers each. 
+ *
+ * The form of the matrix is given as an array of 2 arrays of 3 numbers each.
  * E.g. the identity matrix would be [[1, 0, 0], [0, 1, 0]].
  */
 export type Transform = number[][]
 
 /** Defines the image filters applied to an image paint. All values are from -1 to 1. */
 export interface ImageFilters {
-  exposure: number;
-  contrast: number;
-  saturation: number;
-  temperature: number;
-  tint: number;
-  highlights: number;
-  shadows: number;
+  exposure: number
+  contrast: number
+  saturation: number
+  temperature: number
+  tint: number
+  highlights: number
+  shadows: number
 }
 
 /** A relative offset within a frame */
 export interface FrameOffset {
   /** Unique id specifying the frame. */
-  node_id: string;
+  nodeId: string
 
   /** 2d vector offset within the frame. */
-  node_offset: Vector;
+  nodeOffset: Vector
 }
 
 /** A position color pair representing a gradient stop */
 export interface ColorStop {
   /** Value between 0 and 1 representing position along gradient axis */
-  position: number;
+  position: number
 
   /** Color attached to corresponding position */
-  color: Color;
+  color: Color
 }
 
 /** A description of a main component. Helps you identify which component instances are attached to */
 export interface Component {
   /**  */
-  key: string;
+  key: string
 
-  name: string;
+  name: string
 
-  description: string;
+  description: string
 }
-

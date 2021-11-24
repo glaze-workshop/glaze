@@ -1,0 +1,5 @@
+{
+  "dto.auth.password": "The password supports numbers, upper and lower case, -, _, and the length is between 5-10",
+  "dto.auth.username": "The user name supports numbers, upper and lower case, -, _, and the length is between 5-10",
+  "dto.auth.password_again.same": "Inconsistent passwords"
+}
