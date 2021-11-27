@@ -12,11 +12,10 @@
     "strict": true,
     "moduleResolution": "node",
 
+    "strictPropertyInitialization": false,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
-    "strictNullChecks": false,
-    "noImplicitAny": false,
     "strictBindCallApply": false,
     "noFallthroughCasesInSwitch": false,
     "forceConsistentCasingInFileNames": true,

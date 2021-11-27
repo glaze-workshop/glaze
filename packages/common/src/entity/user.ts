@@ -14,25 +14,25 @@ export interface UserEntity extends CommonTimestamp {
   /**
    * 密码
    */
-  password: string
+  password?: string | null
 
   /**
    * 手机号
    */
-  phone?: string
+  phone?: string | null
 
   /**
    * 头像地址
    */
-  avatar?: string
+  avatar?: string | null
 
   /**
    * 昵称
    */
-  nickname?: string
+  nickname?: string | null
 
   /**
    * 自我介绍
    */
-  intro?: string
+  intro?: string | null
 }

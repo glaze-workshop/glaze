@@ -8,8 +8,10 @@
     "dev": "ts-node --skip-project scripts.ts -d",
     "dev:frontend": "pnpm dev --filter *frontend",
     "dev:storybook": "pnpm storybook --filter *frontend",
-    "dev:basic": "pnpm dev --filter \"*types\" --filter \"*common\" --stream --parallel",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev:basic": "pnpm dev --filter \"*types\" --filter \"*common\" --filter \"*bundler\" --stream --parallel",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "debug:server": "pnpm start:debug --filter \"*backend\"",
+    "build:bundler": "pnpm build --filter \"*bundler\""
   },
   "author": "",
   "license": "ISC",

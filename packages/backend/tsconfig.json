@@ -1,10 +1,7 @@
 {
   "extends": "../../tsconfig.json",
-  "include": [
-    "src"
-  ],
+  "include": ["src"],
   "compilerOptions": {
-    "moduleResolution": "node",
-    "experimentalDecorators": true
+    "strict": true
   }
 }

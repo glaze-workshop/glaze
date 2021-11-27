@@ -9,10 +9,10 @@ datasource db {
 
 /// 用户表
 model GlazeUser {
-  id        BigInt   @id @default(autoincrement())
+  id        Int      @id @default(autoincrement())
   username  String   @unique @db.Text /// 用户名
   phone     String?  @unique @db.Text /// 手机号
-  password  String   @db.Text /// 密码
+  password  String?  @db.Text /// 密码
   avatar    String?  @db.Text /// 头像地址
   nickname  String?  @db.Text /// 昵称
   intro     String?  @db.Text /// 介绍

@@ -6,17 +6,16 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
-    "target": "es2017",
+    "forceConsistentCasingInFileNames": true,
+    "target": "ESNext",
+    "esModuleInterop": true,
     "sourceMap": true,
     "outDir": "./dist",
     "baseUrl": "./",
     "incremental": true,
     "skipLibCheck": true,
-    "strictNullChecks": false,
-    "noImplicitAny": false,
-    "strictBindCallApply": false,
-    "forceConsistentCasingInFileNames": false,
-    "noFallthroughCasesInSwitch": false
+    "importHelpers": true,
+    "strict": true
   },
   "exclude": ["node_modules", "test", "dist", "**/*spec.ts"]
 }

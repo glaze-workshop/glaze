@@ -1,0 +1,24 @@
+
+@url = http://localhost:3000/api
+@cookie = hi
+
+# @name 登录
+POST {{url}}/auth/login
+Content-Type: application/json
+
+{
+  "username": "kunduin",
+  "password": "12345678qwer"
+}
+
+###
+
+# @name 注册
+POST {{url}}/auth/register
+Content-Type: application/json
+
+{
+  "username": "kunduin",
+  "password": "12345678qwer",
+  "passwordAgain": "12345678qwer"
+}

@@ -3,5 +3,8 @@
   "dto.auth.password": "密码支持数字、大小写、-、_，长度在5-10之间",
   "dto.auth.password_again.same": "密码不一致",
   "lang.zh": "中文",
-  "lang.en": "英文"
+  "lang.en": "英文",
+  "error.username.duplication": "用户名「{{username}}」已被使用",
+  "error.phone.duplication": "手机号「{{phone}}」已被使用",
+  "error.login": "登录失败，用户名不存在或密码不匹配"
 }
