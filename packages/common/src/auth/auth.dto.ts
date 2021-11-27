@@ -51,5 +51,5 @@ export class AuthRegisterDTO {
 export const AuthRegisterSchema: SchemaOf<AuthRegisterDTO> = object({
   username: string().matches(CriticalStringRegex, () => t('dto.auth.username')).required(),
   password: string().matches(CriticalStringRegex, () => t('dto.auth.password')).required(),
-  passwordAgain: string().oneOf([ref('password'), null], () => t('dto.auth.password_again.same'))
+  passwordAgain: string().oneOf([ref('password'), null], () => t('dto.auth.password_again.same')).required()
 })

@@ -40,7 +40,7 @@ export function createRollupFullConfig (name: string, env: EnvType): RollupWatch
       format: 'esm'
     }],
     plugins: [
-      clean([FullPath.appBuild]),
+      isEnvProduction && clean([FullPath.appBuild]),
       peerDepsExternal(),
       resolve({
         mainFields: [
@@ -82,6 +82,6 @@ export function createRollupFullConfig (name: string, env: EnvType): RollupWatch
         check: true
       }),
       sourceMaps()
-    ]
+    ].filter(Boolean)
   }
 }

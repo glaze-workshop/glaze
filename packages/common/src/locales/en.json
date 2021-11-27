@@ -1,5 +1,8 @@
 {
   "dto.auth.password": "The password supports numbers, upper and lower case, -, _, and the length is between 5-10",
   "dto.auth.username": "The user name supports numbers, upper and lower case, -, _, and the length is between 5-10",
-  "dto.auth.password_again.same": "Inconsistent passwords"
+  "dto.auth.password_again.same": "Inconsistent passwords",
+  "error.username.duplication": "Username \"{{username}}\" is already in use",
+  "lang.en": "English",
+  "lang.zh": "Chinese"
 }
