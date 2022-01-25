@@ -17,13 +17,13 @@
   },
   "devDependencies": {
     "@glaze/bundler": "workspace:*",
-    "yup": ">=0.32.11",
-    "i18next": ">=21.5.2",
-    "msw": ">=0.35.0"
+    "i18next": "^21.6.7",
+    "msw": "^0.36.7",
+    "yup": "^0.32.11"
   },
   "peerDependencies": {
-    "yup": ">=0.32.11",
     "i18next": ">=21.5.2",
-    "msw": ">=0.35.0"
+    "msw": ">=0.35.0",
+    "yup": ">=0.32.11"
   }
 }
