@@ -18,7 +18,7 @@ export class AuthService {
    * @returns token 数据
    */
   async login (loginInfo: AuthDto.AuthLoginDTO) {
-    const userInfo = await this.userService.findUserByUsername(loginInfo.username)
+    const userInfo = await this.userService.findUserByUsername(loginInfo.username, true)
     if (
       loginInfo.password &&
       userInfo?.password &&

@@ -42,13 +42,18 @@ export class UserService {
    * 通过用户名查找用户
    *
    * @param username 用户名
+   * @param showPassword 展示密码
    * @returns 用户信息
    */
-  async findUserByUsername (username: string): Promise<Entity.UserEntity | null> {
-    return await this.prisma.glazeUser.findFirst({
+  async findUserByUsername (username: string, showPassword = false): Promise<Entity.UserEntity | null> {
+    const user = await this.prisma.glazeUser.findFirst({
       where: {
         username
       }
     })
+    if (!showPassword && user) {
+      user.password = null
+    }
+    return user
   }
 }

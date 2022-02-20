@@ -12,7 +12,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "debug:server": "pnpm start:debug --filter \"*backend\"",
     "build:bundler": "pnpm build --filter \"*bundler\"",
-    "prisma:generate": "pnpm prisma:generate --filter \"*backend\""
+    "prisma:generate": "pnpm prisma:generate --filter \"*backend\"",
+    "nginx": "nginx -p"
   },
   "author": "",
   "license": "ISC",

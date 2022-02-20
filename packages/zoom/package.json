@@ -1,0 +1,16 @@
+{
+  "name": "@glaze/zoom",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.cjs.js",
+  "module": "dist/index.esm.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "dev": "glaze-bundle -d -r",
+    "build": "glaze-bundle -b -r",
+    "prepare": "npm run build"
+  },
+  "devDependencies": {
+    "@glaze/bundler": "workspace:*"
+  }
+}
