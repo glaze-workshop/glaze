@@ -12,5 +12,8 @@
   },
   "devDependencies": {
     "@glaze/bundler": "workspace:*"
+  },
+  "peerDependencies": {
+    "rxjs": ">7"
   }
 }
