@@ -1,12 +1,9 @@
 ###
-@origin = http://localhost:3000/
+@origin =
 @url = {{origin}}api
 @cookie = hi
 
-###
-
-# @name 登录
-POST {{url}}/auth/login
+POST http://127.0.0.1:4000/api/auth/login
 Content-Type: application/json
 
 {
@@ -16,7 +13,6 @@ Content-Type: application/json
 
 ###
 
-# @name 注册
 POST {{url}}/auth/register
 Content-Type: application/json
 
@@ -26,4 +22,3 @@ Content-Type: application/json
   "passwordAgain": "12345678qwer"
 }
 
-###

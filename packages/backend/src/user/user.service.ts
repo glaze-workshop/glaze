@@ -56,4 +56,16 @@ export class UserService {
     }
     return user
   }
+
+  async findUserById (id: number, showPassword = false): Promise<Entity.UserEntity | null> {
+    const user = await this.prisma.glazeUser.findFirst({
+      where: {
+        id
+      }
+    })
+    if (!showPassword && user) {
+      user.password = null
+    }
+    return user
+  }
 }

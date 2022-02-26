@@ -10,7 +10,7 @@ import { AuthService } from './auth.service'
 /**
  * 权限与用户接口
  */
-@Controller(Prefix.AuthPrefix)
+@Controller(Prefix.AUTH_PREFIX)
 export class AuthController {
   constructor (private authService: AuthService) {}
 

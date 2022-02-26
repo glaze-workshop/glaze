@@ -1,0 +1,16 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    // nestjs 的 debug 方式
+    {
+      "type": "pwa-node",
+      "request": "attach",
+      "name": "Debug nestjs",
+      "port": 9229,
+      "restart": true
+    }
+  ]
+}

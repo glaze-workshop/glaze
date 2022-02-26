@@ -3,13 +3,16 @@ https://docs.nestjs.com/providers#services
 */
 
 import { Injectable } from '@nestjs/common'
-import { AuthDto, GlazeErr } from '@glaze/common'
+import { AuthDto, Entity, GlazeErr } from '@glaze/common'
 import * as bcrypt from 'bcrypt'
 import { UserService } from '../user/user.service'
+import { JwtService } from '@nestjs/jwt'
 
 @Injectable()
 export class AuthService {
-  constructor (private userService: UserService) {}
+  constructor (
+    private userService: UserService,
+    private jwtService: JwtService) {}
 
   /**
    * 登录
@@ -17,16 +20,28 @@ export class AuthService {
    * @param loginInfo 登录信息
    * @returns token 数据
    */
-  async login (loginInfo: AuthDto.AuthLoginDTO) {
+  async login (loginInfo: AuthDto.AuthLoginDTO): Promise<AuthDto.UserInfoWithToken> {
     const userInfo = await this.userService.findUserByUsername(loginInfo.username, true)
     if (
       loginInfo.password &&
       userInfo?.password &&
       await bcrypt.compare(loginInfo?.password, userInfo.password)
     ) {
-      return userInfo
+      const token = this.generateJwtToken(userInfo)
+      const { password, ...userInfoWithoutPassword } = userInfo
+      return { ...userInfoWithoutPassword, token }
     }
     throw new GlazeErr.LoginFailedError()
+  }
+
+  /**
+   * 生成 JWT token
+   * @param user 用户信息
+   * @returns jwt token
+   */
+  generateJwtToken (user: Entity.UserEntity) {
+    const payload: Entity.JwtPayload = { sub: user.id, username: user.username }
+    return this.jwtService.sign(payload)
   }
 
   /**

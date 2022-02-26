@@ -4,5 +4,6 @@
   "dto.auth.password_again.same": "Inconsistent passwords",
   "error.username.duplication": "Username \"{{username}}\" is already in use",
   "lang.en": "English",
-  "lang.zh": "Chinese"
+  "lang.zh": "Chinese",
+  "error.jwt": "jwt 验证错误"
 }

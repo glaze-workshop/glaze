@@ -33,6 +33,7 @@
     "@emotion/styled": "^11.8.1",
     "@glaze/common": "workspace:*",
     "@glaze/types": "workspace:*",
+    "@glaze/zoom": "workspace:*",
     "@hookform/devtools": "^4.0.2",
     "@hookform/resolvers": "^2.8.8",
     "framer-motion": "^6.2.6",

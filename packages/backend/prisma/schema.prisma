@@ -9,13 +9,101 @@ datasource db {
 
 /// 用户表
 model GlazeUser {
-  id        Int      @id @default(autoincrement())
-  username  String   @unique @db.Text /// 用户名
-  phone     String?  @unique @db.Text /// 手机号
-  password  String?  @db.Text /// 密码
-  avatar    String?  @db.Text /// 头像地址
-  nickname  String?  @db.Text /// 昵称
-  intro     String?  @db.Text /// 介绍
-  createdAt DateTime @default(now()) @db.Timestamp(6) /// 创建时间
-  updatedAt DateTime @updatedAt @db.Timestamp(6) /// 更新时间
+  id         Int               @id @default(autoincrement())
+  username   String            @unique @db.Text /// 用户名
+  phone      String?           @unique @db.Text /// 手机号
+  password   String?           @db.Text /// 密码
+  avatar     String?           @db.Text /// 头像地址
+  nickname   String?           @db.Text /// 昵称
+  intro      String?           @db.Text /// 介绍
+  createdAt  DateTime          @default(now()) @db.Timestamp(6) /// 创建时间
+  updatedAt  DateTime          @updatedAt @db.Timestamp(6) /// 更新时间
+  inTeams    GlazeTeamMember[]
+  components GlazeComponent[]
+
+  @@index([phone, username])
+}
+
+//#region 用户组织关系
+
+enum GlazeTeamRole {
+  /// 管理员
+  ADMIN
+  /// 普通成员
+  MEMBER
+  /// 仅阅读
+  VIEWER
+}
+
+enum GlazeTeamType {
+  /// 草稿
+  DRAFT
+  /// 公开组织
+  PUBLIC
+  /// 私有组织
+  PRIVATE
+}
+
+model GlazeTeamMember {
+  member   GlazeUser     @relation(fields: [memberId], references: [id]) /// 成员
+  memberId Int
+  team     GlazeTeam     @relation(fields: [teamId], references: [id]) /// 团队
+  teamId   Int
+  role     GlazeTeamRole @default(MEMBER)
+
+  @@id([memberId, teamId])
+}
+
+model GlazeTeam {
+  id             Int                  @id @default(autoincrement())
+  name           String               @unique @db.Text /// 团队名称
+  type           GlazeTeamType        @default(PRIVATE)
+  intro          String?              @db.Text /// 介绍
+  logo           String?              @db.Text /// 团队logo
+  members        GlazeTeamMember[] /// 团队成员
+  projectFolders GlazeProjectFolder[] /// 项目文件夹
+  createdAt      DateTime             @default(now()) @db.Timestamp(6) /// 创建时间
+  updatedAt      DateTime             @updatedAt @db.Timestamp(6) /// 更新时间
+}
+
+//#endregion
+
+model GlazeProjectFolder {
+  id        Int            @id @default(autoincrement())
+  name      String         @unique @db.Text /// 文件夹名称
+  icon      String?        @db.Text /// 图标
+  projects  GlazeProject[]
+  createdAt DateTime       @default(now()) @db.Timestamp(6) /// 创建时间
+  updatedAt DateTime       @updatedAt @db.Timestamp(6) /// 更新时间
+  team      GlazeTeam      @relation(fields: [teamId], references: [id])
+  teamId    Int
+
+}
+
+model GlazeProject {
+  id              Int                @id @default(autoincrement())
+  name            String?            @unique @db.Text /// 项目名称
+  intro           String?            @db.Text /// 介绍
+  projectFolder   GlazeProjectFolder @relation(fields: [projectFolderId], references: [id])
+  projectFolderId Int
+  document        Json?              @db.Json
+  documentBytes   Bytes?             @db.ByteA
+  createdAt       DateTime           @default(now()) @db.Timestamp(6) /// 创建时间
+  updatedAt       DateTime           @updatedAt @db.Timestamp(6) /// 更新时间
+}
+
+enum GlazeComponentType {
+  BUILD_IN /// 内置组件
+  CUSTOM /// 自定义组件
+}
+
+model GlazeComponent {
+  id        String             @id
+  name      String?            @unique @db.Text /// 组件名称
+  type      GlazeComponentType @default(CUSTOM)
+  icon      String?            @db.Text /// 图标
+  createdAt DateTime           @default(now()) @db.Timestamp(6) /// 创建时间
+  updatedAt DateTime           @updatedAt @db.Timestamp(6) /// 更新时间
+  owner     GlazeUser?         @relation(fields: [ownerId], references: [id])
+  ownerId   Int?
 }

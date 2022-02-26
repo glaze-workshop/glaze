@@ -35,3 +35,12 @@ export class LoginFailedError extends AbstractError<ErrorCode.LoginFailedError> 
     )
   }
 }
+
+export class JwtAuthError extends AbstractError<ErrorCode.JwtAuthError> {
+  constructor () {
+    super(
+      t('error.jwt'),
+      ErrorCode.JwtAuthError
+    )
+  }
+}

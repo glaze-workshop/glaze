@@ -1,12 +1,12 @@
 import axios from 'axios'
-import { AuthPrefix } from '../prefix'
-import { AuthLoginDTO, AuthRegisterDTO } from './auth.dto'
+import { AUTH_PREFIX } from '../prefix'
+import { AuthLoginDTO, AuthRegisterDTO, UserInfoWithToken } from './auth.dto'
 
 /**
  * 注册路径
  */
 export const AUTH_LOGIN_PATH = 'login'
-export const FULL_AUTH_LOGIN_PATH = `${AuthPrefix}/${AUTH_LOGIN_PATH}`
+export const FULL_AUTH_LOGIN_PATH = `${AUTH_PREFIX}/${AUTH_LOGIN_PATH}`
 
 /**
  * 登录
@@ -14,13 +14,13 @@ export const FULL_AUTH_LOGIN_PATH = `${AuthPrefix}/${AUTH_LOGIN_PATH}`
  * @param loginDTO 登录信息
  * @returns 用户数据和token
  */
-export const login = (loginDTO: AuthLoginDTO) => axios.post(FULL_AUTH_LOGIN_PATH, loginDTO)
+export const login = (loginDTO: AuthLoginDTO) => axios.post<UserInfoWithToken>(FULL_AUTH_LOGIN_PATH, loginDTO)
 
 /**
  * 注册路径
  */
 export const AUTH_REGISTER_PATH = 'register'
-export const FULL_AUTH_REGISTER_PATH = `${AuthPrefix}/${AUTH_LOGIN_PATH}`
+export const FULL_AUTH_REGISTER_PATH = `${AUTH_PREFIX}/${AUTH_REGISTER_PATH}`
 
 /**
  * 注册

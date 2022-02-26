@@ -1,5 +1,7 @@
 import { t } from 'i18next'
 import { string, object, SchemaOf, ref } from 'yup'
+import { UserEntity } from '../entity'
+
 import { CriticalStringRegex } from '../utils/regex'
 
 /**
@@ -53,3 +55,7 @@ export const AuthRegisterSchema: SchemaOf<AuthRegisterDTO> = object({
   password: string().matches(CriticalStringRegex, () => t('dto.auth.password')).required(),
   passwordAgain: string().oneOf([ref('password'), null], () => t('dto.auth.password_again.same')).required()
 })
+
+export interface UserInfoWithToken extends UserEntity {
+  token: string
+}

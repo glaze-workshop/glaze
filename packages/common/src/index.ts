@@ -9,5 +9,14 @@ export * as AuthDto from './auth/auth.dto'
 export * as AuthApi from './auth/auth.api'
 export * as AuthMock from './auth/auth.mock'
 
+export * as TeamDto from './team/team.dto'
+export * as TeamApi from './team/team.api'
+
+export * as ProjectDto from './project/project.dto'
+export * as ProjectApi from './project/project.api'
+
+export * as ComponentDto from './component/component.dto'
+export * as ComponentApi from './component/component.api'
+
 export * as Entity from './entity'
 export * as ResType from './res.types'

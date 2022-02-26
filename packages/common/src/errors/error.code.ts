@@ -30,5 +30,10 @@ export enum ErrorCode {
   /**
    * 登录失败，用户名或密码不匹配
    */
-  LoginFailedError
+  LoginFailedError,
+
+  /**
+   * jwt 验证错误
+   */
+  JwtAuthError
 }
