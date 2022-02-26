@@ -1,8 +1,8 @@
 import { Configuration } from 'webpack'
 import { RollupWatchOptions } from 'rollup'
 import { FullPath } from './path.js'
-import { createRequire } from 'module'
 import { ProxyConfigArray, ProxyConfigMap } from 'webpack-dev-server'
+import { pathToFileURL } from 'url'
 
 export interface CommonConfig {
   name: string
@@ -30,6 +30,10 @@ export const WebpackConfig: WebpackCustomConfig = {
   ...(await requireNullable(FullPath.glazeWebpackConfig))
 }
 
+console.log('WebpackConfig', WebpackConfig)
+console.log('defaultConfig', defaultConfig)
+console.log('FullPath.glazeWebpackConfig', FullPath.glazeWebpackConfig)
+
 export const RollupConfig: RollupCustomConfig = {
   ...defaultConfig,
   ...(await requireNullable(FullPath.glazeRollupConfig))
@@ -37,9 +41,10 @@ export const RollupConfig: RollupCustomConfig = {
 
 async function requireNullable (modulePath: string) { // force require
   try {
-    const pkg = await import(modulePath)
+    const pkg = await import(pathToFileURL(modulePath).href)
     return pkg.default
   } catch (e) {
+    console.error(e)
     return null
   }
 }

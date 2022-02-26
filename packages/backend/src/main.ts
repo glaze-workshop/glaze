@@ -1,19 +1,17 @@
 import { GlazeI18n } from '@glaze/common'
 import { NestFactory } from '@nestjs/core'
 import { AppModule } from './app.module'
-import {
-  FastifyAdapter,
-  NestFastifyApplication
-} from '@nestjs/platform-fastify'
 
 async function bootstrap () {
   GlazeI18n.initI18n()
 
-  const app = await NestFactory.create<NestFastifyApplication>(
+  const app = await NestFactory.create(
     AppModule,
-    new FastifyAdapter()
+    {
+      logger: ['log', 'error', 'warn', 'debug']
+    }
   )
   app.enableCors()
-  await app.listen(4000)
+  await app.listen(3000)
 }
 bootstrap()

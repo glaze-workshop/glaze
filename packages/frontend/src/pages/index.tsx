@@ -1,5 +1,6 @@
 import React, { FC, Suspense } from 'react'
 import { BrowserRouter, Navigate, Route, Router, Routes } from 'react-router-dom'
+import Home from './home'
 import Login from './login'
 import Register from './register'
 
@@ -9,7 +10,7 @@ const RootPage: FC = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path='/' element={<Navigate to='/editor' />}/>
+        <Route path='/' element={<Home/>}/>
         <Route path='/editor' element={
           <Suspense fallback={'loading'}>
             <LazyEditor />

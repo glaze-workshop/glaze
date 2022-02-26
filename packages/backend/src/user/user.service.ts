@@ -19,11 +19,15 @@ export class UserService {
    * @returns 新建的用户
    * @throws {@link GlazeErr.UsernameDuplicationError}
    */
-  async addUser (user: Prisma.GlazeUserCreateInput): Promise<Entity.UserEntity> {
+  async addUser (user: Prisma.GlazeUserCreateInput, showPassword = false): Promise<Entity.UserEntity> {
     try {
-      return await this.prisma.glazeUser.create({
+      const newUser = await this.prisma.glazeUser.create({
         data: user
       })
+      if (!showPassword && newUser) {
+        return this.cleanPassword(newUser)
+      }
+      return newUser
     } catch (e) {
       if (isUniqueConstraintError<AuthDto.AuthRegisterDTO>(e)) {
         if (e.meta.target.includes('username')) {
@@ -52,7 +56,7 @@ export class UserService {
       }
     })
     if (!showPassword && user) {
-      user.password = null
+      return this.cleanPassword(user)
     }
     return user
   }
@@ -64,8 +68,13 @@ export class UserService {
       }
     })
     if (!showPassword && user) {
-      user.password = null
+      return this.cleanPassword(user)
     }
     return user
+  }
+
+  private cleanPassword (user: Entity.UserEntity): Entity.UserEntity {
+    const { password, ...userWithoutPassword } = user
+    return userWithoutPassword
   }
 }
