@@ -6,11 +6,12 @@ import { Entity, AuthDto, GlazeErr } from '@glaze/common'
 import { Injectable } from '@nestjs/common'
 import { Prisma } from '@prisma/client'
 import { PrismaService } from '../global/prisma.service'
+import { TeamService } from '../team/team.service'
 import { isUniqueConstraintError } from '../utils/prisma.error'
 
 @Injectable()
 export class UserService {
-  constructor (private prisma: PrismaService) {}
+  constructor (private prisma: PrismaService, private teamService: TeamService) {}
 
   /**
    * 创建用户
@@ -22,8 +23,25 @@ export class UserService {
   async addUser (user: Prisma.GlazeUserCreateInput, showPassword = false): Promise<Entity.UserEntity> {
     try {
       const newUser = await this.prisma.glazeUser.create({
-        data: user
+        data: {
+          inTeams: {
+            create: {
+              role: Entity.GlazeTeamRoleEnum.ADMIN,
+              team: {
+                create: {
+                  type: Entity.GlazeTeamTypeEnum.DRAFT,
+                  name: user.username,
+                  projectFolders: {
+                    create: this.teamService.defaultFolderList
+                  }
+                }
+              }
+            }
+          },
+          ...user
+        }
       })
+
       if (!showPassword && newUser) {
         return this.cleanPassword(newUser)
       }

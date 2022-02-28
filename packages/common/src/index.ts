@@ -18,5 +18,7 @@ export * as ProjectApi from './project/project.api'
 export * as ComponentDto from './component/component.dto'
 export * as ComponentApi from './component/component.api'
 
+export * as SelfApi from './self/self.api'
+
 export * as Entity from './entity'
 export * as ResType from './res.types'

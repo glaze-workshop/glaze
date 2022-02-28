@@ -1,3 +1,4 @@
+import { ProjectFolderEntity } from './project'
 import { CommonTimestamp } from './time'
 
 /**
@@ -34,6 +35,11 @@ export interface TeamEntity extends CommonTimestamp {
    * 团队类型
    */
   type: GlazeTeamType
+
+  /**
+   * 文件夹
+   */
+  projectFolders?: ProjectFolderEntity[]
 }
 
 /**

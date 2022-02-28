@@ -1,5 +1,6 @@
 import React, { FC, Suspense } from 'react'
 import { BrowserRouter, Navigate, Route, Router, Routes } from 'react-router-dom'
+import { useAxiosConfig } from '../hooks/axios'
 import Home from './home'
 import Login from './login'
 import Register from './register'
@@ -7,19 +8,29 @@ import Register from './register'
 const LazyEditor = React.lazy(() => import('./editor/index'))
 
 const RootPage: FC = () => {
+  useAxiosConfig()
+
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path='/' element={<Home/>}/>
-        <Route path='/editor' element={
-          <Suspense fallback={'loading'}>
-            <LazyEditor />
-          </Suspense>
+    <Routes>
+      <Route path='/' element={<Home/>}>
+        <Route path='folder/:folderId' element={<div>hi</div>}/>
+      </Route>
+      <Route path='/editor' element={
+        <Suspense fallback={'loading'}>
+          <LazyEditor />
+        </Suspense>
         }/>
-        <Route path='/login' element={<Login />} />
-        <Route path='/register' element={<Register />} />
-      </Routes>
-    </BrowserRouter>
+      <Route path='/login' element={<Login />} />
+      <Route path='/register' element={<Register />} />
+      <Route
+        path="*"
+        element={
+          <main style={{ padding: '1rem' }}>
+            <p>There's nothing here!</p>
+          </main>
+        }
+      />
+    </Routes>
   )
 }
 

@@ -1,3 +1,5 @@
+import { ProjectModule } from './project/project.module'
+import { SelfModule } from './self/self.module'
 import { TeamModule } from './team/team.module'
 import { UserModule } from './user/user.module'
 import { GlobalModule } from './global/global.module'
@@ -11,6 +13,8 @@ import { JwtModule } from '@nestjs/jwt'
 import { ConfigModule } from '@nestjs/config'
 @Module({
   imports: [
+    ProjectModule,
+    SelfModule,
     ConfigModule.forRoot(),
     TeamModule,
     UserModule,

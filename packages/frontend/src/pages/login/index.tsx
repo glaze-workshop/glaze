@@ -1,5 +1,6 @@
 import { Box, Center, Container, Heading } from '@chakra-ui/react'
-import React, { FC } from 'react'
+import React, { FC, useEffect } from 'react'
+import { cleanToken } from '../../utils/token'
 import LoginForm from './LoginForm'
 
 export interface LoginProps {
@@ -7,6 +8,10 @@ export interface LoginProps {
 }
 
 const Login:FC<LoginProps> = () => {
+  useEffect(() => {
+    cleanToken()
+  }, [])
+
   return (
     <Container maxW="container.sm" h="100vh" centerContent>
       <Box w="350px" pt="80px">

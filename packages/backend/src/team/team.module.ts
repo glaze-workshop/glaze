@@ -11,7 +11,8 @@ import { Module } from '@nestjs/common'
   controllers: [
     TeamController],
   providers: [
-    TeamService]
+    TeamService],
+  exports: [TeamService]
 })
 export class TeamModule {
 

@@ -56,7 +56,7 @@ model GlazeTeamMember {
 
 model GlazeTeam {
   id             Int                  @id @default(autoincrement())
-  name           String               @unique @db.Text /// 团队名称
+  name           String               @db.Text /// 团队名称
   type           GlazeTeamType        @default(PRIVATE)
   intro          String?              @db.Text /// 介绍
   logo           String?              @db.Text /// 团队logo
@@ -68,16 +68,24 @@ model GlazeTeam {
 
 //#endregion
 
-model GlazeProjectFolder {
-  id        Int            @id @default(autoincrement())
-  name      String         @unique @db.Text /// 文件夹名称
-  icon      String?        @db.Text /// 图标
-  projects  GlazeProject[]
-  createdAt DateTime       @default(now()) @db.Timestamp(6) /// 创建时间
-  updatedAt DateTime       @updatedAt @db.Timestamp(6) /// 更新时间
-  team      GlazeTeam      @relation(fields: [teamId], references: [id])
-  teamId    Int
+enum GlazeFolderType {
+  /// 只关联未创建文件夹的项目，但展示所有
+  ALL
+  /// 手动创建的文件夹
+  CUSTOM
+  /// 存档用的文件夹
+  ARCHIVED
+}
 
+model GlazeProjectFolder {
+  id        Int             @id @default(autoincrement())
+  name      String          @db.Text /// 文件夹名称
+  projects  GlazeProject[]
+  createdAt DateTime        @default(now()) @db.Timestamp(6) /// 创建时间
+  updatedAt DateTime        @updatedAt @db.Timestamp(6) /// 更新时间
+  team      GlazeTeam       @relation(fields: [teamId], references: [id])
+  teamId    Int
+  type      GlazeFolderType @default(CUSTOM)
 }
 
 model GlazeProject {

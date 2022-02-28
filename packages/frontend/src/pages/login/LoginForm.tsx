@@ -1,11 +1,13 @@
-import { Button, Flex, FormControl, FormErrorMessage, FormLabel, Input, Link, Spacer, VStack } from '@chakra-ui/react'
-import { AuthApi, AuthDto } from '@glaze/common'
+import { Button, Flex, FormControl, FormErrorMessage, FormLabel, Input, Link, Spacer, useToast, VStack } from '@chakra-ui/react'
+import { AuthApi, AuthDto, GlazeErr } from '@glaze/common'
 import React, { FC } from 'react'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { DevTool } from '@hookform/devtools'
 import { useMutation } from 'react-query'
-import { Link as RouterLink } from 'react-router-dom'
+import { Link as RouterLink, useNavigate } from 'react-router-dom'
+import { UserSubject } from '../../global/status'
+import { writeToken } from '../../utils/token'
 
 export interface LoginFormProps {
 }
@@ -15,8 +17,24 @@ const LoginForm:FC<LoginFormProps> = () => {
     resolver: yupResolver(AuthDto.AuthLoginSchema)
   })
 
+  const toast = useToast()
+  const navigate = useNavigate()
+
   const loginMutation = useMutation(AuthApi.login, {
-    onSuccess: async (userInfoWithToken) => {
+    onSuccess: ({ data }) => {
+      if (GlazeErr.isGlazeError(data)) {
+        if (data.status === GlazeErr.ErrorCode.LoginFailedError) {
+          toast({
+            title: '用户名或密码错误',
+            status: 'error',
+            isClosable: true
+          })
+        }
+      } else {
+        writeToken(data.token)
+        UserSubject.next(data)
+        navigate('/')
+      }
     }
   })
 

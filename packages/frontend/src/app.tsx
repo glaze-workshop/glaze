@@ -7,6 +7,8 @@ import { initReactI18next } from 'react-i18next'
 import { ChakraProvider } from '@chakra-ui/react'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import './mocks/init'
+import { BrowserRouter } from 'react-router-dom'
+import { ReactQueryDevtools } from 'react-query/devtools'
 
 GlazeI18n.initI18n(initReactI18next)
 
@@ -16,8 +18,11 @@ const App:FC = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <ChakraProvider>
-        <RootPage />
+        <BrowserRouter>
+          <RootPage />
+        </BrowserRouter>
       </ChakraProvider>
+      <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   )
 }

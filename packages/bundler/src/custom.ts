@@ -30,10 +30,6 @@ export const WebpackConfig: WebpackCustomConfig = {
   ...(await requireNullable(FullPath.glazeWebpackConfig))
 }
 
-console.log('WebpackConfig', WebpackConfig)
-console.log('defaultConfig', defaultConfig)
-console.log('FullPath.glazeWebpackConfig', FullPath.glazeWebpackConfig)
-
 export const RollupConfig: RollupCustomConfig = {
   ...defaultConfig,
   ...(await requireNullable(FullPath.glazeRollupConfig))
@@ -44,7 +40,6 @@ async function requireNullable (modulePath: string) { // force require
     const pkg = await import(pathToFileURL(modulePath).href)
     return pkg.default
   } catch (e) {
-    console.error(e)
     return null
   }
 }

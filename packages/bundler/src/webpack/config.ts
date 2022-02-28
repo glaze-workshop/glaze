@@ -9,7 +9,8 @@ export function createConfigFile (env: 'production' | 'development'): Configurat
     output: {
       path: FullPath.appBuild,
       filename: '[name].js',
-      chunkFilename: '[name].chunk.js'
+      chunkFilename: '[name].chunk.js',
+      publicPath: '/'
     },
     ...createCommonConfig(env)
   }

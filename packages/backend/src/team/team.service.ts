@@ -5,16 +5,28 @@ https://docs.nestjs.com/providers#services
 import { Injectable } from '@nestjs/common'
 import { Entity, TeamDto } from '@glaze/common'
 import { PrismaService } from '../global/prisma.service'
+import { Prisma } from '@prisma/client'
 
 @Injectable()
 export class TeamService {
   constructor (private prisma: PrismaService) {}
 
+  defaultFolderList = [
+    { name: 'All', type: Entity.GlazeFolderTypeEnum.ALL },
+    { name: 'Archived', type: Entity.GlazeFolderTypeEnum.ARCHIVED }
+  ]
+
+  /**
+   * 创建团队，同时创建默认文件夹
+   */
   createTeam (name: string, type = Entity.GlazeTeamTypeEnum.PRIVATE): Promise<Entity.TeamEntity> {
     return this.prisma.glazeTeam.create({
       data: {
         type,
-        name
+        name,
+        projectFolders: {
+          create: this.defaultFolderList
+        }
       }
     })
   }
@@ -27,6 +39,9 @@ export class TeamService {
             memberId: { equals: memberId }
           }
         }
+      },
+      include: {
+        projectFolders: true
       }
     })
   }
