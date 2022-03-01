@@ -18,6 +18,9 @@ export * as ProjectApi from './project/project.api'
 export * as ComponentDto from './component/component.dto'
 export * as ComponentApi from './component/component.api'
 
+export * as FolderDto from './folder/folder.dto'
+export * as FolderApi from './folder/folder.api'
+
 export * as SelfApi from './self/self.api'
 
 export * as Entity from './entity'

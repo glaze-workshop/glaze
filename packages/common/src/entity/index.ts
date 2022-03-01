@@ -3,6 +3,7 @@ export * from './user'
 export * from './team'
 export * from './project'
 export * from './component'
+export * from './folder'
 export * from './jwt'
 
 export type PureEntity<T> =

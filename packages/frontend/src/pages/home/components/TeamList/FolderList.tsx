@@ -36,7 +36,7 @@ export interface FolderListProps {
 }
 const FolderList:FC<FolderListProps> = ({ folders }) => {
   return (
-    <Stack px="16px">
+    <Stack>
       {folders?.map(folder => (
         <Folder key={folder.id} folder={folder} />
       ))}

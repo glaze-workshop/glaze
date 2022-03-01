@@ -1,4 +1,4 @@
-import { Box, Button, Flex, Icon, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay } from '@chakra-ui/react'
+import { Accordion, AccordionButton, AccordionIcon, AccordionItem, AccordionPanel, Avatar, Box, Button, Flex, Icon, Text } from '@chakra-ui/react'
 import { useUserTeams } from '../../../../hooks/self.hook'
 import React, { FC, useCallback, useEffect, useMemo, useState } from 'react'
 import { Entity } from '@glaze/common'
@@ -6,11 +6,13 @@ import { FiPlus } from 'react-icons/fi'
 import FolderList from './FolderList'
 import { useNavigate } from 'react-router-dom'
 import TeamCreationModal from './TeamCreationModal'
+import { useModalState } from '../../../../hooks/modal.hook'
 
 const TeamList:FC = () => {
   const teamQuery = useUserTeams()
   const teamList = useMemo(() => teamQuery.data?.data, [teamQuery.data])
   const selfTeamInfo = useMemo(() => teamList?.find(team => team.type === Entity.GlazeTeamTypeEnum.DRAFT), [teamList])
+  const otherTeams = useMemo(() => teamList?.filter(team => team.type !== Entity.GlazeTeamTypeEnum.DRAFT), [teamList])
   const selfAllFolderId = useMemo(() => selfTeamInfo?.projectFolders?.find(item => item.type === Entity.GlazeFolderTypeEnum.ALL)?.id, [selfTeamInfo])
 
   const navigate = useNavigate()
@@ -21,21 +23,34 @@ const TeamList:FC = () => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selfAllFolderId])
 
-  const [teamCreationModalIsOpen, setTeamCreationModalIsOpen] = useState(false)
-  const handleCreateTeam = useCallback(() => {
-    setTeamCreationModalIsOpen(true)
-  }, [])
+  const { isOpen, handleModelClose, handleModelOpen } = useModalState()
 
   return (
-    <Flex direction="column" flex="1">
-      <FolderList folders={selfTeamInfo?.projectFolders} />
-      <Box flex="1" overflowX="hidden" overflowY="auto" >
-
+    <Flex direction="column" flex="1" overflowY="hidden">
+      <Box px="16px"><FolderList folders={selfTeamInfo?.projectFolders} /></Box>
+      <Text px="20px" pt="10px" pb="5px" fontWeight="bold">Team</Text>
+      <Box p="4px" flex="1" overflowX="hidden" overflowY="auto" >
+        <Accordion defaultIndex={[0]} allowMultiple>
+          {otherTeams?.map(team => (
+            <AccordionItem key={team.id}>
+              <AccordionButton>
+                <Avatar mr="10px" size="xs" name={team.name} src={team.logo ?? ''}></Avatar>
+                <Text flex='1' textAlign='left'>
+                  {team.name}
+                </Text>
+                <AccordionIcon />
+              </AccordionButton>
+              <AccordionPanel pb={4} px="12px">
+                <FolderList folders={team.projectFolders} />
+              </AccordionPanel>
+            </AccordionItem>
+          ))}
+        </Accordion>
       </Box>
       <Box p={3}>
-        <Button w="100%" onClick={handleCreateTeam} leftIcon={<Icon as={FiPlus} />} display="block" variant='outline'>创建团队</Button>
+        <Button w="100%" onClick={handleModelOpen} leftIcon={<Icon as={FiPlus} />} display="block" variant='outline'>创建团队</Button>
       </Box>
-      <TeamCreationModal isOpen={teamCreationModalIsOpen} onClose={() => setTeamCreationModalIsOpen(false)}></TeamCreationModal>
+      <TeamCreationModal isOpen={isOpen} onClose={handleModelClose}></TeamCreationModal>
     </Flex>
   )
 }

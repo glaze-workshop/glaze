@@ -26,10 +26,4 @@ export class SelfController {
   getSelfTeams (@CurrentUser() user: Entity.UserEntity) {
     return this.teamService.getTeams(user.id)
   }
-
-  @UseGuards(JwtGuard)
-  @Get(SelfApi.SELF_FOLDERS_PATH)
-  getSelfFolders (@CurrentUser() user: Entity.UserEntity) {
-    return this.projectService.getProjectFolderByMemberId(user.id)
-  }
 }

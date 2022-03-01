@@ -19,14 +19,27 @@ export class TeamService {
   /**
    * 创建团队，同时创建默认文件夹
    */
-  createTeam (name: string, type = Entity.GlazeTeamTypeEnum.PRIVATE): Promise<Entity.TeamEntity> {
+  createTeam (ownerId: number, name: string, type = Entity.GlazeTeamTypeEnum.PRIVATE): Promise<Entity.TeamEntity> {
     return this.prisma.glazeTeam.create({
       data: {
         type,
         name,
         projectFolders: {
           create: this.defaultFolderList
+        },
+        members: {
+          create: {
+            memberId: ownerId
+          }
         }
+      }
+    })
+  }
+
+  getTeamFolders (teamId: number): Promise<Entity.ProjectFolderEntity[]> {
+    return this.prisma.glazeProjectFolder.findMany({
+      where: {
+        teamId
       }
     })
   }
@@ -52,6 +65,22 @@ export class TeamService {
         id: teamId
       },
       data: teamUpdateDTO
+    })
+  }
+
+  getTeam (teamId: number) {
+    return this.prisma.glazeTeam.findUnique({
+      where: {
+        id: teamId
+      },
+      include: {
+        projectFolders: true,
+        members: {
+          include: {
+            member: true
+          }
+        }
+      }
     })
   }
 

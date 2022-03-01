@@ -1,3 +1,4 @@
+import { FolderModule } from './folder/folder.module'
 import { ProjectModule } from './project/project.module'
 import { SelfModule } from './self/self.module'
 import { TeamModule } from './team/team.module'
@@ -13,6 +14,7 @@ import { JwtModule } from '@nestjs/jwt'
 import { ConfigModule } from '@nestjs/config'
 @Module({
   imports: [
+    FolderModule,
     ProjectModule,
     SelfModule,
     ConfigModule.forRoot(),

@@ -92,6 +92,7 @@ model GlazeProject {
   id              Int                @id @default(autoincrement())
   name            String?            @unique @db.Text /// 项目名称
   intro           String?            @db.Text /// 介绍
+  preview         String?            @db.Text /// 预览图片
   projectFolder   GlazeProjectFolder @relation(fields: [projectFolderId], references: [id])
   projectFolderId Int
   document        Json?              @db.Json

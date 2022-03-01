@@ -26,12 +26,18 @@ export const FULL_TEAM_PATH_WITH_ID_TO_PATH = compile<{id: number}>(FULL_TEAM_PA
 
 /**
  * 更新团队信息
- * @param id 团队 id
  * @param teamDTO
  * @returns
  */
-export const updateTeam = (id: number, teamDTO: TeamUpdateDTO) =>
-  axios.put(FULL_TEAM_PATH_WITH_ID_TO_PATH({ id }), teamDTO)
+export const updateTeam = (teamDTO: TeamUpdateDTO) =>
+  axios.put(FULL_TEAM_PATH_WITH_ID_TO_PATH({ id: teamDTO.id }), teamDTO)
+
+/**
+ * 获得团队详情
+ * @param id 团队id
+ * @returns
+ */
+export const getTeam = (id: number) => axios.get(FULL_TEAM_PATH_WITH_ID_TO_PATH({ id }))
 
 /**
  * 删除团队

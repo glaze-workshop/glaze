@@ -1,14 +1,15 @@
 import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, Button, Input } from '@chakra-ui/react'
-import { TeamApi } from '@glaze/common'
-import { useUserTeams } from '../../../../hooks/self.hook'
+import { ProjectApi } from '@glaze/common'
+import { useFolderInfo } from '../../../hooks/folder.hook'
 import React, { FC, memo, useCallback, useState } from 'react'
 import { useMutation } from 'react-query'
 
-export interface TeamCreationModalProps {
+export interface ProjectCreationModalProps {
+  folderId: number
   isOpen: boolean
   onClose: () => void
 }
-const TeamCreationModal:FC<TeamCreationModalProps> = ({ isOpen, onClose }) => {
+const ProjectCreationModal:FC<ProjectCreationModalProps> = ({ folderId, isOpen, onClose }) => {
   const [name, setName] = useState('')
   const handleCloseClick = useCallback(() => {
     setName('')
@@ -19,32 +20,32 @@ const TeamCreationModal:FC<TeamCreationModalProps> = ({ isOpen, onClose }) => {
     return setName(e.target.value)
   }, [])
 
-  const teamQuery = useUserTeams()
+  const folderQuery = useFolderInfo(folderId)
 
-  const createTeamMutation = useMutation(TeamApi.createTeam, {
+  const createProjectMutation = useMutation(ProjectApi.createProject, {
     onSuccess: ({ data }) => {
-      teamQuery.refetch()
+      folderQuery.refetch()
       onClose()
     }
   })
 
   const handleCreation = useCallback(() => {
-    createTeamMutation.mutate({ name })
-  }, [createTeamMutation, name])
+    createProjectMutation.mutate({ projectFolderId: folderId, name })
+  }, [createProjectMutation, folderId, name])
 
   return (
     <Modal isOpen={isOpen} onClose={handleCloseClick}>
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>创建团队</ModalHeader>
+        <ModalHeader>创建项目</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          <Input placeholder='团队名称' value={name} onChange={handleNameChange} />
+          <Input placeholder='项目名称' value={name} onChange={handleNameChange} />
         </ModalBody>
 
         <ModalFooter>
-          <Button isLoading={createTeamMutation.isLoading} colorScheme='blue' mr={3} onClick={handleCreation}>
-            创建团队
+          <Button isLoading={createProjectMutation.isLoading} colorScheme='blue' mr={3} onClick={handleCreation}>
+            创建项目
           </Button>
           <Button variant='ghost' onClick={handleCloseClick}>关闭</Button>
         </ModalFooter>
@@ -52,4 +53,4 @@ const TeamCreationModal:FC<TeamCreationModalProps> = ({ isOpen, onClose }) => {
     </Modal>
   )
 }
-export default memo(TeamCreationModal)
+export default memo(ProjectCreationModal)

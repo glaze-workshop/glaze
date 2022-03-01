@@ -1,6 +1,7 @@
 import React, { FC, Suspense } from 'react'
 import { BrowserRouter, Navigate, Route, Router, Routes } from 'react-router-dom'
 import { useAxiosConfig } from '../hooks/axios'
+import Folder from './folder'
 import Home from './home'
 import Login from './login'
 import Register from './register'
@@ -13,7 +14,7 @@ const RootPage: FC = () => {
   return (
     <Routes>
       <Route path='/' element={<Home/>}>
-        <Route path='folder/:folderId' element={<div>hi</div>}/>
+        <Route path='folder/:folderId' element={<Folder />}/>
       </Route>
       <Route path='/editor' element={
         <Suspense fallback={'loading'}>
