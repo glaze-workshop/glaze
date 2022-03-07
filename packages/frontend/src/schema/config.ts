@@ -1,11 +1,13 @@
 import type { CSSProperties } from 'react'
+import { Length } from './length'
 
 export interface I18nString {
   zh: string
   en?: string
 }
 
-export type GlazeString = string | I18nString
+// export type GlazeString = string | I18nString
+export type GlazeString = string
 
 /**
  * @link https://storybook.js.org/docs/react/essentials/controls#annotation
@@ -80,6 +82,11 @@ export type PropsConfig<P> = {
   [key in keyof P]: Control<P[key]>
 }
 
+export type DefaultSizeConfig = {
+  width: Length
+  height: Length
+}
+
 /**
  * 每个组件都有的配置信息
  */
@@ -87,6 +94,8 @@ export interface ComponentConfig<T = any> {
   id: string
   name: GlazeString
   props: PropsConfig<T>
+  defaultSize: DefaultSizeConfig
+  hasChildren?: boolean
 }
 
 export interface GlazeComponentProps {

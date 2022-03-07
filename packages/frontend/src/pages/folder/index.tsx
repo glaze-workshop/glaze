@@ -1,7 +1,7 @@
 import { AspectRatio, Box, Container, SimpleGrid, Text, Image, Flex, Button, IconButton, Icon } from '@chakra-ui/react'
 import React, { FC, memo, useMemo } from 'react'
 import { FiPlus } from 'react-icons/fi'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { useFolderInfo } from '../../hooks/folder.hook'
 import { useModalState } from '../../hooks/modal.hook'
 import ProjectCreationModal from './components/ProjectCreationModal'
@@ -27,7 +27,7 @@ const Folder:FC<FolderProps> = () => {
           </Flex>
           <SimpleGrid columns={2} spacing={10}>
             {folderInfo.projects?.map(project => (
-              <Box key={project.id} borderWidth='1px' borderRadius='lg' overflow='hidden'>
+              <Box as={Link} to={`/project/${project.id}`} key={project.id} borderWidth='1px' borderRadius='lg' overflow='hidden'>
                 <AspectRatio ratio={16 / 9}>
                   <Image src={project.preview ?? ''} fallbackSrc='https://bit.ly/naruto-sage' alt='naruto' objectFit='cover' />
                 </AspectRatio>

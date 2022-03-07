@@ -30,8 +30,8 @@ export class ProjectController {
 
   /** 获得项目详情 */
   @Get(ProjectApi.PROJECT_PATH_WITH_ID)
-  getProject (@Param('id', new ParseIntPipe()) id: number) {
-    return this.projectService.getProject(id)
+  getProject (@Param('id', new ParseIntPipe()) id: number, @Query('doc') withDoc = false) {
+    return this.projectService.getProject(id, withDoc)
   }
 
   /** 删除项目 */

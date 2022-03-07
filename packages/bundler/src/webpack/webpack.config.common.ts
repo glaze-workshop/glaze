@@ -83,7 +83,7 @@ export const createCommonConfig = (env: EnvType): WebpackConfiguration => {
   }
 
   return {
-    devtool: isEnvDevelopment ? 'eval-cheap-source-map' : undefined,
+    devtool: isEnvDevelopment ? 'eval-source-map' : undefined,
     plugins: [
       new CleanWebpackPlugin(),
       new webpack.ProvidePlugin({
