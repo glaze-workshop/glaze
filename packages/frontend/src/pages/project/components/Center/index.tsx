@@ -1,12 +1,12 @@
+import GlazeEditor from '../../../../components/GlazeEditor'
 import React, { FC, memo } from 'react'
-import EditorStage from '../../../../components/EditorStage'
 
 export interface CenterProps {
 
 }
 const Center:FC<CenterProps> = () => {
   return (
-    <EditorStage/>
+    <GlazeEditor />
   )
 }
 export default memo(Center)

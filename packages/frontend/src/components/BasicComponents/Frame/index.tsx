@@ -1,15 +1,16 @@
 import { GlazeComponentProps } from '../../../schema/config'
 import React, { FC } from 'react'
 
-export interface FrameProps extends GlazeComponentProps {
+export interface FrameProps {
 
 }
 
-const Frame:FC<FrameProps> = ({ className, style }) => {
-  return <div className={className} style={{
-    width: 200,
-    height: 100,
-    ...style
-  }}></div>
+const Frame:FC<FrameProps> = ({ children }) => {
+  return <div style={{
+    height: '100%',
+    background: 'green'
+  }}>
+    {children}
+  </div>
 }
 export default Frame

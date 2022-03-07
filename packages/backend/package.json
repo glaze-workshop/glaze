@@ -33,13 +33,15 @@
     "@nestjs/jwt": "^8.0.0",
     "@nestjs/passport": "^8.2.1",
     "@nestjs/platform-express": "^8.3.1",
+    "@nestjs/websockets": "^8.4.0",
     "@prisma/client": "^3.10.0",
     "bcrypt": "^5.0.1",
     "passport": "^0.5.2",
     "passport-jwt": "^4.0.0",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
-    "rxjs": "^7.5.2"
+    "rxjs": "^7.5.2",
+    "ws": "^8.5.0"
   },
   "devDependencies": {
     "@nestjs/cli": "^8.2.0",
