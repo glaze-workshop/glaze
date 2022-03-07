@@ -1,13 +1,8 @@
-import React, { FC } from 'react'
+import React, { FC, useState } from "react";
 
-export interface LeftBarProps {
+export interface LeftBarProps {}
 
-}
-const LeftBar:FC<LeftBarProps> = () => {
-  return (
-    <div className="w-80 border-r">
-      Left Bar
-    </div>
-  )
-}
-export default LeftBar
+const LeftBar: FC<LeftBarProps> = () => {
+  return <div className="w-80 border-r">Left Bar</div>;
+};
+export default LeftBar;
