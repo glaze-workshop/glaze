@@ -6,7 +6,7 @@ import Home from './home'
 import Login from './login'
 import Register from './register'
 
-const LazyEditor = React.lazy(() => import('./editor/index'))
+const LazyEditor = React.lazy(() => import('./project/index'))
 
 const RootPage: FC = () => {
   useAxiosConfig()
@@ -16,7 +16,7 @@ const RootPage: FC = () => {
       <Route path='/' element={<Home/>}>
         <Route path='folder/:folderId' element={<Folder />}/>
       </Route>
-      <Route path='/editor' element={
+      <Route path='/project/:projectId' element={
         <Suspense fallback={'loading'}>
           <LazyEditor />
         </Suspense>

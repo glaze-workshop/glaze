@@ -30,7 +30,14 @@ export class ProjectService {
       where: {
         id: projectId
       },
-      select: this.generateSelect(withDocument)
+      select: {
+        ...this.generateSelect(withDocument),
+        projectFolder: {
+          include: {
+            team: true
+          }
+        }
+      }
     })
   }
 

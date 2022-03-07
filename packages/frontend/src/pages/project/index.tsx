@@ -1,22 +1,23 @@
+import { Box, Flex } from '@chakra-ui/react'
 import React, { FC, memo } from 'react'
 import Center from './components/Center'
 import LeftBar from './components/LeftBar'
 import RightBar from './components/RightBar'
 import TopNav from './components/TopNav'
 
-const Editor:FC = () => {
+const Project:FC = () => {
   return (
-    <div className="h-screen flex flex-col overflow-hidden">
+    <Flex h="100vh" overflow="hidden" direction="column">
       <TopNav/>
-      <div className="flex flex-grow h-full">
+      <Flex h="full" flex={1}>
         <LeftBar/>
-        <div className="flex-grow overflow-hidden flex items-stretch">
+        <Box flex={1} overflow="hidden" alignItems="stretch">
           <Center />
-        </div>
+        </Box>
         <RightBar/>
-      </div>
-    </div>
+      </Flex>
+    </Flex>
   )
 }
 
-export default memo(Editor)
+export default memo(Project)
