@@ -20,9 +20,24 @@ import { StructureProxy, createYjsMapProxy, NodeProxy } from './yjs.hook'
  */
 
 export default class EditorSharedDocument {
-  doc = new Y.Doc()
-  structureTree = this.doc.getArray<Y.Map<any>>('structure')
-  nodeList = this.doc.getMap<Y.Map<any>>('components')
+  doc
+  structureTree
+  nodeList
+
+  constructor () {
+    this.doc = new Y.Doc()
+    this.structureTree = this.doc.getArray<Y.Map<any>>('structure')
+    this.nodeList = this.doc.getMap<Y.Map<any>>('components')
+  }
+
+  connect (projectId: number) {
+
+  }
+
+  /** TODO: close websocket */
+  close () {
+
+  }
 
   getNodeById = (nodeId: string) => {
     return this.nodeList.get(nodeId)

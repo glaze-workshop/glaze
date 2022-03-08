@@ -1,17 +1,12 @@
 import styled from '@emotion/styled'
 import { Point, Transform, Zoom } from '@glaze/zoom'
 import normalizeWheel from 'normalize-wheel'
-import { useObservableEagerState } from 'observable-hooks'
 import React, { FC, memo, useEffect, useRef } from 'react'
 import EditorContent from './EditorContent'
 import EditorUpper from './EditorUpper'
-import { EditorPositionSubject } from './state'
+import { EditorPositionSubject, useProjectIdChange } from './state'
 const zoom = new Zoom()
 
-const Selection = document.createElement('div')
-Selection.style.position = 'absolute'
-Selection.style.border = '1px solid black'
-Selection.style.boxSizing = 'border-box'
 export interface GlazeEditorProps {
 
 }
@@ -25,6 +20,8 @@ const EditorContainer = styled.div`
 
 const GlazeEditor:FC<GlazeEditorProps> = () => {
   const container = useRef<HTMLDivElement>(null)
+
+  useProjectIdChange()
 
   useEffect(() => {
     EditorPositionSubject.next(container.current?.getBoundingClientRect() ?? null)
