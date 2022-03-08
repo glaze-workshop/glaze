@@ -24,7 +24,7 @@ function NodeControl ({ nodeInfo, structureInfo, parentStructureInfo }: NodeCont
   const layoutProxy = useYjsMapProxy<LayoutConfig>(nodeProxy.layout)
   const wrapperRef = useRef<HTMLDivElement>(null)
 
-  useYjsRerender(nodeInfo, structureInfo, nodeProxy.layout, nodeProxy.props, structureProxy.children)
+  useYjsRerender(nodeInfo, nodeProxy.layout, nodeProxy.props, structureProxy.children)
 
   const componentObservable = useMemo(() =>
     AllComponentsSubject.pipe(map(components => components.get(nodeProxy.componentId))), [nodeProxy.componentId])
