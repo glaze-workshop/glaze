@@ -1,10 +1,11 @@
+import React, { FC, memo, useState } from 'react'
 import { Box } from '@chakra-ui/react'
-import React, { FC, memo } from 'react'
+import { icons } from './icon'
 
-export interface LeftBarProps {
+export interface LeftBarProps {}
+const LeftBar: FC<LeftBarProps> = () => {
+  const [type, setType] = useState('basic')
 
-}
-const LeftBar:FC<LeftBarProps> = () => {
   return (
     <Box w="300px" className="border-r">
       Left Bar
