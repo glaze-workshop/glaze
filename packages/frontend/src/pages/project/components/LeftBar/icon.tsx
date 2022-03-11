@@ -12,7 +12,7 @@ export const icons = {
   HTML5: ({ active }: IconProps) => {
     return (
       <svg
-        className="w-6 h-6"
+        className="w-8 h-8"
         fill="none"
         viewBox="0 0 512 512"
         xmlns="http://www.w3.org/2000/svg"
