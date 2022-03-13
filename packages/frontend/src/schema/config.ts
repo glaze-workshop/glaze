@@ -1,5 +1,6 @@
 import type { CSSProperties } from 'react'
 import { Length } from './length'
+import previewFields from './preview'
 
 export interface I18nString {
   zh: string
@@ -35,48 +36,55 @@ export enum ControlType {
    */
   MULTI_SELECT = 'multi_select',
 
-  FONT = 'font'
+  FONT = 'font',
 }
 
-export interface AbstractControl<T extends ControlType = ControlType, D = unknown> {
+export interface AbstractControl<
+  T extends ControlType = ControlType,
+  D = unknown
+> {
   name: GlazeString
   type: T
   default: D
 }
 
-export interface BooleanControl extends AbstractControl<ControlType.BOOLEAN, boolean> {
-}
+export interface BooleanControl
+  extends AbstractControl<ControlType.BOOLEAN, boolean> {}
 
-export interface NumberControl extends AbstractControl<ControlType.NUMBER, number> {
+export interface NumberControl
+  extends AbstractControl<ControlType.NUMBER, number> {
   min: number
   max: number
 }
 
-export interface TextControl extends AbstractControl<ControlType.TEXT, string> {
-}
+export interface TextControl
+  extends AbstractControl<ControlType.TEXT, string> {}
 
 export interface Option<T> {
   value: T
   description: GlazeString
 }
 
-export interface SelectControl<T = unknown> extends AbstractControl<ControlType.SELECT, T> {
+export interface SelectControl<T = unknown>
+  extends AbstractControl<ControlType.SELECT, T> {
   options: T[]
 }
 
-export interface MultiSelectControl<T = unknown> extends AbstractControl<ControlType.MULTI_SELECT, T[]> {
+export interface MultiSelectControl<T = unknown>
+  extends AbstractControl<ControlType.MULTI_SELECT, T[]> {
   options: T[]
 }
 
-export type Control<T> = SelectControl<T> | MultiSelectControl<T> | (
-  NonNullable<T> extends boolean
-  ? BooleanControl
-  : NonNullable<T> extends number
-  ? NumberControl
-  : NonNullable<T> extends string
-  ? TextControl
-  : never
-)
+export type Control<T> =
+  | SelectControl<T>
+  | MultiSelectControl<T>
+  | (NonNullable<T> extends boolean
+      ? BooleanControl
+      : NonNullable<T> extends number
+      ? NumberControl
+      : NonNullable<T> extends string
+      ? TextControl
+      : never)
 
 export type PropsConfig<P> = {
   [key in keyof P]: Control<P[key]>
@@ -101,4 +109,12 @@ export interface ComponentConfig<T = any> {
 export interface GlazeComponentProps {
   className?: string
   style?: CSSProperties
+}
+
+export interface FieldNode {
+  type: keyof typeof previewFields
+  h?: number
+  displayName?: string
+  module?: string
+  props: Record<string, any>
 }
