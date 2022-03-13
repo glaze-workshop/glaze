@@ -2,7 +2,6 @@ import chokidar from 'chokidar'
 import path from 'path'
 
 import { Log } from '../utils'
-import { componentsRootPath } from './config'
 import { ComponentsMonitorCallback, ComponentsMonitorEvent, ComponentsMonitorEventType } from './type'
 import { belongsTo, isComponentDir } from './utils'
 
@@ -160,9 +159,4 @@ class ComponentsMonitor {
   }
 }
 
-/**
- * Singleton Monitor
- */
-const monitor = new ComponentsMonitor(componentsRootPath)
-
-export default monitor
+export default ComponentsMonitor

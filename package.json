@@ -7,6 +7,7 @@
   "scripts": {
     "dev": "ts-node --skip-project scripts.ts -d",
     "dev:frontend": "pnpm dev --filter *frontend",
+    "dev:editor": "pnpm dev --filter *frontend --filter *editor --filter *common --stream --parallel",
     "dev:storybook": "pnpm storybook --filter *frontend",
     "dev:basic": "pnpm dev --filter \"*types\" --filter \"*zoom\" --filter \"*common\" --filter \"*bundler\" --stream --parallel",
     "test": "echo \"Error: no test specified\" && exit 1",

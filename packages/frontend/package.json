@@ -49,7 +49,8 @@
     "react-i18next": "^11.15.4",
     "react-icons": "^4.3.1",
     "react-query": "^3.34.15",
-    "react-router-dom": "^6.2.1"
+    "react-router-dom": "^6.2.1",
+    "systemjs": "^6.12.1"
   },
   "msw": {
     "workerDirectory": "public"
