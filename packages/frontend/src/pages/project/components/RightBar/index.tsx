@@ -6,7 +6,7 @@ export interface RightBarProps {
 }
 const RightBar:FC<RightBarProps> = () => {
   return (
-    <Box w="300px" className="border-l">
+    <Box w="250px" className="border-l">
       Right Bar
     </Box>
   )

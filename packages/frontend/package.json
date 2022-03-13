@@ -25,6 +25,7 @@
     "@storybook/react": "^6.4.19",
     "@types/react": "^17.0.39",
     "@types/react-dom": "^17.0.11",
+    "classnames": "^2.3.1",
     "normalize.css": "^8.0.1",
     "react-rnd": "^10.3.5"
   },
@@ -53,5 +54,11 @@
   },
   "msw": {
     "workerDirectory": "public"
+  },
+  "eslintConfig": {
+    "rules": {
+      "no-trailing-spaces": "warn",
+      "comma-dangle": "warn"
+    }
   }
 }
