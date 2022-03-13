@@ -17,7 +17,6 @@ const ContentWrapper = styled.div`
 
 const EditorContent:FC<EditorContentProps> = ({ zoom }) => {
   const contentRef = useRef<HTMLDivElement>(null)
-  const goodRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const subscriber = zoom.subscribe(transform => {

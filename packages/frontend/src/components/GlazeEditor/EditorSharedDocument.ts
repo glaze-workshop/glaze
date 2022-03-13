@@ -3,6 +3,7 @@ import * as Y from 'yjs'
 import { ComponentConfig } from '../../schema/config'
 import { LayoutConfig, PositionConfig, PositionType } from '../../schema/layout'
 import { BasicComponentId } from '../BasicComponents/basicComponentInfo'
+import { WebSocketProvider } from './provider/WebsocketProvider'
 import { AllComponentsSubject, SelectedNodeInfoSubject } from './state'
 import { StructureProxy, createYjsMapProxy, NodeProxy } from './yjs.hook'
 
@@ -23,20 +24,26 @@ export default class EditorSharedDocument {
   doc
   structureTree
   nodeList
+  webSocketProvider: WebSocketProvider | null = null
 
   constructor () {
     this.doc = new Y.Doc()
     this.structureTree = this.doc.getArray<Y.Map<any>>('structure')
     this.nodeList = this.doc.getMap<Y.Map<any>>('components')
+
+    this.doc.on('update', function (...args) {
+      console.log('[EditorSharedDocument] args:', args)
+      console.log('[EditorSharedDocument] args:', editorSharedDocument)
+    })
   }
 
   connect (projectId: number) {
-
+    this.webSocketProvider = new WebSocketProvider(`ws://localhost:3000/ws-doc?projectId=${projectId}`, String(projectId), this.doc)
   }
 
   /** TODO: close websocket */
   close () {
-
+    this.webSocketProvider?.disconnect()
   }
 
   getNodeById = (nodeId: string) => {
@@ -111,47 +118,44 @@ export default class EditorSharedDocument {
     // 创建节点流程:  props -> props, default layout -> layout
     const { id: componentId, props, defaultSize, name } = componentConfig
 
-    {
-      const yStructureMap = new Y.Map()
-      const structure = createYjsMapProxy<StructureProxy>(yStructureMap)
-      structure.nodeId = nodeId
-      structure.children = new Y.Array()
-      if (inParent) {
-        inParent.get('children').push([yStructureMap])
-      } else {
-        this.structureTree.push([yStructureMap])
+    this.doc.transact(() => {
+      {
+        const yStructureMap = new Y.Map()
+        const structure = createYjsMapProxy<StructureProxy>(yStructureMap)
+        structure.nodeId = nodeId
+        structure.children = new Y.Array()
+        if (inParent) {
+          inParent.get('children').push([yStructureMap])
+        } else {
+          this.structureTree.push([yStructureMap])
+        }
       }
-    }
 
-    {
-      const yNodeMap = new Y.Map()
-      const node = createYjsMapProxy<NodeProxy>(yNodeMap)
-      node.id = nodeId
-      node.name = name
-      node.componentId = componentId
+      {
+        const yNodeMap = new Y.Map()
+        const node = createYjsMapProxy<NodeProxy>(yNodeMap)
+        node.id = nodeId
+        node.name = name
+        node.componentId = componentId
 
-      const yLayoutMap = new Y.Map()
-      const layout = createYjsMapProxy<LayoutConfig>(yLayoutMap)
-      layout.width = defaultSize.width
-      layout.height = defaultSize.height
-      layout.position = position
+        const yLayoutMap = new Y.Map()
+        const layout = createYjsMapProxy<LayoutConfig>(yLayoutMap)
+        layout.width = defaultSize.width
+        layout.height = defaultSize.height
+        layout.position = position
 
-      node.layout = yLayoutMap
+        node.layout = yLayoutMap
 
-      const yPropsMap = new Y.Map()
-      for (const [key, value] of Object.entries(props)) {
-        yPropsMap.set(key, value.default)
+        const yPropsMap = new Y.Map()
+        for (const [key, value] of Object.entries(props)) {
+          yPropsMap.set(key, value.default)
+        }
+        node.props = yPropsMap
+
+        this.nodeList.set(nodeId, yNodeMap)
       }
-      node.props = yPropsMap
-
-      this.nodeList.set(nodeId, yNodeMap)
-    }
+    })
   }
 }
 
 export const editorSharedDocument = new EditorSharedDocument()
-
-editorSharedDocument.doc.on('update', (...args) => {
-  console.log('[EditorSharedDocument] args:', args)
-  console.log('[EditorSharedDocument] args:', editorSharedDocument)
-})

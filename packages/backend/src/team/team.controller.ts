@@ -26,7 +26,7 @@ export class TeamController {
    * @param userId 用户 id
    */
   @Get(TeamApi.FULL_TEAM_PATH)
-  getTeams (@Query('userId', new ParseIntPipe()) userId: number) {
+  getTeams (@Query('userId', ParseIntPipe) userId: number) {
     return this.teamService.getTeams(userId)
   }
 
@@ -34,12 +34,12 @@ export class TeamController {
    * 修改团队
    */
   @Put(TeamApi.FULL_TEAM_PATH_WITH_ID)
-  updateTeam (@Param('id', new ParseIntPipe()) id: number, @Body() teamUpdateDTO: TeamDto.TeamUpdateDTO) {
+  updateTeam (@Param('id', ParseIntPipe) id: number, @Body() teamUpdateDTO: TeamDto.TeamUpdateDTO) {
     return this.teamService.updateTeam(id, teamUpdateDTO)
   }
 
   @Get(TeamApi.FULL_TEAM_PATH_WITH_ID)
-  getTeam (@Param('id', new ParseIntPipe()) id: number) {
+  getTeam (@Param('id', ParseIntPipe) id: number) {
     return this.teamService.getTeam(id)
   }
 
@@ -47,7 +47,7 @@ export class TeamController {
    * 删除团队
    */
   @Delete(TeamApi.FULL_TEAM_PATH_WITH_ID)
-  deleteTeam (@Param('id', new ParseIntPipe()) id: number) {
+  deleteTeam (@Param('id', ParseIntPipe) id: number) {
     return this.teamService.deleteTeam(id)
   }
 
@@ -55,7 +55,7 @@ export class TeamController {
    * 加入团队
    */
   @Post(TeamApi.FULL_TEAM_MEMBER_PATH)
-  joinTeam (@Param('id', new ParseIntPipe()) id: number, @Param('memberId', new ParseIntPipe()) memberId: number) {
+  joinTeam (@Param('id', ParseIntPipe) id: number, @Param('memberId', ParseIntPipe) memberId: number) {
     return this.teamService.joinTeam(id, memberId)
   }
 
@@ -63,7 +63,7 @@ export class TeamController {
    * 更新团队成员身份
    */
   @Put(TeamApi.FULL_TEAM_MEMBER_PATH)
-  updateTeamMemberRole (@Param('id', new ParseIntPipe()) id: number, @Param('memberId', new ParseIntPipe()) memberId: number, @Body() role: Entity.GlazeTeamRoleEnum) {
+  updateTeamMemberRole (@Param('id', ParseIntPipe) id: number, @Param('memberId', ParseIntPipe) memberId: number, @Body() role: Entity.GlazeTeamRoleEnum) {
     return this.teamService.updateTeamMemberRole(id, memberId, role)
   }
 
@@ -71,7 +71,7 @@ export class TeamController {
    * 删除成员
    */
   @Delete(TeamApi.FULL_TEAM_MEMBER_PATH)
-  deleteTeamMember (@Param('id', new ParseIntPipe()) id: number, @Param('memberId', new ParseIntPipe()) memberId: number) {
+  deleteTeamMember (@Param('id', ParseIntPipe) id: number, @Param('memberId', ParseIntPipe) memberId: number) {
     return this.teamService.deleteTeamMember(id, memberId)
   }
 }

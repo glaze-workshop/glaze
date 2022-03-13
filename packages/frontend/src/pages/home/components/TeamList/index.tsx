@@ -1,6 +1,6 @@
 import { Accordion, AccordionButton, AccordionIcon, AccordionItem, AccordionPanel, Avatar, Box, Button, Flex, Icon, Text } from '@chakra-ui/react'
 import { useUserTeams } from '../../../../hooks/self.hook'
-import React, { FC, useCallback, useEffect, useMemo, useState } from 'react'
+import React, { FC, memo, useCallback, useEffect, useMemo, useState } from 'react'
 import { Entity } from '@glaze/common'
 import { FiPlus } from 'react-icons/fi'
 import FolderList from './FolderList'
@@ -10,8 +10,9 @@ import { useModalState } from '../../../../hooks/modal.hook'
 
 const TeamList:FC = () => {
   const teamQuery = useUserTeams()
-  const teamList = useMemo(() => teamQuery.data?.data, [teamQuery.data])
-  const selfTeamInfo = useMemo(() => teamList?.find(team => team.type === Entity.GlazeTeamTypeEnum.DRAFT), [teamList])
+  const teamList = useMemo(() => teamQuery.data?.data ?? [], [teamQuery.data])
+  const selfTeamInfo = useMemo(() =>
+    teamList?.find(team => team.type === Entity.GlazeTeamTypeEnum.DRAFT), [teamList])
   const otherTeams = useMemo(() => teamList?.filter(team => team.type !== Entity.GlazeTeamTypeEnum.DRAFT), [teamList])
   const selfAllFolderId = useMemo(() => selfTeamInfo?.projectFolders?.find(item => item.type === Entity.GlazeFolderTypeEnum.ALL)?.id, [selfTeamInfo])
 
@@ -54,4 +55,4 @@ const TeamList:FC = () => {
     </Flex>
   )
 }
-export default TeamList
+export default memo(TeamList)

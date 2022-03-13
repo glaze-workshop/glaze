@@ -14,8 +14,6 @@ export interface ProjectEntity extends CommonTimestamp {
   intro?: string | null
   preview?: string | null
   projectFolderId: number
-  document?: JsonValue
-  documentBytes?: Buffer | null
 
   projectFolder?: ProjectFolderEntity
 }

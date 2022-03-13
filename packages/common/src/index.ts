@@ -25,3 +25,5 @@ export * as SelfApi from './self/self.api'
 
 export * as Entity from './entity'
 export * as ResType from './res.types'
+
+export * from './websocket/event'

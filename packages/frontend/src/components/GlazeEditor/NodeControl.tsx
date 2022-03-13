@@ -5,8 +5,8 @@ import { map } from 'rxjs'
 import * as Y from 'yjs'
 import { LayoutConfig } from '../../schema/layout'
 import { AllComponentsSubject, SelectedNodeInfoSubject } from './state'
-import { createYjsMapProxy, NodeProxy, StructureProxy, useNodeLayout, useYjsMapProxy, useYjsRerender } from './yjs.hook'
-import EditorSharedDocument, { editorSharedDocument } from './EditorSharedDocument'
+import { NodeProxy, StructureProxy, useNodeLayout, useYjsMapProxy, useYjsRerender } from './yjs.hook'
+import { editorSharedDocument } from './EditorSharedDocument'
 
 const NodeControlWrapper = styled.div`
   position: absolute;
@@ -46,18 +46,19 @@ function NodeControl ({ nodeInfo, structureInfo, parentStructureInfo }: NodeCont
 
   return (
     <NodeControlWrapper ref={wrapperRef} style={layoutStyle} onClick={handleWrapperClick}>
-      {componentFullInfo && React.createElement(
-        componentFullInfo.component,
-        nodeProxy.props.toJSON(),
-        ...structureProxy.children.map(children => (
-          <NodeControl
-            key={children.get('nodeId')}
-            nodeInfo={editorSharedDocument.nodeList.get(children.get('nodeId'))!}
-            parentStructureInfo={structureInfo}
-            structureInfo={children}
-          ></NodeControl>
-        )))}
-      {componentFullInfo?.component}
+      {componentFullInfo &&
+        <componentFullInfo.component
+          {...nodeProxy.props.toJSON()}>
+          {structureProxy.children.map(children => (
+            <NodeControl
+              key={children.get('nodeId')}
+              nodeInfo={editorSharedDocument.nodeList.get(children.get('nodeId'))!}
+              parentStructureInfo={structureInfo}
+              structureInfo={children}
+            />
+          ))}
+        </componentFullInfo.component>
+      }
     </NodeControlWrapper>
   )
 }

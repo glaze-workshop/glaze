@@ -11,29 +11,34 @@ import {
   HttpStatus
 } from '@nestjs/common'
 import { serializeError } from 'serialize-error'
+import { HttpAdapterHost } from '@nestjs/core'
 
 @Catch()
 export class AllExceptionsFilter implements ExceptionFilter {
+  constructor (private readonly httpAdapterHost: HttpAdapterHost) {}
+
   catch (exception: unknown, host: ArgumentsHost) {
+    const { httpAdapter } = this.httpAdapterHost
+
     const ctx = host.switchToHttp()
     const response = ctx.getResponse()
     const request = ctx.getRequest()
 
     if (exception instanceof GlazeErr.AbstractError) {
-      response.json(serializeError(exception))
+      httpAdapter.reply(response, serializeError(exception))
     } else if (!(exception instanceof HttpException) && exception instanceof Error) {
-      response.json(serializeError(new GlazeErr.ServerError(exception)))
+      httpAdapter.reply(response, serializeError(new GlazeErr.ServerError(exception)))
     } else {
       const status =
         exception instanceof HttpException
           ? exception.getStatus()
           : HttpStatus.INTERNAL_SERVER_ERROR
 
-      response.status(status).json({
+      httpAdapter.reply(response, {
         statusCode: status,
         timestamp: new Date().toISOString(),
         path: request.url
-      })
+      }, status)
     }
   }
 }

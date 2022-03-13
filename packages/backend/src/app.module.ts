@@ -1,3 +1,5 @@
+import { DocService } from './project/doc.service'
+import { DocGateway } from './project/doc.gateway'
 import { FolderModule } from './folder/folder.module'
 import { ProjectModule } from './project/project.module'
 import { SelfModule } from './self/self.module'
@@ -24,6 +26,8 @@ import { ConfigModule } from '@nestjs/config'
     AuthModule],
   controllers: [AppController],
   providers: [
+    DocService,
+    DocGateway,
     {
       provide: APP_FILTER,
       useClass: AllExceptionsFilter

@@ -21,12 +21,12 @@ export class FolderController {
   }
 
   @Delete(FolderApi.FOLDER_PATH_WITH_ID)
-  deleteFolder (@Param('id', new ParseIntPipe()) id: number) {
+  deleteFolder (@Param('id', ParseIntPipe) id: number) {
     return this.folderService.deleteFolder(id)
   }
 
   @Get(FolderApi.FOLDER_PATH_WITH_ID)
-  getFolder (@Param('id', new ParseIntPipe()) id: number) {
+  getFolder (@Param('id', ParseIntPipe) id: number) {
     return this.folderService.getFolderInfoById(id)
   }
 }

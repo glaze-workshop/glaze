@@ -11,27 +11,12 @@ import { PrismaService } from '../global/prisma.service'
 export class ProjectService {
   constructor (private prisma: PrismaService) {}
 
-  public generateSelect (withDocument = false) {
-    return {
-      id: true,
-      name: true,
-      intro: true,
-      preview: true,
-      projectFolderId: true,
-      document: withDocument,
-      documentBytes: withDocument,
-      createdAt: true,
-      updatedAt: true
-    }
-  }
-
-  getProject (projectId: number, withDocument = false): Promise<Entity.ProjectEntity | null> {
+  getProject (projectId: number): Promise<Entity.ProjectEntity | null> {
     return this.prisma.glazeProject.findUnique({
       where: {
         id: projectId
       },
-      select: {
-        ...this.generateSelect(withDocument),
+      include: {
         projectFolder: {
           include: {
             team: true
@@ -87,7 +72,6 @@ export class ProjectService {
 
   getProjects (folderId: number): Promise<Entity.ProjectEntity[]> {
     return this.prisma.glazeProject.findMany({
-      select: this.generateSelect(),
       where: {
         projectFolderId: { equals: folderId }
       }
