@@ -30,19 +30,19 @@ export class ProjectController {
 
   /** 获得项目详情 */
   @Get(ProjectApi.PROJECT_PATH_WITH_ID)
-  getProject (@Param('id', new ParseIntPipe()) id: number, @Query('doc') withDoc = false) {
-    return this.projectService.getProject(id, withDoc)
+  getProject (@Param('id', ParseIntPipe) id: number) {
+    return this.projectService.getProject(id)
   }
 
   /** 删除项目 */
   @Delete(ProjectApi.PROJECT_PATH_WITH_ID)
-  deleteProject (@Param('id', new ParseIntPipe()) id: number) {
+  deleteProject (@Param('id', ParseIntPipe) id: number) {
     return this.projectService.deleteProject(id)
   }
 
   /** 存档项目 */
   @Put(ProjectApi.PROJECT_ARCHIVE_PATH)
-  archiveProject (@Param('id', new ParseIntPipe()) id: number) {
+  archiveProject (@Param('id', ParseIntPipe) id: number) {
     return this.projectService.archiveProject(id)
   }
 }

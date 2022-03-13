@@ -1,5 +1,6 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["interactiveTransactions"]
 }
 
 datasource db {
@@ -89,16 +90,24 @@ model GlazeProjectFolder {
 }
 
 model GlazeProject {
-  id              Int                @id @default(autoincrement())
-  name            String?            @unique @db.Text /// 项目名称
-  intro           String?            @db.Text /// 介绍
-  preview         String?            @db.Text /// 预览图片
-  projectFolder   GlazeProjectFolder @relation(fields: [projectFolderId], references: [id])
+  id              Int                   @id @default(autoincrement())
+  name            String?               @unique @db.Text /// 项目名称
+  intro           String?               @db.Text /// 介绍
+  preview         String?               @db.Text /// 预览图片
+  projectFolder   GlazeProjectFolder    @relation(fields: [projectFolderId], references: [id])
   projectFolderId Int
-  document        Json?              @db.Json
-  documentBytes   Bytes?             @db.ByteA
-  createdAt       DateTime           @default(now()) @db.Timestamp(6) /// 创建时间
-  updatedAt       DateTime           @updatedAt @db.Timestamp(6) /// 更新时间
+  createdAt       DateTime              @default(now()) @db.Timestamp(6) /// 创建时间
+  updatedAt       DateTime              @updatedAt @db.Timestamp(6) /// 更新时间
+  documentUpdate  GlazeDocumentUpdate[]
+}
+
+model GlazeDocumentUpdate {
+  id        BigInt       @id @default(autoincrement())
+  project   GlazeProject @relation(fields: [projectId], references: [id])
+  projectId Int
+  update    Bytes        @db.ByteA
+  createdAt DateTime     @default(now()) @db.Timestamp(6) /// 创建时间
+  updatedAt DateTime     @updatedAt @db.Timestamp(6) /// 更新时间
 }
 
 enum GlazeComponentType {

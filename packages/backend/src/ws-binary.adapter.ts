@@ -8,10 +8,11 @@ import {
 } from '@nestjs/websockets/constants'
 import { MessageMappingProperties } from '@nestjs/websockets/gateway-metadata-explorer'
 import * as http from 'http'
+import { decoding } from 'lib0'
 import { EMPTY, fromEvent, Observable } from 'rxjs'
 import { filter, first, mergeMap, share, takeUntil } from 'rxjs/operators'
-
-let wsPackage: any = {}
+import * as ws from 'ws'
+let wsPackage: typeof ws = {} as typeof ws
 
 enum READY_STATE {
   CONNECTING_STATE = 0,
@@ -23,7 +24,7 @@ enum READY_STATE {
 type HttpServerRegistryKey = number
 type HttpServerRegistryEntry = any
 type WsServerRegistryKey = number
-type WsServerRegistryEntry = any[]
+type WsServerRegistryEntry = ws.Server[]
 
 const UNDERLYING_HTTP_SERVER_PORT = 0
 
@@ -99,7 +100,7 @@ export class WsBinaryAdapter extends AbstractWsAdapter {
   }
 
   public bindMessageHandlers (
-    client: any,
+    client: ws.WebSocket,
     handlers: MessageMappingProperties[],
     transform: (data: any) => Observable<any>
   ) {
@@ -116,7 +117,7 @@ export class WsBinaryAdapter extends AbstractWsAdapter {
       if (client.readyState !== READY_STATE.OPEN_STATE) {
         return
       }
-      client.send(JSON.stringify(response))
+      client.send(response)
     }
     source$.subscribe(onMessage)
   }
@@ -127,22 +128,26 @@ export class WsBinaryAdapter extends AbstractWsAdapter {
     transform: (data: any) => Observable<any>
   ): Observable<any> {
     try {
-      const message = JSON.parse(buffer.data)
+      const decoder = decoding.createDecoder(new Uint8Array(buffer.data))
+      const event = decoding.readVarUint(decoder)
+
       const messageHandler = handlers.find(
-        handler => handler.message === message.event
+        handler => handler.message === event
       )
       const { callback } = messageHandler !
-      return transform(callback(message.data))
-    } catch {
+      return transform(callback(decoder))
+    } catch (e) {
+      this.logger.error(e)
       return EMPTY
     }
   }
 
-  public bindErrorHandler (server: any) {
+  public bindErrorHandler (server: ws.Server) {
     server.on(CONNECTION_EVENT, (ws: any) =>
       ws.on(ERROR_EVENT, (err: any) => this.logger.error(err))
     )
     server.on(ERROR_EVENT, (err: any) => this.logger.error(err))
+
     return server
   }
 
@@ -177,7 +182,7 @@ export class WsBinaryAdapter extends AbstractWsAdapter {
       let isRequestDelegated = false
       for (const wsServer of wsServersCollection ?? []) {
         if (pathname === wsServer.path) {
-          wsServer.handleUpgrade(request, socket, head, (ws: unknown) => {
+          wsServer.handleUpgrade(request, socket, head, (ws) => {
             wsServer.emit('connection', ws, request)
           })
           isRequestDelegated = true
@@ -191,8 +196,8 @@ export class WsBinaryAdapter extends AbstractWsAdapter {
     return httpServer
   }
 
-  protected addWsServerToRegistry<T extends Record<'path', string> = any> (
-    wsServer: T,
+  protected addWsServerToRegistry (
+    wsServer: ws.Server,
     port: number,
     path: string
   ) {

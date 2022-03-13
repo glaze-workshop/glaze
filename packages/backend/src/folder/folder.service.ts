@@ -38,9 +38,7 @@ export class FolderService {
         id: folderId
       },
       include: {
-        projects: {
-          select: this.projectService.generateSelect()
-        },
+        projects: true,
         team: true
       }
     })

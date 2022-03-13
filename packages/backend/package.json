@@ -32,12 +32,13 @@
     "@nestjs/core": "^8.2.6",
     "@nestjs/jwt": "^8.0.0",
     "@nestjs/passport": "^8.2.1",
-    "@nestjs/platform-express": "^8.3.1",
+    "@nestjs/platform-fastify": "^8.4.0",
     "@nestjs/websockets": "^8.4.0",
     "@prisma/client": "^3.10.0",
     "bcrypt": "^5.0.1",
     "passport": "^0.5.2",
     "passport-jwt": "^4.0.0",
+    "query-string": "^7.1.1",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^7.5.2",
@@ -50,6 +51,7 @@
     "@types/bcrypt": "^5.0.0",
     "@types/passport-jwt": "^3.0.6",
     "@types/supertest": "^2.0.11",
+    "@types/ws": "^8.5.2",
     "liquibase": "^4.4.0",
     "prettier": "^2.5.1",
     "prisma": "^3.10.0",
@@ -58,7 +60,7 @@
     "supertest": "^6.2.2",
     "ts-loader": "^9.2.6",
     "tsconfig-paths": "^3.12.0",
-    "typescript": "^4.5.5"
+    "typescript": "^4.6.2"
   },
   "jest": {
     "moduleFileExtensions": [
