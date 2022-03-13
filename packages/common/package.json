@@ -13,18 +13,28 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "path-to-regexp": "^3.0.0"
+    "path-to-regexp": "^3.0.0",
+    "tiny-emitter": "^2.1.0",
+    "uuid": "^8.3.2",
+    "ws": "^8.5.0"
   },
   "devDependencies": {
     "@glaze/bundler": "workspace:*",
+    "@types/uuid": "^8.3.4",
     "i18next": "^21.6.7",
     "msw": "^0.36.7",
     "yup": "^0.32.11"
   },
   "peerDependencies": {
+    "axios": ">=0.26",
     "i18next": ">=21.5.2",
     "msw": ">=0.35.0",
-    "yup": ">=0.32.11",
-    "axios": ">=0.26"
+    "yup": ">=0.32.11"
+  },
+  "eslintConfig": {
+    "rules": {
+      "space-before-function-paren": "warn",
+      "indent": "warn"
+    }
   }
 }

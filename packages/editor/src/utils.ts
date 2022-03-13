@@ -6,16 +6,21 @@ import { cloneDeep } from 'lodash'
 import webpackBaseConfig from '../webpack.config.base'
 import { EditorWebSocketResponse } from './routers/type'
 
-/**
- * Return JSON.parse result
- * or origin input otherwise
- */
-export const tryParse = (s: string) => {
+export const tryParse = (s: string): any => {
   try {
     return JSON.parse(s)
   } catch (e) {
-    console.error(e)
-    return s
+    console.log('tryParse fail', e)
+    return null
+  }
+}
+
+export const tryStringify = (data: any): string => {
+  try {
+    return JSON.stringify(data)
+  } catch (e) {
+    console.log('tryStringify fail', e)
+    return ''
   }
 }
 
@@ -26,7 +31,9 @@ export const Log = {
   ws: debug('router:ws'),
   center: debug('center'),
   webpack: debug('center:webpack'),
-  monitor: debug('center:monitor')
+  monitor: debug('center:monitor'),
+  connection: debug('lcp:connection'),
+  server: debug('lcp:server')
 }
 
 /**

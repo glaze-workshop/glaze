@@ -1,4 +1,3 @@
-
 import './yup.init'
 
 export * as GlazeI18n from './i18n.init'
@@ -26,4 +25,8 @@ export * as SelfApi from './self/self.api'
 export * as Entity from './entity'
 export * as ResType from './res.types'
 
-export * as EditorType from './editor/editor.type'
+export * from './editor/editor.type'
+export * from './editor/lcp.type'
+export { default as LCPSocket } from './editor/LCPSocket'
+export { default as LCPClient } from './editor/LCPClient'
+// export { default as LCPServer } from './editor/LCPServer'
