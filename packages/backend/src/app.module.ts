@@ -1,5 +1,4 @@
-import { DocService } from './project/doc.service'
-import { DocGateway } from './project/doc.gateway'
+import { DocModule } from './doc/doc.module'
 import { FolderModule } from './folder/folder.module'
 import { ProjectModule } from './project/project.module'
 import { SelfModule } from './self/self.module'
@@ -12,10 +11,11 @@ import { AuthModule } from './auth/auth.module'
 import { Module } from '@nestjs/common'
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
-import { JwtModule } from '@nestjs/jwt'
 import { ConfigModule } from '@nestjs/config'
+
 @Module({
   imports: [
+    DocModule,
     FolderModule,
     ProjectModule,
     SelfModule,
@@ -26,8 +26,6 @@ import { ConfigModule } from '@nestjs/config'
     AuthModule],
   controllers: [AppController],
   providers: [
-    DocService,
-    DocGateway,
     {
       provide: APP_FILTER,
       useClass: AllExceptionsFilter

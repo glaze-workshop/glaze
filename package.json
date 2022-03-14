@@ -14,7 +14,10 @@
     "build:bundler": "pnpm build --filter \"*bundler\"",
     "prisma:generate": "pnpm prisma:generate --filter \"*backend\"",
     "prisma:push": "pnpm prisma:push --filter \"*backend\"",
-    "nginx": "nginx -p"
+    "caddy:run": "caddy run --config Caddyfile --watch"
+  },
+  "config": {
+    "nginx_config": "${pwd}/nginx_config"
   },
   "author": "",
   "license": "ISC",
@@ -42,6 +45,8 @@
     "@typescript-eslint/eslint-plugin": "^5.12.0",
     "@typescript-eslint/parser": "^5.12.0",
     "commander": "^8.3.0",
+    "cross-var": "^1.1.0",
+    "esbuild": "^0.14.25",
     "eslint": "^7.32.0",
     "eslint-config-standard": "^16.0.3",
     "eslint-plugin-import": "^2.25.4",
