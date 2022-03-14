@@ -1,0 +1,22 @@
+localhost {
+	log {
+		output stdout
+		format json
+	}
+	reverse_proxy 127.0.0.1:8888
+	handle /api/* {
+		reverse_proxy 127.0.0.1:3000
+	}
+}
+
+*.preview.localhost {
+	encode gzip
+	uri path_regexp /.* /doc/preview/{labels.2}
+	reverse_proxy 127.0.0.1:3000
+}
+
+*.file.localhost {
+	encode gzip
+	root packages/{labels.2}/dist
+	file_server browse
+}

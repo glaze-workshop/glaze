@@ -33,7 +33,7 @@ export class DocService {
     } else {
       const doc = new WSSharedDoc(projectId, this)
       this.docMap.set(projectId, doc)
-      const fullDocumentUpdate = await this.getFullDocument(projectId)
+      const [fullDocumentUpdate] = await this.getFullDocument(projectId)
       Y.applyUpdate(doc, fullDocumentUpdate, 'database')
       return doc
     }
@@ -48,7 +48,7 @@ export class DocService {
     })
   }
 
-  async getFullDocument (projectId: number) {
+  async getFullDocument (projectId: number): Promise<[Uint8Array, Y.Doc]> {
     return this.prisma.$transaction(async (prisma) => {
       const fullDocUpdates = await prisma.glazeDocumentUpdate.findMany({
         where: { project: { id: projectId } }
@@ -63,9 +63,7 @@ export class DocService {
 
       const encodedUpdates = Y.encodeStateAsUpdate(dbYDoc)
 
-      if (fullDocUpdates.length <= 10) {
-        return encodedUpdates
-      } else {
+      if (fullDocUpdates.length > 10) {
         await prisma.glazeDocumentUpdate.deleteMany({ where: { id: { in: fullDocUpdates.map(u => u.id) } } })
         await prisma.glazeDocumentUpdate.create({
           data: {
@@ -73,8 +71,8 @@ export class DocService {
             update: Buffer.from(encodedUpdates)
           }
         })
-        return encodedUpdates
       }
+      return [encodedUpdates, dbYDoc]
     }, {
       maxWait: 5000, // default: 2000
       timeout: 10000 // default: 5000
