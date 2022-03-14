@@ -1,5 +1,5 @@
 import React, { FC, memo, useState } from 'react'
-import { Flex } from '@chakra-ui/react'
+import { Box, Flex } from '@chakra-ui/react'
 import { icons } from './icon'
 import { menus } from '../../../../schema/fields/index'
 import cl from 'classnames'
@@ -24,10 +24,10 @@ const LeftBar: FC<LeftBarProps> = () => {
               justifyContent="center"
               _hover={{
                 opacity: '50%',
-                backgroundColor: 'rgba(59,130,246,0.5)',
+                backgroundColor: '#d0d9eb7e'
               }}
               className={cl('cursor-pointer border-transparent border-r-4', {
-                'border-indigo-600 shadow': key === type,
+                'border-indigo-600 shadow': key === type
               })}
             >
               <MenuIcon active={key === type} />
@@ -35,6 +35,9 @@ const LeftBar: FC<LeftBarProps> = () => {
           )
         })}
       </Flex>
+      <Box w="70%" padding="10px 0">
+        {fields?.panel}
+      </Box>
     </Flex>
   )
 }
