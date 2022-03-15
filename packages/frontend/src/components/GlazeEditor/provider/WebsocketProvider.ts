@@ -193,7 +193,7 @@ export class WebSocketProvider extends Observable<string> {
     serverUrl: string,
     room: string,
     doc: Y.Doc,
-    { connect = true, awareness = new awarenessProtocol.Awareness(doc), params = {}, resyncInterval = -1 } = {}) {
+    { connect = true, awareness = new awarenessProtocol.Awareness(doc), params = {}, resyncInterval = 2000 } = {}) {
     super()
     // ensure that url is always ends with /
     while (serverUrl[serverUrl.length - 1] === '/') {

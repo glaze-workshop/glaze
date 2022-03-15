@@ -1,8 +1,5 @@
 localhost {
-	log {
-		output stdout
-		format json
-	}
+
 	reverse_proxy 127.0.0.1:8888
 	handle /api/* {
 		reverse_proxy 127.0.0.1:3000

@@ -5,7 +5,8 @@ import React, { FC, memo, useEffect, useRef } from 'react'
 import EditorContent from './EditorContent'
 import EditorUpper from './EditorUpper'
 import { EditorPositionSubject, useProjectIdChange } from './state'
-const zoom = new Zoom()
+
+export const zoom = new Zoom()
 
 export interface GlazeEditorProps {
 
