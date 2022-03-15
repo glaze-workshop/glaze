@@ -1,7 +1,7 @@
 import { WebSocket } from 'ws'
 import { HeartbeatHandler, LCPSocketSubscriber, LCPSocketMessage } from '@glaze/common'
 
-import { Log, tryParse, tryStringify } from '../utils'
+import { Log, tryParse, tryStringify } from '../../utils'
 import SimpleHeartbeatHandler from './SimpleHeartbeatHandler'
 
 class LCPConnection {

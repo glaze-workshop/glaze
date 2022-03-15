@@ -52,7 +52,8 @@ export interface LCPClientMessage<P = any> {
 }
 
 export interface LCPClientReceiver {
-  (success: boolean, data: any): any
+  retry: () => void
+  response: (success: boolean, data: any) => any
 }
 
 export interface LCPSubscribeResponse {

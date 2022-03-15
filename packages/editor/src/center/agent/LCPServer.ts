@@ -7,8 +7,8 @@ import {
 } from '@glaze/common'
 import { v4 as UuidV4 } from 'uuid'
 
-import { Log } from '../utils'
-import { LCPServerSubscribeInfo } from './type'
+import { Log } from '../../utils'
+import { LCPServerSubscribeInfo } from '../type'
 import LCPConnection from './LCPConnection'
 
 class LCPServer {
@@ -26,15 +26,24 @@ class LCPServer {
     })
 
     connection.onClose(() => {
+      this.removeConnection(connection)
       this.connections--
-      Log.server(`connection closed: ${this.connections}`)
+      Log.server(`connection closed: ${this.connections}`, this.subscribeMap)
     })
 
     this.connections++
     Log.server(`add connections: ${this.connections}`)
   }
 
-  removeConnection(connection: LCPConnection) {}
+  removeConnection(connection: LCPConnection) {
+    for (const subscribeSet of this.subscribeMap.values()) {
+      for (const sub of [...subscribeSet]) {
+        if (sub.connection === connection) {
+          subscribeSet.delete(sub)
+        }
+      }
+    }
+  }
 
   /**
    * Dispatch message from connection
@@ -112,7 +121,8 @@ class LCPServer {
       connection,
       path,
       uuid: publishId,
-      params
+      params,
+      seq: 0
     })
 
     this.sendMessage<LCPSubscribeResponse>(connection, {
@@ -162,7 +172,23 @@ class LCPServer {
     })
   }
 
-  publish<P>(path: P | string, data: any) {}
+  publish<P>(path: string, data: any) {
+    const subscribeSet = this.subscribeMap.get(path)
+    if (subscribeSet) {
+      subscribeSet.forEach((subscribeInfo) => {
+        const { connection, uuid, seq } = subscribeInfo
+        const nextSeq = seq + 1
+        this.sendMessage(connection, {
+          uuid,
+          seq: nextSeq,
+          success: true,
+          data
+        })
+
+        subscribeInfo.seq = nextSeq // update seq
+      })
+    }
+  }
 }
 
 export default LCPServer

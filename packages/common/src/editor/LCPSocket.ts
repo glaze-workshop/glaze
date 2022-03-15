@@ -13,7 +13,7 @@ const LOG_PREFIX = '[LCPSocket]'
 
 const Log = {
   log(...args: any[]) {
-    console.log(LOG_PREFIX, ...args)
+    // console.log(LOG_PREFIX, ...args)
   },
   error(...args: any[]) {
     console.error(LOG_PREFIX, ...args)
@@ -26,6 +26,7 @@ class LCPSocket {
   private interval: number
 
   private ws: WebSocket
+  private openCount: number = 0
   private state: LCPSocketState = LCPSocketState.Closed
   private subscribers: Set<LCPSocketSubscriber> = new Set()
   private waitingTasks: (() => void)[] = []
@@ -35,7 +36,7 @@ class LCPSocket {
     this.url = url
 
     this.setHeartbeat(heartbeat, heartbeatInterval)
-    this.openWs()
+    this.open()
   }
 
   private setHeartbeat(
@@ -63,22 +64,24 @@ class LCPSocket {
 
       this.heartbeatTimeout = window.setTimeout(() => {
         // timeout
-        Log.error('heartbeat timeout error, close immediately')
-        this.close()
+        Log.error('heartbeat timeout error, reopen immediately')
+        this.close(true)
       }, 30 * 1000) // timeout in 30s
     }
   }
 
-  private openWs() {
+  open() {
     if (this.state !== LCPSocketState.Closed) {
       // WebSocket already open
       return
     }
     const ws = (this.ws = new WebSocket(this.url))
     this.state = LCPSocketState.Create
+    this.openCount++
+    Log.log(`open ${this.openCount}`)
 
     ws.addEventListener('open', (e) => {
-      Log.log('[LCPSocket] on open', e)
+      Log.log('on open', e)
       this.state = LCPSocketState.Ready
       this.flushTasks() // flush task pushed before Ready
     })
@@ -108,7 +111,7 @@ class LCPSocket {
               }, this.interval)
             } else {
               // heartbeat check fail
-              // => throw and open
+              // => throw and close
               Log.error('heartbeat check fail, data:', data)
               this.close()
             }
@@ -140,14 +143,19 @@ class LCPSocket {
     this.nextHeartbeat()
   }
 
-  close() {
+  close(reopen: boolean = false) {
     clearTimeout(this.heartbeatTimeout) // clear either heartbeat request & timeout
 
     if (this.ws && this.ws.readyState === WebSocket.OPEN) {
       this.ws.close()
     }
 
-    this.state = LCPSocketState.Closed
+    if (reopen) {
+      this.open()
+    } else {
+      this.state = LCPSocketState.Closed
+    }
+    this.closeListeners.forEach((listener) => listener(reopen))
   }
 
   private flushTasks() {
@@ -166,17 +174,16 @@ class LCPSocket {
       return
     }
 
-    // 2. Closed  => re-open
-    if (this.state === LCPSocketState.Closed) {
-      // re-open WebSocket connection
-      this.close()
-      this.openWs()
-    }
-
-    // 3. Create => push waiting task queue until opened
+    // 2. Create => push waiting task queue until opened
     this.waitingTasks.push(() => {
       this.ws.send(raw)
     })
+
+    // 3. Closed  => re-open
+    if (this.state === LCPSocketState.Closed) {
+      // re-open WebSocket connection
+      this.close(true)
+    }
   }
 
   /**
@@ -193,6 +200,21 @@ class LCPSocket {
       }
 
       this.subscribers.delete(subscriber)
+      unsubscribed = true
+    }
+  }
+
+  private closeListeners: Set<(reopen: boolean) => void> = new Set()
+  onClose(cb: (reopen: boolean) => void): () => void {
+    this.closeListeners.add(cb)
+
+    let unsubscribed = false
+    return () => {
+      if (unsubscribed) {
+        return
+      }
+
+      this.closeListeners.delete(cb)
       unsubscribed = true
     }
   }

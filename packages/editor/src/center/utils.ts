@@ -5,9 +5,7 @@ import path from 'path'
  */
 export const isComponentDir = (root: string, target: string): boolean => {
   const relative = path.relative(root, target)
-  return (
-    !!relative && !relative.includes(path.sep) && path.extname(target) === ''
-  )
+  return !!relative && !relative.includes(path.sep) && path.extname(target) === ''
 }
 
 /**
