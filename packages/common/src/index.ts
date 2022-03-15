@@ -1,4 +1,3 @@
-
 import './yup.init'
 
 export * as GlazeI18n from './i18n.init'
@@ -27,3 +26,8 @@ export * as Entity from './entity'
 export * as ResType from './res.types'
 
 export * from './websocket/event'
+
+export * from './editor/editor.type'
+export * from './editor/lcp.type'
+export { default as LCPSocket } from './editor/LCPSocket'
+export { default as LCPClient } from './editor/LCPClient'
