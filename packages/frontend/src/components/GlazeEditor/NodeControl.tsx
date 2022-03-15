@@ -4,7 +4,7 @@ import React, { FC, memo, useCallback, useMemo, useRef } from 'react'
 import { map } from 'rxjs'
 import * as Y from 'yjs'
 import { LayoutConfig } from '../../schema/layout'
-import { AllComponentsSubject, SelectedNodeInfoSubject } from './state'
+import { AllComponentsSubject, SelectedNodeInfoSubject, useNodeInfoObserve } from './state'
 import { NodeProxy, StructureProxy, useNodeLayout, useYjsMapProxy, useYjsRerender } from './yjs.hook'
 import { editorSharedDocument } from './EditorSharedDocument'
 
@@ -25,6 +25,7 @@ function NodeControl ({ nodeInfo, structureInfo, parentStructureInfo }: NodeCont
   const wrapperRef = useRef<HTMLDivElement>(null)
 
   useYjsRerender(nodeInfo, nodeProxy.layout, nodeProxy.props, structureProxy.children)
+  useNodeInfoObserve(nodeProxy, structureProxy, wrapperRef, parentStructureInfo)
 
   const componentObservable = useMemo(() =>
     AllComponentsSubject.pipe(map(components => components.get(nodeProxy.componentId))), [nodeProxy.componentId])
@@ -35,14 +36,9 @@ function NodeControl ({ nodeInfo, structureInfo, parentStructureInfo }: NodeCont
   const handleWrapperClick: React.MouseEventHandler<HTMLDivElement> = useCallback((e) => {
     e.stopPropagation()
     if (wrapperRef.current) {
-      SelectedNodeInfoSubject.next({
-        nodeProxy,
-        parentStructureInfo,
-        structureProxy,
-        wrapper: wrapperRef.current
-      })
+      SelectedNodeInfoSubject.next(nodeProxy.id)
     }
-  }, [nodeProxy, parentStructureInfo, structureProxy])
+  }, [nodeProxy])
 
   return (
     <NodeControlWrapper ref={wrapperRef} style={layoutStyle} onClick={handleWrapperClick}>

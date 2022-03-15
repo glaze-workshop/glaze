@@ -43,7 +43,7 @@ function GlazeNodeWrapper ({ nodeInfo, structureInfo, enableLayout }: GlazeNodeW
         <GlazeNodeWrapper
           key={child.nodeId}
           nodeInfo={window.GLAZE_NODES[child.nodeId]}
-          structureInfo={structureInfo}
+          structureInfo={child}
           enableLayout />
       ))}
     </CurrentComponent>

@@ -3,10 +3,10 @@ const glazeConfig = {
   port: 8888,
   proxy: {
     '/api': {
-      target: 'http://localhost:3000'
+      target: 'http://127.0.0.1:3000'
     },
     '/ws-doc': {
-      target: 'ws://localhost:3000',
+      target: 'ws://127.0.0.1:3000',
       ws: true
     }
   }
