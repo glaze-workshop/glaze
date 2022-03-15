@@ -1,9 +1,7 @@
-import { Box, Flex } from '@chakra-ui/react'
-import { SelfApi } from '@glaze/common'
-import React, { FC, useEffect } from 'react'
-import { useQuery } from 'react-query'
+import React, { FC } from 'react'
 import { Outlet } from 'react-router-dom'
-import { useCurrentUser, useUserTeams } from '../../hooks/self.hook'
+import { Box, Flex } from '@chakra-ui/react'
+
 import SideBar from './components/SideBar'
 
 const Home:FC = () => {

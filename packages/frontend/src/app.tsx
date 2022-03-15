@@ -10,6 +10,13 @@ import './mocks/init'
 import { BrowserRouter } from 'react-router-dom'
 import { ReactQueryDevtools } from 'react-query/devtools'
 
+import 'systemjs'
+
+// eslint-disable-next-line no-undef
+System.set('app:react', { default: React, __useDefault: true })
+// eslint-disable-next-line no-undef
+System.set('app:react-dom', { default: ReactDOM, __useDefault: true })
+
 GlazeI18n.initI18n(initReactI18next)
 
 const queryClient = new QueryClient()

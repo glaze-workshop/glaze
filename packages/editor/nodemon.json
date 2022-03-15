@@ -1,0 +1,4 @@
+{
+  "ext": "js,mjs,ts,json",
+  "ignore": ["src/components/**", "lib/**"]
+}
