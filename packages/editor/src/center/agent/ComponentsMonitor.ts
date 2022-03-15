@@ -1,9 +1,9 @@
 import chokidar from 'chokidar'
 import path from 'path'
 
-import { Log } from '../utils'
-import { ComponentsMonitorCallback, ComponentsMonitorEvent, ComponentsMonitorEventType } from './type'
-import { belongsTo, isComponentDir } from './utils'
+import { Log } from '../../utils'
+import { ComponentsMonitorCallback, ComponentsMonitorEvent, ComponentsMonitorEventType } from '../type'
+import { belongsTo, isComponentDir } from '../utils'
 
 class ComponentsMonitor {
   root: string
@@ -136,18 +136,22 @@ class ComponentsMonitor {
     }
   }
 
-  on(type: ComponentsMonitorEventType, cb: ComponentsMonitorCallback) {
+  on(type: ComponentsMonitorEventType, cb: ComponentsMonitorCallback): () => void {
     this.getListeners(type).add(cb)
-    return this
+
+    let unsubscribed = false
+    return () => {
+      if (unsubscribed) {
+        return
+      }
+
+      this.getListeners(type).delete(cb)
+      unsubscribed = true
+    }
   }
 
-  off(type: ComponentsMonitorEventType, cb: ComponentsMonitorCallback) {
-    this.getListeners(type).delete(cb)
-    return this
-  }
-
-  emit(type: ComponentsMonitorEventType, componentName?: string) {
-    const event = new ComponentsMonitorEvent(type, componentName)
+  private emit(type: ComponentsMonitorEventType, componentName?: string) {
+    const event: ComponentsMonitorEvent = { type, componentName }
 
     this.getListeners(type).forEach((cb) => {
       cb(event)

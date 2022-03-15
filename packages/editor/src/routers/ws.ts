@@ -1,6 +1,6 @@
 import express from 'express'
 
-import LCPConnection from '../center/LCPConnection'
+import LCPConnection from '../center/agent/LCPConnection'
 import { server } from '../center'
 
 const wsRouter = express.Router()

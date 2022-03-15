@@ -1,9 +1,6 @@
 import debug from 'debug'
 import { WebSocket } from 'ws'
-import webpack from 'webpack'
-import { cloneDeep } from 'lodash'
 
-import webpackBaseConfig from '../webpack.config.base'
 import { EditorWebSocketResponse } from './routers/type'
 
 export const tryParse = (s: string): any => {
@@ -32,6 +29,7 @@ export const Log = {
   center: debug('center'),
   webpack: debug('center:webpack'),
   monitor: debug('center:monitor'),
+  components: debug('center:components'),
   connection: debug('lcp:connection'),
   server: debug('lcp:server')
 }
@@ -47,9 +45,4 @@ export const sendMessage = (ws: WebSocket, response: EditorWebSocketResponse): b
   } catch (e) {
     return false
   }
-}
-
-export const getWebpackBaseConfig = (): webpack.Configuration => {
-  // @ts-ignore
-  return cloneDeep(webpackBaseConfig)
 }

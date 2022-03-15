@@ -13,7 +13,7 @@ const LOG_PREFIX = '[LCPClient]'
 
 const Log = {
   log(...args: any[]) {
-    console.log(LOG_PREFIX, ...args)
+    // console.log(LOG_PREFIX, ...args)
   },
   error(...args: any[]) {
     console.error(LOG_PREFIX, ...args)
@@ -25,6 +25,7 @@ const REQUEST_TIMEOUT = 60 * 1000 // request timeout in 1min
 class LCPClient {
   private socket: LCPSocket
   private requestMap: Map<string, LCPClientReceiver> = new Map()
+  private subscribeCount: number = 0
 
   constructor(options: LCPClientOptions | LCPSocket) {
     this.socket = options instanceof LCPSocket ? options : options.socket
@@ -32,11 +33,22 @@ class LCPClient {
     this.socket.onMessage((data) => {
       this.dispatchMessage(data)
     })
+
+    this.socket.onClose((reopen) => {
+      if (this.subscribeCount > 0 && !reopen) {
+        setTimeout(() => {
+          this.socket.open()
+          this.requestMap.forEach(({ retry }) => {
+            retry()
+          })
+        }, 3 * 1000) // reopen in 2s
+      }
+    })
   }
 
   private dispatchMessage({ uuid, seq, success, data }: LCPServerMessage) {
     if (this.requestMap.has(uuid)) {
-      this.requestMap.get(uuid)?.(success, data)
+      this.requestMap.get(uuid)?.response(success, data)
     } else {
       Log.error(`No match request: ${uuid}-${seq}`, data)
     }
@@ -61,11 +73,16 @@ class LCPClient {
         reject(new Error('Request timeout'))
       }, REQUEST_TIMEOUT)
 
-      this.requestMap.set(reqId, (success, data) => {
-        clearTimeout(timeout)
-        this.requestMap.delete(reqId)
+      this.requestMap.set(reqId, {
+        retry: () => {
+          this.socket.sendMessage(message)
+        },
+        response: (success, data) => {
+          clearTimeout(timeout)
+          this.requestMap.delete(reqId)
 
-        success ? resolve(data) : reject(data)
+          success ? resolve(data) : reject(data)
+        }
       })
     })
   }
@@ -73,7 +90,7 @@ class LCPClient {
   /**
    * Internal request but ignore response
    */
-  private _send<T = any>(message: LCPClientMessage): void {
+  private _send(message: LCPClientMessage): void {
     this.socket.sendMessage(message)
   }
 
@@ -82,6 +99,7 @@ class LCPClient {
    * return Promise with single Response
    */
   request<T = any>(path: string, params?: any): Promise<T> {
+    Log.log(`Request ${path}`)
     return this._request({
       type: LCPMessageType.Request,
       path,
@@ -99,6 +117,7 @@ class LCPClient {
     params: any = undefined,
     onUpdate: (data: T) => void
   ): Promise<() => void> {
+    Log.log(`Subscribe ${path}`)
     return new Promise((resolve) => {
       this._request<LCPSubscribeResponse>({
         type: LCPMessageType.Subscribe,
@@ -107,13 +126,19 @@ class LCPClient {
         params
       }).then(({ success, subscribeId }) => {
         if (success) {
+          Log.log(`Subscribe ${path} success: ${subscribeId}`)
           // start listening
-          this.requestMap.set(
-            subscribeId,
-            (_ /* ignore internal success */, data: T) => {
+          this.requestMap.set(subscribeId, {
+            retry: () => {
+              unsubscribe()
+              this.subscribe(path, params, onUpdate)
+            },
+            response: (_ /* ignore internal success */, data: T) => {
+              Log.log(`on Subscribe ${path}`, data)
               onUpdate(data)
             }
-          )
+          })
+          this.subscribeCount++
 
           // unsubscribe method
           let unsubscribed = false
@@ -129,6 +154,7 @@ class LCPClient {
             })
 
             this.requestMap.delete(subscribeId)
+            this.subscribeCount--
             unsubscribed = true
           }
 

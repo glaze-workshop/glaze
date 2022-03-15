@@ -17,8 +17,12 @@ export enum EditorComponentState {
 export interface EditorComponentInfo {
   name: string
   state: EditorComponentState
-  sourcePath: string
   targetPath: string
+}
+
+export interface EditorComponentInfoInternal extends EditorComponentInfo {
+  sourcePath: string
+  compiler: any
 }
 
 // ...
