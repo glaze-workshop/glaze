@@ -75,7 +75,7 @@ export default class EditorSharedDocument {
     }
     console.log('createNodeByComponentId 2', SelectedNodeInfoSubject)
 
-    const selectedNodeSubject = AllNodeInfoObservableMap.getValueSubject(SelectedNodeInfoSubject.value)?.value
+    const selectedNodeSubject = SelectedNodeInfoSubject.value && AllNodeInfoObservableMap.getValueSubject(SelectedNodeInfoSubject.value)?.value
     // 选中节点
     if (selectedNodeSubject) {
       console.log('selectedNodeSubject', selectedNodeSubject)
