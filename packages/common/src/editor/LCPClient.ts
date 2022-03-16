@@ -1,12 +1,13 @@
 import { v4 as UuidV4 } from 'uuid'
+
 import {
   LCPClientMessage,
   LCPMessageType,
   LCPServerMessage,
-  LCPSubscribeResponse
-} from '..'
-
-import { LCPClientOptions, LCPClientReceiver } from './lcp.type'
+  LCPSubscribeResponse,
+  LCPClientOptions,
+  LCPClientReceiver
+} from './lcp.type'
 import LCPSocket from './LCPSocket'
 
 const LOG_PREFIX = '[LCPClient]'

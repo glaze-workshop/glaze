@@ -30,7 +30,9 @@ const GlazeEditor:FC<GlazeEditorProps> = () => {
 
   useEffect(() => {
     if (container.current) {
-      container.current.addEventListener('wheel', (event) => {
+      const el = container.current
+
+      const onWheel = (event: WheelEvent) => {
         event.preventDefault()
         const e = normalizeWheel(event)
         if (event.ctrlKey) {
@@ -43,7 +45,11 @@ const GlazeEditor:FC<GlazeEditorProps> = () => {
         } else {
           zoom.scrollY(e.pixelY * 0.3)
         }
-      })
+      }
+      el.addEventListener('wheel', onWheel)
+      return () => {
+        el.removeEventListener('wheel', onWheel)
+      }
     }
   }, [])
 
