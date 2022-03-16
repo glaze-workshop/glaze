@@ -1,11 +1,10 @@
-import { LCPSocketMessage } from '..'
 import { tryParse, tryStringify } from '../utils/json'
 import {
   HeartbeatTrigger,
-  LCPServerMessage,
   LCPSocketOptions,
   LCPSocketState,
-  LCPSocketSubscriber
+  LCPSocketSubscriber,
+  LCPSocketMessage
 } from './lcp.type'
 import SimpleHeartbeatTrigger from './SimpleHeartbeatTrigger'
 

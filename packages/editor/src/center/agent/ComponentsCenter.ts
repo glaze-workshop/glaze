@@ -12,6 +12,10 @@ class ComponentsCenter {
 
   removeComponent(name: string) {
     Log.components('remove', name)
+    const info = this.componentsMap.get(name)
+    info.compiler.close((err, _result) => {
+      Log.components(`compiler for ${name} closed`, err)
+    })
     this.componentsMap.delete(name)
     Log.components('current components', [...this.componentsMap.keys()])
   }

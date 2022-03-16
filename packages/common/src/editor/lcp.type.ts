@@ -1,4 +1,4 @@
-import { LCPSocket } from '..'
+import LCPSocket from './LCPSocket'
 
 // ========== Heartbeat ==========
 export interface HeartbeatTrigger<T = any, R = any> {
