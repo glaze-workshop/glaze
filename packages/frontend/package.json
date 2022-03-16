@@ -60,7 +60,8 @@
   "eslintConfig": {
     "rules": {
       "no-trailing-spaces": "warn",
-      "comma-dangle": "warn"
+      "comma-dangle": "warn",
+      "space-before-function-paren": "warn"
     }
   }
 }

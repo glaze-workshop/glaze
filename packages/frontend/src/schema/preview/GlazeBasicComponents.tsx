@@ -1,8 +1,8 @@
 import React from 'react'
-import { GlazeDiv } from '../../components/GlazeDiv'
+import GlazeDiv from '../../components/BasicComponents/Div'
 
 const previewGBCFields = {
-  div: (props: any) => <GlazeDiv props={props} />
+  div: () => <GlazeDiv />
 }
 
 export default previewGBCFields
