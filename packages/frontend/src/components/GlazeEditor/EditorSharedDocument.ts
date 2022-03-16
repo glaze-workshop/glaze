@@ -56,6 +56,7 @@ export default class EditorSharedDocument {
 
   createNodeByComponentId = (componentId: string) => {
     const { component, config } = AllComponentsSubject.value.get(componentId) ?? {}
+    console.log('createNodeByComponentId 1', config)
     if (componentId === BasicComponentId.Screen && config) {
       const leftMax = this.structureTree.toArray().map((item) => {
         const node = this.mapStructureTreeNodeToNode(item)
@@ -72,7 +73,7 @@ export default class EditorSharedDocument {
         type: [PositionType.LEFT, PositionType.TOP]
       })
     }
-
+    console.log('createNodeByComponentId 2', SelectedNodeInfoSubject)
     // 选中节点
     if (SelectedNodeInfoSubject.value) {
       const { nodeProxy, parentStructureInfo, structureProxy } = SelectedNodeInfoSubject.value
@@ -101,7 +102,6 @@ export default class EditorSharedDocument {
             type: [PositionType.LEFT, PositionType.TOP]
           }
         }
-
         this.createNode(config,
           selectedComponentConfig.hasChildren ? structureProxy.yNode : parentStructureInfo,
           calculatePosition())

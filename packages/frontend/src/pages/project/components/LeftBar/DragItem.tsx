@@ -3,6 +3,8 @@ import { FieldNode } from '../../../../schema/config'
 import { Box } from '@chakra-ui/react'
 import cl from 'classnames'
 import { Rnd } from 'react-rnd'
+import { BasicComponentId } from '../../../../components/BasicComponents/basicComponentInfo'
+import { editorSharedDocument } from '../../../../components/GlazeEditor/EditorSharedDocument'
 
 export interface DragItemProps {
   fieldItem: FieldNode
@@ -10,6 +12,10 @@ export interface DragItemProps {
 
 const DragItem: FC<DragItemProps> = ({ fieldItem }: DragItemProps) => {
   const [isDragging, setIsDragging] = useState(false)
+
+  const handleCreate = (id: BasicComponentId) => {
+    editorSharedDocument.createNodeByComponentId(id)
+  }
 
   return (
     <Rnd
@@ -20,7 +26,10 @@ const DragItem: FC<DragItemProps> = ({ fieldItem }: DragItemProps) => {
         height: '40px'
       }}
       onDrag={(e) => e && setIsDragging(true)}
-      onDragStop={(e) => e && setIsDragging(false)}
+      onDragStop={(e) => {
+        setIsDragging(false)
+        handleCreate(BasicComponentId.Div)
+      }}
     >
       <Box
         display="flex"
