@@ -43,6 +43,11 @@ class ComponentsCenter {
   /**
    * Single Component
    */
+  getComponentInfo(name: string): EditorComponentInfo {
+    const { state, targetPath } = this.componentsMap.get(name)
+    return { name, state, targetPath }
+  }
+
   getComponentInfoDetail(name: string): EditorComponentInfoInternal {
     return this.componentsMap.get(name)
   }

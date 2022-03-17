@@ -44,7 +44,7 @@ export interface LCPClientOptions {
   socket: LCPSocket
 }
 
-export interface LCPClientMessage<P = any> {
+export interface LCPClientMessage<P = string> {
   type: LCPMessageType // request type
   path: P | string // request target
   uuid: string // reqId
