@@ -9,7 +9,7 @@ import LCPServer from './agent/LCPServer'
 import ComponentsController from './agent/ComponentsController'
 import ComponentsMonitor from './agent/ComponentsMonitor'
 import ComponentsCenter from './agent/ComponentsCenter'
-import { createComponentCompiler } from './webpackUtils'
+import { componentTargetPath, createComponentCompiler } from './webpackUtils'
 
 export const server = new LCPServer(new ComponentsController())
 
@@ -29,7 +29,7 @@ monitor.on(ComponentsMonitorEventType.Create, (e) => {
       const newInfo = {
         ...componentInfo,
         state: EditorComponentState.Ready,
-        targetPath: `${componentStaticPrefix}/${name}/${name}-${hash}.js`
+        targetPath: componentTargetPath(name, hash)
       }
 
       Log.center(`compiler onUpdate: ${name}`, newInfo.targetPath)
@@ -41,7 +41,8 @@ monitor.on(ComponentsMonitorEventType.Create, (e) => {
        *   ComponentList
        *   Component_A
        */
-      server.publish<EditorSubscribeType>(EditorSubscribeType.ComponentList, componentsCenter.getComponentsList())
+      server.publish(EditorSubscribeType.Component(name), componentsCenter.getComponentInfo(name))
+      server.publish(EditorSubscribeType.ComponentList, componentsCenter.getComponentsList())
     }, 500) // update delay
   })
 
@@ -59,7 +60,7 @@ monitor.on(ComponentsMonitorEventType.Create, (e) => {
    * Update:
    *   ComponentList
    */
-  server.publish<EditorSubscribeType>(EditorSubscribeType.ComponentList, componentsCenter.getComponentsList())
+  server.publish(EditorSubscribeType.ComponentList, componentsCenter.getComponentsList())
 })
 
 monitor.on(ComponentsMonitorEventType.Remove, (e) => {
@@ -74,20 +75,5 @@ monitor.on(ComponentsMonitorEventType.Remove, (e) => {
    *   ComponentList
    *   Component_X
    */
-  server.publish<EditorSubscribeType>(EditorSubscribeType.ComponentList, componentsCenter.getComponentsList())
+  server.publish(EditorSubscribeType.ComponentList, componentsCenter.getComponentsList())
 })
-
-// monitor.on(ComponentsMonitorEventType.Update, (e) => {
-//   Log.center(`update component: ${e.componentName}`, e)
-
-//   const name = e.componentName as string
-
-//   const info = this.componentsMap.get(name)
-//   info.state = ComponentState.Updating
-
-//   this.notify({
-//     type: EditorCenterEventType.ComponentUpdate,
-//     componentName: name
-//   })
-//   server.publish<EditorSubscribeType>(EditorSubscribeType.ComponentList, [...componentsMap.values()])
-// })

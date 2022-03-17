@@ -1,10 +1,14 @@
 // ========== Component 相关 ==========
-export enum EditorRequestType {
-  ComponentList = 'EDITOR_REQUEST_COMPONENTLIST'
+export const EditorRequestType = {
+  ComponentList: 'EDITOR_REQUEST_COMPONENTLIST',
+  Component: (componentName: string) =>
+    `EDITOR_REQUEST_COMPONENT_${componentName}`
 }
 
-export enum EditorSubscribeType {
-  ComponentList = 'EDITOR_SUBSCRIBE_COMPONENTLIST'
+export const EditorSubscribeType = {
+  ComponentList: 'EDITOR_SUBSCRIBE_COMPONENTLIST',
+  Component: (componentName: string) =>
+    `EDITOR_SUBSCRIBE_COMPONENT_${componentName}`
 }
 
 export enum EditorComponentState {

@@ -8,6 +8,7 @@ import {
 } from '@glaze/common'
 import React, { useEffect, useRef, useState } from 'react'
 
+import { Log } from '../../../utils/log'
 import { AllComponentsSubject } from '../state'
 import { CustomComponentInfo, CustomComponentMeta } from './type'
 import {
@@ -52,35 +53,36 @@ export const useCustomComponent = (componentName: string) => {
   useEffect(() => {
     const client = getEditorClient()
 
-    const loadComponent = (componentList: EditorComponentInfo[]) => {
-      console.log('componentList', componentList)
-      const componentInfo = componentList.filter(
-        (component) => component.name === componentName
-      )[0]
+    const loadComponent = (componentInfo: EditorComponentInfo) => {
+      Log.EditorCustomSupportHook(
+        `componentInfo of ${componentName}`,
+        componentInfo
+      )
       if (componentInfo) {
         updateInfo(componentInfo)
       }
     }
 
-    // client.request(EditorRequestType.ComponentList)
     client
-      .request<EditorComponentInfo[]>(EditorRequestType.ComponentList)
-      .then((componentList) => {
-        loadComponent(componentList)
+      .request<EditorComponentInfo>(EditorRequestType.Component(componentName))
+      .then((componentInfo) => {
+        loadComponent(componentInfo)
       })
       .catch((err) => {
         console.error(
-          `[useCustomComponent] subscribe ${EditorRequestType.ComponentList} error`,
+          `[useCustomComponent] subscribe ${EditorRequestType.Component(
+            componentName
+          )} error`,
           err
         )
       })
 
     client
-      .subscribe<EditorComponentInfo[]>(
-        EditorSubscribeType.ComponentList,
+      .subscribe<EditorComponentInfo>(
+        EditorSubscribeType.Component(componentName),
         undefined,
-        (componentList) => {
-          loadComponent(componentList)
+        (componentInfo) => {
+          loadComponent(componentInfo)
         }
       )
       .then((unsubscribe) => {
@@ -88,7 +90,9 @@ export const useCustomComponent = (componentName: string) => {
       })
       .catch((err) => {
         console.error(
-          `[useCustomComponent] subscribe ${EditorSubscribeType.ComponentList} error`,
+          `[useCustomComponent] subscribe ${EditorSubscribeType.Component(
+            componentName
+          )} error`,
           err
         )
       })
@@ -209,7 +213,11 @@ const updateCustomComponentInfo = (componentNameList: string[]) => {
   })
 
   if (componentsChanged) {
-    console.log('custom component list', componentNameList, newComponents)
+    Log.EditorCustomSupportHook(
+      'New custom component list',
+      componentNameList,
+      newComponents
+    )
     AllComponentsSubject.next(newComponents)
   }
 }
