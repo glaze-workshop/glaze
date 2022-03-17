@@ -1,4 +1,12 @@
-import { useCallback, useEffect, useReducer, useState } from 'react'
+import { stat } from 'fs'
+import {
+  MutableRefObject,
+  useCallback,
+  useEffect,
+  useReducer,
+  useRef,
+  useState
+} from 'react'
 import { BehaviorSubject } from 'rxjs'
 
 export function useForceRerender() {
@@ -83,4 +91,14 @@ export const useSetBehaviorSubjectState = <T>(
   )
 
   return setSubject
+}
+
+/**
+ * Turn state into ref:
+ *   Caught newest state value and assign to ref.current
+ */
+export const useStateRef = <T>(state: T): MutableRefObject<T> => {
+  const ref = useRef<T>(state)
+  ref.current = state
+  return ref
 }
