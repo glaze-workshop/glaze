@@ -60,7 +60,10 @@
   "eslintConfig": {
     "rules": {
       "no-trailing-spaces": "warn",
-      "comma-dangle": "warn"
+      "comma-dangle": "warn",
+      "multiline-ternary": "off",
+      "react/no-children-prop": "off",
+      "react-hooks/rules-of-hooks": "warn"
     }
   }
 }
