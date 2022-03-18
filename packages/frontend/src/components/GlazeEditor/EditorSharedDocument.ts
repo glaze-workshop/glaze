@@ -4,11 +4,7 @@ import { ComponentConfig } from '../../schema/config'
 import { LayoutConfig, PositionConfig, PositionType } from '../../schema/layout'
 import { BasicComponentId } from '../BasicComponents/basicComponentInfo'
 import { WebSocketProvider } from './provider/WebsocketProvider'
-<<<<<<< HEAD
-import { AllComponentsSubject, SelectedNodeInfoSubject, AllNodeInfoObservableMap } from './state'
-=======
 import { AllComponentsSubject, AllNodeInfoObservableMap, SelectedNodeInfoSubject } from './state'
->>>>>>> 1eb5108dfb903f1e1c97e15963ebe1b82187d8f6
 import { StructureProxy, createYjsMapProxy, NodeProxy } from './yjs.hook'
 
 /**
@@ -76,12 +72,9 @@ export default class EditorSharedDocument {
         type: [PositionType.LEFT, PositionType.TOP]
       })
     }
-    console.log('createNodeByComponentId 2', SelectedNodeInfoSubject)
-
     const selectedNodeSubject = AllNodeInfoObservableMap.getValueSubject(SelectedNodeInfoSubject.value)?.value
     // 选中节点
     if (selectedNodeSubject) {
-      console.log('selectedNodeSubject', selectedNodeSubject)
       const { nodeProxy, parentStructureInfo, structureProxy } = selectedNodeSubject
 
       const { component: selectedComponent, config: selectedComponentConfig } =
