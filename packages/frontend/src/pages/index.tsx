@@ -1,5 +1,11 @@
 import React, { FC, Suspense } from 'react'
-import { BrowserRouter, Navigate, Route, Router, Routes } from 'react-router-dom'
+import {
+  BrowserRouter,
+  Navigate,
+  Route,
+  Router,
+  Routes
+} from 'react-router-dom'
 import { useAxiosConfig } from '../hooks/axios'
 import Folder from './folder'
 import Home from './home'
@@ -13,21 +19,24 @@ const RootPage: FC = () => {
 
   return (
     <Routes>
-      <Route path='/' element={<Home/>}>
-        <Route path='folder/:folderId' element={<Folder />}/>
+      <Route path="/" element={<Home />}>
+        <Route path="folder/:folderId" element={<Folder />} />
       </Route>
-      <Route path='/project/:projectId' element={
-        <Suspense fallback={'loading'}>
-          <LazyEditor />
-        </Suspense>
-        }/>
-      <Route path='/login' element={<Login />} />
-      <Route path='/register' element={<Register />} />
+      <Route
+        path="/project/:projectId"
+        element={
+          <Suspense fallback={'loading'}>
+            <LazyEditor />
+          </Suspense>
+        }
+      />
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
       <Route
         path="*"
         element={
           <main style={{ padding: '1rem' }}>
-            <p>There's nothing here!</p>
+            <p>There&apos;s nothing here!</p>
           </main>
         }
       />
