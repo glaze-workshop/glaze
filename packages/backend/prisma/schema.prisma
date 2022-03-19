@@ -90,24 +90,62 @@ model GlazeProjectFolder {
 }
 
 model GlazeProject {
-  id              Int                   @id @default(autoincrement())
-  name            String?               @unique @db.Text /// 项目名称
-  intro           String?               @db.Text /// 介绍
-  preview         String?               @db.Text /// 预览图片
-  projectFolder   GlazeProjectFolder    @relation(fields: [projectFolderId], references: [id])
-  projectFolderId Int
-  createdAt       DateTime              @default(now()) @db.Timestamp(6) /// 创建时间
-  updatedAt       DateTime              @updatedAt @db.Timestamp(6) /// 更新时间
-  documentUpdate  GlazeDocumentUpdate[]
+  id                 Int                     @id @default(autoincrement())
+  name               String?                 @unique @db.Text /// 项目名称
+  intro              String?                 @db.Text /// 介绍
+  preview            String?                 @db.Text /// 预览图片
+  projectFolder      GlazeProjectFolder      @relation(fields: [projectFolderId], references: [id])
+  projectFolderId    Int
+  createdAt          DateTime                @default(now()) @db.Timestamp(6) /// 创建时间
+  updatedAt          DateTime                @updatedAt @db.Timestamp(6) /// 更新时间
+  documentUpdate     GlazeDocumentUpdate[]
+  documentDeployInfo GlazeProjectDeployInfo?
 }
 
 model GlazeDocumentUpdate {
-  id        BigInt       @id @default(autoincrement())
+  id        Int          @id @default(autoincrement())
   project   GlazeProject @relation(fields: [projectId], references: [id])
   projectId Int
   update    Bytes        @db.ByteA
   createdAt DateTime     @default(now()) @db.Timestamp(6) /// 创建时间
   updatedAt DateTime     @updatedAt @db.Timestamp(6) /// 更新时间
+}
+
+enum GlazeProjectDeployStatus {
+  /// 执行中
+  RUNNING
+  /// 暂停
+  SUSPEND
+}
+
+model GlazeProjectDeployInfo {
+  id         Int                      @id @default(autoincrement())
+  info       Bytes                    @db.ByteA
+  path       String                   @unique @db.Text
+  createdAt  DateTime                 @default(now()) @db.Timestamp(6) /// 创建时间
+  updatedAt  DateTime                 @updatedAt @db.Timestamp(6) /// 更新时间
+  project    GlazeProject             @relation(fields: [projectId], references: [id])
+  projectId  Int                      @unique
+  log        GlazeProjectLogInfo[]
+  status     GlazeProjectDeployStatus @default(RUNNING)
+  screenshot String?                  @db.Text
+
+  @@index([path])
+}
+
+model GlazeProjectLogInfo {
+  id           Int                    @id @default(autoincrement())
+  deployInfo   GlazeProjectDeployInfo @relation(fields: [deployInfoId], references: [id])
+  deployInfoId Int
+  remoteAddr   String                 @db.Text
+  protocol     String                 @db.Text
+  method       String                 @db.Text
+  host         String                 @db.Text
+  uri          String                 @db.Text
+  status       Int                    @db.Integer
+  size         Int                    @db.Integer
+  duration     Int                    @db.Integer
+  time         DateTime
 }
 
 enum GlazeComponentType {

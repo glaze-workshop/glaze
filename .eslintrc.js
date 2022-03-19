@@ -23,6 +23,7 @@ module.exports = {
     '@typescript-eslint'
   ],
   rules: {
+    camelcase: 0,
     'no-use-before-define': 0,
     'no-unused-vars': 0,
     semi: 'off',

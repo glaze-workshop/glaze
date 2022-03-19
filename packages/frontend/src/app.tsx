@@ -11,6 +11,7 @@ import { BrowserRouter } from 'react-router-dom'
 import { ReactQueryDevtools } from 'react-query/devtools'
 
 import 'systemjs'
+import { queryClient } from './utils/queryClient'
 
 // eslint-disable-next-line no-undef
 System.set('app:react', { default: React, __useDefault: true })
@@ -18,8 +19,6 @@ System.set('app:react', { default: React, __useDefault: true })
 System.set('app:react-dom', { default: ReactDOM, __useDefault: true })
 
 GlazeI18n.initI18n(initReactI18next)
-
-const queryClient = new QueryClient()
 
 const App:FC = () => {
   return (

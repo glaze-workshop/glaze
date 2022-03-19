@@ -5,11 +5,14 @@ import Folder from './folder'
 import Home from './home'
 import Login from './login'
 import Register from './register'
+import Dashboard from './project/dashboard'
+import { useWebSocketMessage } from '../hooks/websocket'
 
 const LazyEditor = React.lazy(() => import('./project/index'))
 
 const RootPage: FC = () => {
   useAxiosConfig()
+  useWebSocketMessage()
 
   return (
     <Routes>
@@ -21,6 +24,7 @@ const RootPage: FC = () => {
           <LazyEditor />
         </Suspense>
         }/>
+      <Route path='/project/:projectId/dashboard' element={<Dashboard />}/>
       <Route path='/login' element={<Login />} />
       <Route path='/register' element={<Register />} />
       <Route

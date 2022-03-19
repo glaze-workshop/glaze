@@ -22,6 +22,8 @@ export * as FolderApi from './folder/folder.api'
 
 export * as SelfApi from './self/self.api'
 
+export * as DeploymentApi from './deployment/deployment.api'
+
 export * as Entity from './entity'
 export * as ResType from './res.types'
 
@@ -31,3 +33,5 @@ export * from './editor/editor.type'
 export * from './editor/lcp.type'
 export { default as LCPSocket } from './editor/LCPSocket'
 export { default as LCPClient } from './editor/LCPClient'
+
+export * from './utils/null'

@@ -1,4 +1,3 @@
-import type { JsonValue } from 'type-fest'
 import { ProjectFolderEntity } from './folder'
 import { CommonTimestamp } from './time'
 

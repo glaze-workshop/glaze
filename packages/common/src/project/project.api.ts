@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { compile } from 'path-to-regexp'
-import { ProjectEntity } from '../entity'
+import { DeploymentEntity, ProjectEntity } from '../entity'
 import { PROJECT_PREFIX } from '../prefix'
 import { ProjectCreationDTO, ProjectUpdateDTO } from './project.dto'
 

@@ -12,6 +12,7 @@
     "dev:basic": "pnpm dev --filter \"*types\" --filter \"*zoom\" --filter \"*common\" --filter \"*bundler\" --stream --parallel",
     "test": "echo \"Error: no test specified\" && exit 1",
     "debug:server": "pnpm start:debug --filter \"*backend\"",
+    "debug:logserver": "pnpm logserver:dev --filter \"*backend\"",
     "build:bundler": "pnpm build --filter \"*bundler\"",
     "prisma:generate": "pnpm prisma:generate --filter \"*backend\"",
     "prisma:push": "pnpm prisma:push --filter \"*backend\"",
@@ -29,6 +30,7 @@
   "dependencies": {
     "axios": "^0.26.0",
     "i18next": "^21.6.11",
+    "json-bigint": "^1.0.0",
     "lib0": "^0.2.46",
     "lodash": "^4.17.21",
     "nanoid": "^3.3.1",
@@ -41,6 +43,7 @@
   "devDependencies": {
     "@changesets/cli": "^2.21.0",
     "@types/jest": "^27.4.0",
+    "@types/json-bigint": "^1.0.1",
     "@types/node": "^16.11.25",
     "@types/normalize-wheel": "^1.0.0",
     "@typescript-eslint/eslint-plugin": "^5.12.0",

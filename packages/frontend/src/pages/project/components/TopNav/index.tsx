@@ -1,17 +1,17 @@
 import { useProjectInfo, useProjectInfoUnderParam } from '../../../../hooks/project.hook'
 import React, { FC, memo } from 'react'
-import { useParams } from 'react-router-dom'
-import { Box, Button, Center, Flex, Icon, IconButton, Text } from '@chakra-ui/react'
-import { FiMenu } from 'react-icons/fi'
+import { Box, Button, MenuButton, Flex, Icon, IconButton, Menu, Text, MenuItem, MenuList } from '@chakra-ui/react'
+import { FiMenu, FiSettings } from 'react-icons/fi'
 import { BasicComponentId } from '../../../../components/BasicComponents/basicComponentInfo'
 import { editorSharedDocument } from '../../../../components/GlazeEditor/EditorSharedDocument'
+import { Link } from 'react-router-dom'
 import { createCustomComponentId } from '../../../../components/GlazeEditor/customSupport'
 
 export interface TopNavProps {
 }
 
 const TopNav:FC<TopNavProps> = () => {
-  const { projectInfo } = useProjectInfoUnderParam()
+  const { projectInfo, projectId } = useProjectInfoUnderParam()
 
   const handleCreate = (id: BasicComponentId | string) => {
     editorSharedDocument.createNodeByComponentId(id)
@@ -20,7 +20,14 @@ const TopNav:FC<TopNavProps> = () => {
   return (
     <Flex h="60px" boxShadow="sm" flexShrink={0} alignItems="center" px="4px">
       <Flex alignItems="center">
-        <IconButton aria-label='更多' icon={<Icon as={FiMenu}/>}></IconButton>
+        <Menu>
+          <MenuButton as={IconButton} aria-label='更多' icon={<Icon as={FiMenu}/>}/>
+          <MenuList>
+            <MenuItem icon={<Icon as={FiSettings}/>} as={Link} to={`/project/${projectId}/dashboard`}>
+              控制台
+            </MenuItem>
+          </MenuList>
+        </Menu>
         {projectInfo && <Text ml="4px">{projectInfo.projectFolder?.team?.name} / {projectInfo.name}</Text>}
       </Flex>
       <Flex flex={1} alignItems='center' gap="4px" justifyContent="center">

@@ -35,5 +35,10 @@ export enum ErrorCode {
   /**
    * jwt 验证错误
    */
-  JwtAuthError
+  JwtAuthError,
+
+  /**
+   * 部署 path 重复
+   */
+  DeploymentPathDuplicationError,
 }

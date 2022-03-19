@@ -3,13 +3,15 @@ https://docs.nestjs.com/modules
 */
 
 import { Global, Module } from '@nestjs/common'
+import { CosService } from './cos.service'
 import { PrismaService } from './prisma.service'
+import { ConfigModule } from '@nestjs/config'
 
 @Global()
 @Module({
-  imports: [],
+  imports: [ConfigModule],
   controllers: [],
-  providers: [PrismaService],
+  providers: [PrismaService, CosService],
   exports: [PrismaService]
 })
 export class GlobalModule {}

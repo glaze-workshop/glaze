@@ -44,3 +44,12 @@ export class JwtAuthError extends AbstractError<ErrorCode.JwtAuthError> {
     )
   }
 }
+
+export class DeploymentPathDuplicationError extends AbstractError<ErrorCode.DeploymentPathDuplicationError> {
+  constructor (path: string) {
+    super(
+      `部署路径「${path}」重复`,
+      ErrorCode.DeploymentPathDuplicationError
+    )
+  }
+}

@@ -1,3 +1,6 @@
+import { ScreenshotModule } from './screenshot/screenshot.module'
+import { MessageModule } from './message/message.module'
+import { DeploymentModule } from './deployment/deployment.module'
 import { DocModule } from './doc/doc.module'
 import { FolderModule } from './folder/folder.module'
 import { ProjectModule } from './project/project.module'
@@ -11,10 +14,14 @@ import { AuthModule } from './auth/auth.module'
 import { Module } from '@nestjs/common'
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
-import { ConfigModule } from '@nestjs/config'
+import { ConfigModule, ConfigService } from '@nestjs/config'
+import { BullModule } from '@nestjs/bull'
 
 @Module({
   imports: [
+    ScreenshotModule,
+    MessageModule,
+    DeploymentModule,
     DocModule,
     FolderModule,
     ProjectModule,
@@ -23,7 +30,18 @@ import { ConfigModule } from '@nestjs/config'
     TeamModule,
     UserModule,
     GlobalModule,
-    AuthModule],
+    AuthModule,
+    BullModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => ({
+        redis: {
+          host: configService.get('REDIS_HOST'),
+          port: Number(configService.get('REDIS_PORT'))
+        }
+      }),
+      inject: [ConfigService]
+    })
+  ],
   controllers: [AppController],
   providers: [
     {
