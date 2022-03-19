@@ -3,7 +3,7 @@ https://docs.nestjs.com/providers#services
 */
 import { Entity, GlazeErr } from '@glaze/common'
 
-import { forwardRef, Inject, Injectable } from '@nestjs/common'
+import { Injectable } from '@nestjs/common'
 import { nanoid } from 'nanoid'
 import { Buffer } from 'buffer'
 import { isUniqueConstraintError } from '../utils/prisma.error'
@@ -49,7 +49,7 @@ export class DeploymentService {
   async initDeployProject (projectId: number): Promise<Entity.DeploymentEntity> {
     const [updates] = await this.docService.getFullDocument(projectId)
 
-    const deploymentInfo = await this.prisma.glazeProjectDeployInfo.create({
+    return this.prisma.glazeProjectDeployInfo.create({
       data: {
         projectId,
         path: nanoid(8),
@@ -57,14 +57,11 @@ export class DeploymentService {
       },
       select: this.selectWithoutData()
     })
-
-    this.screenshotService.addDeploymentJob(deploymentInfo)
-    return deploymentInfo
   }
 
   async updateProjectDeployment (projectId: number): Promise<Entity.DeploymentEntity> {
     const [updates] = await this.docService.getFullDocument(projectId)
-    const deploymentInfo = await this.prisma.glazeProjectDeployInfo.update({
+    return this.prisma.glazeProjectDeployInfo.update({
       where: {
         projectId
       },
@@ -73,8 +70,6 @@ export class DeploymentService {
       },
       select: this.selectWithoutData()
     })
-    this.screenshotService.addDeploymentJob(deploymentInfo)
-    return deploymentInfo
   }
 
   async updateProjectDeploymentPath (projectId: number, path: string): Promise<Entity.DeploymentEntity> {

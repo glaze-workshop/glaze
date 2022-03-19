@@ -1,7 +1,9 @@
+import { Entity } from '@glaze/common'
+
 export interface ScreenshotJob {
 }
 
 export interface DeploymentScreenshotJob {
-  userId: number
-  projectId: number
+  user: Entity.UserEntity
+  deployment: Entity.DeploymentEntity
 }

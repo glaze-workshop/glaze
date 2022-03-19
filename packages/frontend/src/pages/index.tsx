@@ -5,8 +5,11 @@ import Folder from './folder'
 import Home from './home'
 import Login from './login'
 import Register from './register'
-import Dashboard from './project/dashboard'
+import Dashboard from './project/dashboard/dashboard'
 import { useWebSocketMessage } from '../hooks/websocket'
+import Setting from './project/dashboard/setting/setting'
+import Analysis from './project/dashboard/analysis/analysis'
+import Overview from './project/dashboard/overview/overview'
 
 const LazyEditor = React.lazy(() => import('./project/index'))
 
@@ -24,7 +27,11 @@ const RootPage: FC = () => {
           <LazyEditor />
         </Suspense>
         }/>
-      <Route path='/project/:projectId/dashboard' element={<Dashboard />}/>
+      <Route path='/project/:projectId/dashboard' element={<Dashboard />}>
+        <Route path='setting' element={<Setting />}/>
+        <Route path='analysis' element={<Analysis />}/>
+        <Route index element={<Overview />}/>
+      </Route>
       <Route path='/login' element={<Login />} />
       <Route path='/register' element={<Register />} />
       <Route

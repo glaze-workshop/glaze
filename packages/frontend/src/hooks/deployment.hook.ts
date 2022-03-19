@@ -5,11 +5,13 @@ import { DeploymentApi } from '@glaze/common'
 
 export function useProjectDeploymentInfo () {
   const { projectId } = useProjectInfoUnderParam()
-  const deploymentQueryInfo = useQuery([DeploymentApi.FULL_DEPLOYMENT_PATH, projectId], () => DeploymentApi.getProjectDeployment(projectId))
+  const key = useMemo(() => DeploymentApi.FULL_DEPLOYMENT_PATH_TO_PATH({ projectId }), [projectId])
+  const deploymentQueryInfo = useQuery(key, () => DeploymentApi.getProjectDeployment(projectId))
   const deploymentInfo = useMemo(() => deploymentQueryInfo.data?.data, [deploymentQueryInfo.data])
 
   return {
     deploymentInfo,
-    deploymentQueryInfo
+    deploymentQueryInfo,
+    projectId
   }
 }

@@ -12,6 +12,6 @@ import { ConfigModule } from '@nestjs/config'
   imports: [ConfigModule],
   controllers: [],
   providers: [PrismaService, CosService],
-  exports: [PrismaService]
+  exports: [PrismaService, CosService]
 })
 export class GlobalModule {}

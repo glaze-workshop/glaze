@@ -3,6 +3,7 @@ import axios from 'axios'
 import { GlazeErr } from '@glaze/common'
 import { getToken } from '../utils/token'
 
+axios.defaults.headers.put['Content-Type'] = 'application/json'
 axios.interceptors.request.use(function (config) {
   // Do something before request is sent
   const { headers } = config
