@@ -23,6 +23,7 @@ const LoginForm:FC<LoginFormProps> = () => {
   const loginMutation = useMutation(AuthApi.login, {
     onSuccess: ({ data }) => {
       if (GlazeErr.isGlazeError(data)) {
+        // 登入失败
         if (data.status === GlazeErr.ErrorCode.LoginFailedError) {
           toast({
             title: '用户名或密码错误',
@@ -31,6 +32,12 @@ const LoginForm:FC<LoginFormProps> = () => {
           })
         }
       } else {
+        // 登入成功
+        toast({
+          title: `欢迎 ${data.nickname || data.username}`,
+          status: 'success',
+          duration: 2000
+        })
         writeToken(data.token)
         UserSubject.next(data)
         navigate('/')

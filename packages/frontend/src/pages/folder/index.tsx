@@ -10,11 +10,12 @@ import {
   IconButton,
   Icon
 } from '@chakra-ui/react'
-import React, { FC, memo, useMemo } from 'react'
+import React, { FC, memo, useEffect, useMemo } from 'react'
 import { FiPlus } from 'react-icons/fi'
 import { Link, useParams } from 'react-router-dom'
 import { useFolderInfo } from '../../hooks/folder.hook'
 import { useModalState } from '../../hooks/modal.hook'
+import { Log } from '../../utils/log'
 import ProjectBox from './components/ProjectBox'
 import ProjectCreationModal from './components/ProjectCreationModal'
 
@@ -26,6 +27,12 @@ const Folder: FC<FolderProps> = () => {
 
   const folderInfo = useMemo(() => folderQuery.data?.data, [folderQuery.data])
   const { isOpen, handleModelClose, handleModelOpen } = useModalState()
+
+  const isFolderArchived = folderInfo?.type === 'ARCHIVED'
+
+  useEffect(() => {
+    Log.HomeFolder('folderInfo', folderInfo)
+  }, [folderInfo])
 
   return (
     <Container maxW="container.md" py="24px">
@@ -45,7 +52,12 @@ const Folder: FC<FolderProps> = () => {
           </Flex>
           <SimpleGrid columns={2} spacing={10}>
             {folderInfo.projects?.map((project) => (
-              <ProjectBox key={project.id} project={project} />
+              <ProjectBox
+                key={project.id}
+                project={project}
+                folderQuery={folderQuery}
+                isArchived={isFolderArchived}
+              />
               // <Box as={Link} to={`/project/${project.id}`} key={project.id} borderWidth='1px' borderRadius='lg' overflow='hidden'>
               //   <AspectRatio ratio={16 / 9}>
               //     <Image src={project.preview ?? ''} fallbackSrc='https://bit.ly/naruto-sage' alt='naruto' objectFit='cover' />
