@@ -67,6 +67,12 @@ export const positionToStyle = (position: PositionConfig) => {
 }
 
 export function useNodeLayout(layoutProxy: LayoutConfig) {
+  // 理论上不存在，但是由于没有进行严格类型检查，可能存在漏网之鱼，补一手
+  if (!layoutProxy || !layoutProxy.position) {
+    console.log('layoutProxy', layoutProxy)
+    return {}
+  }
+
   const {
     position: { top, right, bottom, left },
     width,
