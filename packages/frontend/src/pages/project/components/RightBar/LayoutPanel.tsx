@@ -9,8 +9,12 @@ import {
   AccordionItem,
   AccordionButton
 } from '@chakra-ui/react'
-import { positionOption, lengthOption } from './layout.panel'
-import { PositionType } from 'packages/frontend/src/schema/layout'
+import {
+  LRpositionOption,
+  TBpositionOption,
+  lengthOption
+} from './layout.panel'
+import { PositionType } from '../../../../schema/layout'
 import LayoutPanelUnit from './LayoutPanelUnit'
 import { widthUpdater, heightUpdater, positionUpdater } from './yjsMapUpdater'
 
@@ -21,8 +25,10 @@ export interface LayoutPanelProps {
 const LayoutPanel: FC<LayoutPanelProps> = ({
   layoutInfo
 }: LayoutPanelProps) => {
-  const [posOption, setPosOption] =
-    useState<Array<PositionType>>(positionOption)
+  const [LRposOption, setLRPosOption] =
+    useState<Array<PositionType>>(LRpositionOption)
+  const [TBposOption, setTBPosOption] =
+    useState<Array<PositionType>>(TBpositionOption)
   const [posInfo, setPosInfo] = useState<any>()
   const [widthInfo, setWidthInfo] = useState<any>()
   const [heightInfo, setHeightInfo] = useState<any>()
@@ -34,6 +40,7 @@ const LayoutPanel: FC<LayoutPanelProps> = ({
     setPosInfo(positionInfo)
     setWidthInfo(wInfo)
     setHeightInfo(hInfo)
+    // console.log('layoutInfo', layoutInfo)
     // console.log('posInfo', posInfo)
     // console.log('wInfo', widthInfo)
     // console.log('hInfo', heightInfo)
@@ -62,24 +69,34 @@ const LayoutPanel: FC<LayoutPanelProps> = ({
                 <LayoutPanelUnit
                   selectorProps={{
                     defaultValue: posInfo.type[0],
-                    fullOptions: posOption
+                    fullOptions:
+                      posInfo.type[0] === PositionType.LEFT ||
+                      posInfo.type[0] === PositionType.RIGHT
+                        ? LRposOption
+                        : TBposOption
                   }}
                   numberCounterProps={{
                     defaultValue: posInfo[posInfo.type[0]],
                     yMap: layoutInfo
                   }}
                   yjsMapUpdater={positionUpdater}
+                  yMap={layoutInfo}
                 />
                 <LayoutPanelUnit
                   selectorProps={{
                     defaultValue: posInfo.type[1],
-                    fullOptions: posOption
+                    fullOptions:
+                      posInfo.type[1] === PositionType.LEFT ||
+                      posInfo.type[1] === PositionType.RIGHT
+                        ? LRposOption
+                        : TBposOption
                   }}
                   numberCounterProps={{
                     defaultValue: posInfo[posInfo.type[1]],
                     yMap: layoutInfo
                   }}
                   yjsMapUpdater={positionUpdater}
+                  yMap={layoutInfo}
                 />
               </>
             )}
@@ -108,6 +125,7 @@ const LayoutPanel: FC<LayoutPanelProps> = ({
                   yMap: layoutInfo
                 }}
                 yjsMapUpdater={widthUpdater}
+                yMap={layoutInfo}
               />
             )}
           </AccordionPanel>
@@ -135,6 +153,7 @@ const LayoutPanel: FC<LayoutPanelProps> = ({
                   yMap: layoutInfo
                 }}
                 yjsMapUpdater={heightUpdater}
+                yMap={layoutInfo}
               />
             )}
           </AccordionPanel>

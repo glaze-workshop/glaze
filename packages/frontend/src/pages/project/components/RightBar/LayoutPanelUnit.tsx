@@ -18,12 +18,14 @@ export interface LayoutPanelUnitProps {
   selectorProps: LayoutSelectorProps
   numberCounterProps: LayoutNumberCounterProps
   yjsMapUpdater: (yMap: Y.Map<any>, newValue: any) => void
+  yMap: Y.Map<any>
 }
 
 const LayoutPanelUnit: FC<LayoutPanelUnitProps> = ({
   selectorProps,
   numberCounterProps,
-  yjsMapUpdater
+  yjsMapUpdater,
+  yMap
 }: LayoutPanelUnitProps) => {
   const [selectorValue, setSelectorValue] = useState('')
   const [numberValue, setNumberValue] = useState(0)
@@ -39,10 +41,12 @@ const LayoutPanelUnit: FC<LayoutPanelUnitProps> = ({
   const handleSelectChange = (e: ChangeEvent<HTMLSelectElement>) => {
     const newValue = e.target.options[e.target.options.selectedIndex].value
     setSelectorValue(newValue)
+    yjsMapUpdater(yMap, [newValue, numberValue])
   }
 
-  const handleNumberCounterChange = (numberValue: any) => {
-    setNumberValue(numberValue)
+  const handleNumberCounterChange = (value: any) => {
+    setNumberValue(value)
+    yjsMapUpdater(yMap, [selectorValue, value])
   }
 
   return (

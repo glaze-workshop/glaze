@@ -1,11 +1,14 @@
 import { PositionType } from '../../../../schema/layout'
 import { LengthUnit } from '../../../../schema/length'
 
-export const positionOption: Array<PositionType> = [
-  PositionType.TOP,
-  PositionType.BOTTOM,
+export const LRpositionOption: Array<PositionType> = [
   PositionType.LEFT,
   PositionType.RIGHT
+]
+
+export const TBpositionOption: Array<PositionType> = [
+  PositionType.TOP,
+  PositionType.BOTTOM
 ]
 
 export const lengthOption: Array<LengthUnit> = [
