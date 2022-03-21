@@ -35,15 +35,15 @@ export interface NodeProxy {
   readonly yNode: Y.Map<any>
 }
 
-export function createYjsMapProxy<T> (yNode: Y.Map<any>): T {
+export function createYjsMapProxy<T>(yNode: Y.Map<any>): T {
   return new Proxy(yNode, {
-    get (target, prop) {
+    get(target, prop) {
       if (prop === 'yNode') {
         return target
       }
       return target.get(prop.toString())
     },
-    set (target, prop, value) {
+    set(target, prop, value) {
       target.set(prop.toString(), value)
       return true
     }
@@ -66,21 +66,35 @@ export const positionToStyle = (position: PositionConfig) => {
   const { type, top, left, right, bottom } = position
 }
 
-export function useNodeLayout (layoutProxy: LayoutConfig) {
-  const style = useMemo(() => ({
-    width: lengthToStyle(layoutProxy.width),
-    height: lengthToStyle(layoutProxy.height),
-    top: `${layoutProxy.position.top}px`,
-    left: `${layoutProxy.position.left}px`
-  }), [layoutProxy])
+export function useNodeLayout(layoutProxy: LayoutConfig) {
+  // 理论上不存在，但是由于没有进行严格类型检查，可能存在漏网之鱼，补一手
+  if (!layoutProxy || !layoutProxy.position) {
+    console.log('layoutProxy', layoutProxy)
+    return {}
+  }
+
+  const {
+    position: { top, right, bottom, left },
+    width,
+    height
+  } = layoutProxy
+
+  const style: any = {
+    width: lengthToStyle(width),
+    height: lengthToStyle(height)
+  }
+  top && (style.top = `${top}px`)
+  left && (style.left = `${left}px`)
+  right && (style.right = `${right}px`)
+  bottom && (style.bottom = `${bottom}px`)
   return style
 }
 
-export function useYjsMapProxy<T> (yMap: Y.Map<any>) {
+export function useYjsMapProxy<T>(yMap: Y.Map<any>) {
   return useMemo(() => createYjsMapProxy<T>(yMap), [yMap])
 }
 
-export function useYjsRerender (...yjsObjects: Y.AbstractType<any>[]) {
+export function useYjsRerender(...yjsObjects: Y.AbstractType<any>[]) {
   const forceRender = useForceRerender()
   useEffect(() => {
     yjsObjects.forEach((obj) => {
@@ -91,6 +105,6 @@ export function useYjsRerender (...yjsObjects: Y.AbstractType<any>[]) {
         obj.unobserve(forceRender)
       })
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [forceRender, ...yjsObjects])
 }
