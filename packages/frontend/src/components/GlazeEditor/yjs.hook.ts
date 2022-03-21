@@ -77,7 +77,9 @@ export function useNodeLayout (layoutProxy: LayoutConfig) {
     width: lengthToStyle(layoutProxy.width),
     height: lengthToStyle(layoutProxy.height),
     top: `${layoutProxy.position.top}px`,
-    left: `${layoutProxy.position.left}px`
+    left: `${layoutProxy.position.left}px`,
+    right: `${layoutProxy.position.right}px`,
+    bottom: `${layoutProxy.position.bottom}px`
   }
   return style
 }
