@@ -3,16 +3,16 @@ import * as Y from 'yjs'
 import {
   Tag,
   Box,
-  Select,
   Accordion,
   AccordionPanel,
   AccordionIcon,
   AccordionItem,
   AccordionButton
 } from '@chakra-ui/react'
-import { positionOption } from './panel'
+import { positionOption, lengthOption } from './layout.panel'
 import { PositionType } from 'packages/frontend/src/schema/layout'
-import NumberCounter from './NumberCounter'
+import LayoutPanelUnit from './LayoutPanelUnit'
+import { widthUpdater, heightUpdater, positionUpdater } from './yjsMapUpdater'
 
 export interface LayoutPanelProps {
   layoutInfo: Y.Map<any>
@@ -31,12 +31,12 @@ const LayoutPanel: FC<LayoutPanelProps> = ({
     const positionInfo = layoutInfo.get('position')
     const wInfo = layoutInfo.get('width')
     const hInfo = layoutInfo.get('height')
-    // console.log('layoutPanel position', positionInfo)
-    // console.log('layoutPanel width', wInfo)
-    // console.log('layoutPanel height', hInfo)
     setPosInfo(positionInfo)
     setWidthInfo(wInfo)
     setHeightInfo(hInfo)
+    // console.log('posInfo', posInfo)
+    // console.log('wInfo', widthInfo)
+    // console.log('hInfo', heightInfo)
   })
 
   const yjsMapUpdater = (
@@ -67,26 +67,28 @@ const LayoutPanel: FC<LayoutPanelProps> = ({
             {posInfo && (
               <>
                 {' '}
-                <Select placeholder={posInfo.type[0]}>
-                  {posOption
-                    .filter((pos) => pos !== posInfo.type[0])
-                    .map((item) => (
-                      <option value={item} key={item}>
-                        {item}
-                      </option>
-                    ))}
-                </Select>
-                {/* <NumberCounter defaultValue={posInfo[posInfo.type[0]]} /> */}
-                <Select placeholder={posInfo.type[1]}>
-                  {posOption
-                    .filter((pos) => pos !== posInfo.type[1])
-                    .map((item) => (
-                      <option value={item} key={item}>
-                        {item}
-                      </option>
-                    ))}
-                </Select>
-                {/* <NumberCounter defaultValue={posInfo[posInfo.type[1]]} /> */}
+                <LayoutPanelUnit
+                  selectorProps={{
+                    defaultValue: posInfo.type[0],
+                    fullOptions: posOption
+                  }}
+                  numberCounterProps={{
+                    defaultValue: posInfo[posInfo.type[0]],
+                    yMap: layoutInfo
+                  }}
+                  yjsMapUpdater={positionUpdater}
+                />
+                <LayoutPanelUnit
+                  selectorProps={{
+                    defaultValue: posInfo.type[1],
+                    fullOptions: posOption
+                  }}
+                  numberCounterProps={{
+                    defaultValue: posInfo[posInfo.type[1]],
+                    yMap: layoutInfo
+                  }}
+                  yjsMapUpdater={positionUpdater}
+                />
               </>
             )}
           </AccordionPanel>
@@ -104,14 +106,17 @@ const LayoutPanel: FC<LayoutPanelProps> = ({
           </h2>
           <AccordionPanel pb={4}>
             {widthInfo && (
-              <>
-                <Select placeholder={widthInfo[0]}></Select>
-                <NumberCounter
-                  defaultValue={widthInfo[1]}
-                  yMap={layoutInfo}
-                  yjsMapUpdater={yjsMapUpdater}
-                />
-              </>
+              <LayoutPanelUnit
+                selectorProps={{
+                  defaultValue: widthInfo[0],
+                  fullOptions: lengthOption
+                }}
+                numberCounterProps={{
+                  defaultValue: widthInfo[1],
+                  yMap: layoutInfo
+                }}
+                yjsMapUpdater={widthUpdater}
+              />
             )}
           </AccordionPanel>
         </AccordionItem>
@@ -128,10 +133,17 @@ const LayoutPanel: FC<LayoutPanelProps> = ({
           </h2>
           <AccordionPanel>
             {heightInfo && (
-              <>
-                <Select placeholder={heightInfo[0]}></Select>
-                {/* <NumberCounter defaultValue={heightInfo[1]} /> */}
-              </>
+              <LayoutPanelUnit
+                selectorProps={{
+                  defaultValue: heightInfo[0],
+                  fullOptions: lengthOption
+                }}
+                numberCounterProps={{
+                  defaultValue: heightInfo[1],
+                  yMap: layoutInfo
+                }}
+                yjsMapUpdater={heightUpdater}
+              />
             )}
           </AccordionPanel>
         </AccordionItem>

@@ -67,12 +67,18 @@ export const positionToStyle = (position: PositionConfig) => {
 }
 
 export function useNodeLayout (layoutProxy: LayoutConfig) {
-  const style = useMemo(() => ({
+  // const style = useMemo(() => ({
+  //   width: lengthToStyle(layoutProxy.width),
+  //   height: lengthToStyle(layoutProxy.height),
+  //   top: `${layoutProxy.position.top}px`,
+  //   left: `${layoutProxy.position.left}px`
+  // }), [layoutProxy])
+  const style = {
     width: lengthToStyle(layoutProxy.width),
     height: lengthToStyle(layoutProxy.height),
     top: `${layoutProxy.position.top}px`,
     left: `${layoutProxy.position.left}px`
-  }), [layoutProxy])
+  }
   return style
 }
 
@@ -91,6 +97,6 @@ export function useYjsRerender (...yjsObjects: Y.AbstractType<any>[]) {
         obj.unobserve(forceRender)
       })
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [forceRender, ...yjsObjects])
 }
