@@ -10,17 +10,17 @@ import {
 } from '@chakra-ui/react'
 import {
   LayoutSelectorProps,
-  LayoutNumberCounterProps
+  LayoutNumberCounterProps,
+  YMapUpdater
 } from './layout.interface'
-import { Length, LengthUnit } from '../../../../schema/length'
-import { YMapUpdater } from './type'
-// import { useShadowState } from '../../../../hooks/utils.hook'
-import { PositionConfig } from 'packages/frontend/src/schema/layout'
+import { LengthUnit, Length } from '../../../../schema/length'
+import { PositionType } from '../../../../schema/layout'
+import { useShadowState } from '../../../../hooks/utils.hook'
 
 export interface LayoutPanelUnitProps {
   selectorProps: LayoutSelectorProps
   numberCounterProps: LayoutNumberCounterProps
-  yjsMapUpdater: any
+  yjsMapUpdater: YMapUpdater<Length> | YMapUpdater<[PositionType, number]>
   yMap: Y.Map<any>
 }
 
@@ -30,15 +30,12 @@ const LayoutPanelUnit: FC<LayoutPanelUnitProps> = ({
   yjsMapUpdater,
   yMap
 }: LayoutPanelUnitProps) => {
-  //   const [selectorValue, setSelectorValue] = useShadowState(
-  //     selectorProps.defaultValue
-  //   )
-  //   const [numberValue, setNumberValue] = useShadowState(
-  //     numberCounterProps.defaultValue
-  //   )
-
-  const [selectorValue, setSelectorValue] = useState('')
-  const [numberValue, setNumberValue] = useState(0)
+  const [selectorValue, setSelectorValue] = useShadowState(
+    selectorProps.defaultValue
+  )
+  const [numberValue, setNumberValue] = useShadowState(
+    numberCounterProps.defaultValue
+  )
 
   useEffect(() => {
     setSelectorValue(selectorProps.defaultValue)
