@@ -15,35 +15,35 @@ const RightBar: FC<RightBarProps> = () => {
   const [layoutInfo, setLayoutInfo] = useState<Y.Map<any>>()
 
   useEffect(() => {
+    const selectCertainNode = (nodeId: string) => {
+      const nodeInfo = editorSharedDocument.getNodeById(nodeId)
+      // console.log('[selectedCertainNode]', nodeInfo)
+      nodeInfo && yjsMapExtractor(nodeInfo)
+    }
+
+    const yjsMapExtractor = (YMap: Y.Map<any>) => {
+      const idInfo = YMap.get('id')
+      const nameInfo = YMap.get('name')
+      const propsInfo = YMap.get('props')
+      const layoutInfo = YMap.get('layout')
+      // console.log('[yjsMapExtractor nameInfo]', nameInfo)
+      // console.log('[yjsMapExtractor props]', propsInfo)
+      // console.log('[yjsMapExtractor layout]', layoutInfo)
+      setIdInfo(idInfo)
+      setNameInfo(nameInfo)
+      setPropsInfo(propsInfo)
+      setLayoutInfo(layoutInfo)
+    }
+
     const subscriber = SelectedNodeInfoSubject.subscribe((node) => {
       setSelectedNode(node)
+      selectCertainNode(node || '')
     })
-    selectCertainNode()
 
     return () => {
       subscriber.unsubscribe()
     }
-  })
-
-  const selectCertainNode = () => {
-    const nodeInfo = editorSharedDocument.getNodeById(selectedNode)
-    // console.log('[selectedCertainNode]', nodeInfo)
-    nodeInfo && yjsMapExtractor(nodeInfo)
-  }
-
-  const yjsMapExtractor = (YMap: Y.Map<any>) => {
-    const idInfo = YMap.get('id')
-    const nameInfo = YMap.get('name')
-    const propsInfo = YMap.get('props')
-    const layoutInfo = YMap.get('layout')
-    // console.log('[yjsMapExtractor nameInfo]', nameInfo)
-    // console.log('[yjsMapExtractor props]', propsInfo)
-    console.log('[yjsMapExtractor layout]', layoutInfo)
-    setIdInfo(idInfo)
-    setNameInfo(nameInfo)
-    setPropsInfo(propsInfo)
-    setLayoutInfo(layoutInfo)
-  }
+  }, [])
 
   return (
     <Box w="250px" className="border-l" padding="10px">
