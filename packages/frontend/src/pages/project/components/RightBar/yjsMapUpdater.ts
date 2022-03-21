@@ -2,12 +2,13 @@ import * as Y from 'yjs'
 import { LayoutOption, PositionType } from '../../../../schema/layout'
 import { Length } from '../../../../schema/length'
 import { findPosArrTargetNoobIndex } from './layout.utils'
+import { YMapUpdater } from './type'
 
-export const widthUpdater = (yMap: Y.Map<any>, newValue: Length): void => {
+export const widthUpdater = (yMap: any, newValue: any): void => {
   yMap.set(LayoutOption.WIDTH, newValue)
 }
 
-export const heightUpdater = (yMap: Y.Map<any>, newValue: Length): void => {
+export const heightUpdater = (yMap: any, newValue: any): void => {
   yMap.set(LayoutOption.HEIGHT, newValue)
 }
 
