@@ -39,14 +39,6 @@ const LayoutPanel: FC<LayoutPanelProps> = ({
     // console.log('hInfo', heightInfo)
   })
 
-  const yjsMapUpdater = (
-    yMap: Y.Map<any>,
-    key: string,
-    newValue: any
-  ): void => {
-    yMap.set(key, newValue)
-  }
-
   return (
     <>
       <Tag size="md" variant="solid" colorScheme="teal" marginBottom="10px">
