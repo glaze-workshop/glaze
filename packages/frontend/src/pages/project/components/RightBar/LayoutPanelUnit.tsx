@@ -20,7 +20,7 @@ import { useShadowState } from '../../../../hooks/utils.hook'
 export interface LayoutPanelUnitProps {
   selectorProps: LayoutSelectorProps
   numberCounterProps: LayoutNumberCounterProps
-  yjsMapUpdater: YMapUpdater<Length> | YMapUpdater<[PositionType, number]>
+  yjsMapUpdater: any
   yMap: Y.Map<any>
 }
 
