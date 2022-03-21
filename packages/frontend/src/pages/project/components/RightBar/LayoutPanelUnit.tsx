@@ -12,12 +12,15 @@ import {
   LayoutSelectorProps,
   LayoutNumberCounterProps
 } from './layout.interface'
-import { LengthUnit } from '../../../../schema/length'
+import { Length, LengthUnit } from '../../../../schema/length'
+import { YMapUpdater } from './type'
+// import { useShadowState } from '../../../../hooks/utils.hook'
+import { PositionConfig } from 'packages/frontend/src/schema/layout'
 
 export interface LayoutPanelUnitProps {
   selectorProps: LayoutSelectorProps
   numberCounterProps: LayoutNumberCounterProps
-  yjsMapUpdater: (yMap: Y.Map<any>, newValue: any) => void
+  yjsMapUpdater: any
   yMap: Y.Map<any>
 }
 
@@ -27,6 +30,13 @@ const LayoutPanelUnit: FC<LayoutPanelUnitProps> = ({
   yjsMapUpdater,
   yMap
 }: LayoutPanelUnitProps) => {
+  //   const [selectorValue, setSelectorValue] = useShadowState(
+  //     selectorProps.defaultValue
+  //   )
+  //   const [numberValue, setNumberValue] = useShadowState(
+  //     numberCounterProps.defaultValue
+  //   )
+
   const [selectorValue, setSelectorValue] = useState('')
   const [numberValue, setNumberValue] = useState(0)
 
