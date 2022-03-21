@@ -1,18 +1,18 @@
-import * as Y from 'yjs'
 import { PositionConfig, LayoutOption } from '../../../../schema/layout'
 import { Length } from '../../../../schema/length'
+import { YMapUpdater } from './type'
 
-export const widthUpdater = (yMap: Y.Map<any>, newValue: Length): void => {
+export const widthUpdater: YMapUpdater<Length> = (yMap, newValue): void => {
   yMap.set(LayoutOption.WIDTH, newValue)
 }
 
-export const heightUpdater = (yMap: Y.Map<any>, newValue: Length): void => {
+export const heightUpdater: YMapUpdater<Length> = (yMap, newValue): void => {
   yMap.set(LayoutOption.HEIGHT, newValue)
 }
 
-export const positionUpdater = (
-  yMap: Y.Map<any>,
-  newValue: PositionConfig
+export const positionUpdater: YMapUpdater<PositionConfig> = (
+  yMap,
+  newValue
 ): void => {
   yMap.set(LayoutOption.POSITION, newValue)
 }

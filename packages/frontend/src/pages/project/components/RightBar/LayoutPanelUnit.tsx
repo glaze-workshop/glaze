@@ -1,5 +1,4 @@
 import React, { FC, useState, useEffect, ChangeEvent, memo } from 'react'
-import * as Y from 'yjs'
 import {
   Select,
   NumberInput,
@@ -12,12 +11,15 @@ import {
   LayoutSelectorProps,
   LayoutNumberCounterProps
 } from './layout.interface'
-import { LengthUnit } from '../../../../schema/length'
+import { Length, LengthUnit } from '../../../../schema/length'
+import { YMapUpdater } from './type'
+import { useShadowState } from '../../../../hooks/utils.hook'
+import { PositionConfig } from 'packages/frontend/src/schema/layout'
 
 export interface LayoutPanelUnitProps {
   selectorProps: LayoutSelectorProps
   numberCounterProps: LayoutNumberCounterProps
-  yjsMapUpdater: (yMap: Y.Map<any>, newValue: any) => void
+  yjsMapUpdater: YMapUpdater<Length> | YMapUpdater<PositionConfig>
 }
 
 const LayoutPanelUnit: FC<LayoutPanelUnitProps> = ({
@@ -25,16 +27,23 @@ const LayoutPanelUnit: FC<LayoutPanelUnitProps> = ({
   numberCounterProps,
   yjsMapUpdater
 }: LayoutPanelUnitProps) => {
-  const [selectorValue, setSelectorValue] = useState('')
-  const [numberValue, setNumberValue] = useState(0)
+  const [selectorValue, setSelectorValue] = useShadowState(
+    selectorProps.defaultValue
+  )
+  const [numberValue, setNumberValue] = useShadowState(
+    numberCounterProps.defaultValue
+  )
 
-  useEffect(() => {
-    setSelectorValue(selectorProps.defaultValue)
-  }, [selectorProps])
+  // const [selectorValue, setSelectorValue] = useState('')
+  // const [numberValue, setNumberValue] = useState(0)
 
-  useEffect(() => {
-    setNumberValue(numberCounterProps.defaultValue)
-  }, [numberCounterProps])
+  // useEffect(() => {
+  //   setSelectorValue(selectorProps.defaultValue)
+  // }, [selectorProps])
+
+  // useEffect(() => {
+  //   setNumberValue(numberCounterProps.defaultValue)
+  // }, [numberCounterProps])
 
   const handleSelectChange = (e: ChangeEvent<HTMLSelectElement>) => {
     const newValue = e.target.options[e.target.options.selectedIndex].value
