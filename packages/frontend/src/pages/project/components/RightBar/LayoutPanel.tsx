@@ -76,8 +76,7 @@ const LayoutPanel: FC<LayoutPanelProps> = ({
                         : TBposOption
                   }}
                   numberCounterProps={{
-                    defaultValue: posInfo[posInfo.type[0]],
-                    yMap: layoutInfo
+                    defaultValue: posInfo[posInfo.type[0]]
                   }}
                   yjsMapUpdater={positionUpdater}
                   yMap={layoutInfo}
@@ -92,8 +91,7 @@ const LayoutPanel: FC<LayoutPanelProps> = ({
                         : TBposOption
                   }}
                   numberCounterProps={{
-                    defaultValue: posInfo[posInfo.type[1]],
-                    yMap: layoutInfo
+                    defaultValue: posInfo[posInfo.type[1]]
                   }}
                   yjsMapUpdater={positionUpdater}
                   yMap={layoutInfo}
@@ -121,8 +119,7 @@ const LayoutPanel: FC<LayoutPanelProps> = ({
                   fullOptions: lengthOption
                 }}
                 numberCounterProps={{
-                  defaultValue: widthInfo[1],
-                  yMap: layoutInfo
+                  defaultValue: widthInfo[1]
                 }}
                 yjsMapUpdater={widthUpdater}
                 yMap={layoutInfo}
@@ -149,8 +146,7 @@ const LayoutPanel: FC<LayoutPanelProps> = ({
                   fullOptions: lengthOption
                 }}
                 numberCounterProps={{
-                  defaultValue: heightInfo[1],
-                  yMap: layoutInfo
+                  defaultValue: heightInfo[1]
                 }}
                 yjsMapUpdater={heightUpdater}
                 yMap={layoutInfo}
