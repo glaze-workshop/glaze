@@ -21,7 +21,7 @@ export const useShadowState = <T>(
 
   const lastbaseState = useRef(baseState)
   if (!compare(lastbaseState.current, baseState)) {
-    console.log('baseState change', lastbaseState.current, baseState)
+    // console.log('baseState change', lastbaseState.current, baseState)
     // when baseState change will only re-render because of setbaseState method
     lastbaseState.current = baseState
     // and override current value
@@ -31,7 +31,7 @@ export const useShadowState = <T>(
   // only set shadowValue and don't change originState
   const forceUpdate = useForceRerender()
   const setVal = useCallback((newValue: T) => {
-    console.log('setVal', newValue, typeof newValue)
+    // console.log('setVal', newValue, typeof newValue)
     valRef.current = newValue
     // only change shadowState and invoke re-render
     forceUpdate()
