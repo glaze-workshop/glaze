@@ -31,7 +31,8 @@ export const Log = {
   monitor: debug('center:monitor'),
   components: debug('center:components'),
   connection: debug('lcp:connection'),
-  server: debug('lcp:server')
+  server: debug('lcp:server'),
+  controller: debug('lcp:controller')
 }
 
 /**

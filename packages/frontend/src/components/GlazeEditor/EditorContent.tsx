@@ -1,10 +1,9 @@
 import styled from '@emotion/styled'
 import { Zoom } from '@glaze/zoom'
-import { useObservableEagerState } from 'observable-hooks'
 import React, { FC, memo, useEffect, useRef } from 'react'
+
 import { editorSharedDocument } from './EditorSharedDocument'
 import NodeControl from './NodeControl'
-import { EditorPositionSubject, SelectedNodeInfoSubject } from './state'
 import { useYjsRerender } from './yjs.hook'
 
 export interface EditorContentProps {

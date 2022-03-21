@@ -72,7 +72,9 @@ export default class EditorSharedDocument {
         type: [PositionType.LEFT, PositionType.TOP]
       })
     }
-    const selectedNodeSubject = AllNodeInfoObservableMap.getValueSubject(SelectedNodeInfoSubject.value)?.value
+    console.log('createNodeByComponentId 2', SelectedNodeInfoSubject)
+
+    const selectedNodeSubject = SelectedNodeInfoSubject.value && AllNodeInfoObservableMap.getValueSubject(SelectedNodeInfoSubject.value)?.value
     // 选中节点
     if (selectedNodeSubject) {
       const { nodeProxy, parentStructureInfo, structureProxy } = selectedNodeSubject
