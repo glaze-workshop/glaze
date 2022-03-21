@@ -5,8 +5,9 @@ const program = new Command()
 
 const frontend = ['--filter', '*frontend']
 const type = ['--filter', '*types']
+const common = ['--filter', '*common']
 
-const allFilters = [...frontend, ...type]
+const allFilters = [...frontend, ...type, ...common]
 
 /**
  * Support win

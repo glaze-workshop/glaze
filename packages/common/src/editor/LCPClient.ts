@@ -1,12 +1,13 @@
 import { v4 as UuidV4 } from 'uuid'
+
 import {
   LCPClientMessage,
   LCPMessageType,
   LCPServerMessage,
-  LCPSubscribeResponse
-} from '..'
-
-import { LCPClientOptions, LCPClientReceiver } from './lcp.type'
+  LCPSubscribeResponse,
+  LCPClientOptions,
+  LCPClientReceiver
+} from './lcp.type'
 import LCPSocket from './LCPSocket'
 
 const LOG_PREFIX = '[LCPClient]'
@@ -118,51 +119,49 @@ class LCPClient {
     onUpdate: (data: T) => void
   ): Promise<() => void> {
     Log.log(`Subscribe ${path}`)
-    return new Promise((resolve) => {
-      this._request<LCPSubscribeResponse>({
-        type: LCPMessageType.Subscribe,
-        path,
-        uuid: UuidV4(),
-        params
-      }).then(({ success, subscribeId }) => {
-        if (success) {
-          Log.log(`Subscribe ${path} success: ${subscribeId}`)
-          // start listening
-          this.requestMap.set(subscribeId, {
-            retry: () => {
-              unsubscribe()
-              this.subscribe(path, params, onUpdate)
-            },
-            response: (_ /* ignore internal success */, data: T) => {
-              Log.log(`on Subscribe ${path}`, data)
-              onUpdate(data)
-            }
-          })
-          this.subscribeCount++
+    return this._request<LCPSubscribeResponse>({
+      type: LCPMessageType.Subscribe,
+      path,
+      uuid: UuidV4(),
+      params
+    }).then(({ success, subscribeId }) => {
+      if (success) {
+        Log.log(`Subscribe ${path} success: ${subscribeId}`)
+        // start listening
+        this.requestMap.set(subscribeId, {
+          retry: () => {
+            unsubscribe()
+            this.subscribe(path, params, onUpdate)
+          },
+          response: (_ /* ignore internal success */, data: T) => {
+            Log.log(`on Subscribe ${path}`, data)
+            onUpdate(data)
+          }
+        })
+        this.subscribeCount++
 
-          // unsubscribe method
-          let unsubscribed = false
-          const unsubscribe = () => {
-            if (unsubscribed) {
-              return
-            }
-
-            this._send({
-              type: LCPMessageType.UnSubscribe,
-              path,
-              uuid: subscribeId
-            })
-
-            this.requestMap.delete(subscribeId)
-            this.subscribeCount--
-            unsubscribed = true
+        // unsubscribe method
+        let unsubscribed = false
+        const unsubscribe = () => {
+          if (unsubscribed) {
+            return
           }
 
-          resolve(unsubscribe)
-        } else {
-          return Promise.reject(new Error('Subscribe reject'))
+          this._send({
+            type: LCPMessageType.UnSubscribe,
+            path,
+            uuid: subscribeId
+          })
+
+          this.requestMap.delete(subscribeId)
+          this.subscribeCount--
+          unsubscribed = true
         }
-      })
+
+        return unsubscribe
+      } else {
+        return Promise.reject(new Error('Subscribe reject'))
+      }
     })
   }
 }

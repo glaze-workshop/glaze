@@ -12,6 +12,10 @@ class ComponentsCenter {
 
   removeComponent(name: string) {
     Log.components('remove', name)
+    const info = this.componentsMap.get(name)
+    info.compiler.close((err, _result) => {
+      Log.components(`compiler for ${name} closed`, err)
+    })
     this.componentsMap.delete(name)
     Log.components('current components', [...this.componentsMap.keys()])
   }
@@ -39,6 +43,11 @@ class ComponentsCenter {
   /**
    * Single Component
    */
+  getComponentInfo(name: string): EditorComponentInfo {
+    const { state, targetPath } = this.componentsMap.get(name)
+    return { name, state, targetPath }
+  }
+
   getComponentInfoDetail(name: string): EditorComponentInfoInternal {
     return this.componentsMap.get(name)
   }

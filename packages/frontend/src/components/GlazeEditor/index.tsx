@@ -2,15 +2,14 @@ import styled from '@emotion/styled'
 import { Point, Transform, Zoom } from '@glaze/zoom'
 import normalizeWheel from 'normalize-wheel'
 import React, { FC, memo, useEffect, useRef } from 'react'
+import EditorActionDetect from './EditorActionDetect'
 import EditorContent from './EditorContent'
 import EditorUpper from './EditorUpper'
 import { EditorPositionSubject, useProjectIdChange } from './state'
 
 export const zoom = new Zoom()
 
-export interface GlazeEditorProps {
-
-}
+export interface GlazeEditorProps {}
 
 const EditorContainer = styled.div`
   position: relative;
@@ -19,18 +18,22 @@ const EditorContainer = styled.div`
   overflow: hidden;
 `
 
-const GlazeEditor:FC<GlazeEditorProps> = () => {
+const GlazeEditor: FC<GlazeEditorProps> = () => {
   const container = useRef<HTMLDivElement>(null)
 
   useProjectIdChange()
 
   useEffect(() => {
-    EditorPositionSubject.next(container.current?.getBoundingClientRect() ?? null)
+    EditorPositionSubject.next(
+      container.current?.getBoundingClientRect() ?? null
+    )
   }, [])
 
   useEffect(() => {
     if (container.current) {
-      container.current.addEventListener('wheel', (event) => {
+      const el = container.current
+
+      const onWheel = (event: WheelEvent) => {
         event.preventDefault()
         const e = normalizeWheel(event)
         if (event.ctrlKey) {
@@ -43,7 +46,11 @@ const GlazeEditor:FC<GlazeEditorProps> = () => {
         } else {
           zoom.scrollY(e.pixelY * 0.3)
         }
-      })
+      }
+      el.addEventListener('wheel', onWheel)
+      return () => {
+        el.removeEventListener('wheel', onWheel)
+      }
     }
   }, [])
 
@@ -51,6 +58,7 @@ const GlazeEditor:FC<GlazeEditorProps> = () => {
     <EditorContainer ref={container}>
       <EditorContent zoom={zoom} />
       <EditorUpper zoom={zoom} />
+      <EditorActionDetect />
     </EditorContainer>
   )
 }

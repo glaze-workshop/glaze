@@ -1,13 +1,22 @@
-import React, { FC, memo, useState } from 'react'
+import React, { FC, memo, useEffect, useState } from 'react'
 import { Box, Flex } from '@chakra-ui/react'
 import { icons } from './icon'
 import { menus } from '../../../../schema/fields/index'
 import cl from 'classnames'
+import { useCustomComponentList } from '../../../../components/GlazeEditor/customSupport'
 
 export interface LeftBarProps {}
 const LeftBar: FC<LeftBarProps> = () => {
   const [type, setType] = useState('GBC')
   const fields = menus.find((menu) => menu.key === type)
+
+  /**
+   * TODO 从这里可以获取本地组件列表
+   */
+  const customComponentList = useCustomComponentList()
+  useEffect(() => {
+    console.log('LeftBar: customComponentList', customComponentList)
+  }, [customComponentList])
 
   return (
     <Flex w="250px" className="border-r">

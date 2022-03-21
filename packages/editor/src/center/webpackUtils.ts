@@ -3,6 +3,7 @@ import { webpack } from 'webpack'
 import { CleanWebpackPlugin } from 'clean-webpack-plugin'
 
 import { CompilerCreatorOptions } from './type'
+import { componentStaticPrefix } from './config'
 
 /**
  * Create base config
@@ -59,3 +60,9 @@ export const createComponentCompiler = ({ componentName, entry, onUpdate }: Comp
 
   return compiler
 }
+
+/**
+ * Webpack compiled target component result
+ */
+export const componentTargetPath = (componentName: string, hash: string) =>
+  `${componentStaticPrefix}/${componentName}/${componentName}-${hash}.js`
