@@ -1,5 +1,5 @@
-import { stat } from 'fs'
 import {
+  ChangeEvent,
   MutableRefObject,
   useCallback,
   useEffect,
@@ -101,4 +101,65 @@ export const useStateRef = <T>(state: T): MutableRefObject<T> => {
   const ref = useRef<T>(state)
   ref.current = state
   return ref
+}
+
+/**
+ * Expect baseState to be a React-state value
+ * this hook create a shadow state for input-state
+ * which will update when baseState change
+ * also it can change itself without mutate baseState
+ * either baseState or shadowState change will make Component re-render only for one time
+ *
+ * promise:
+ *   setVal always return same reference
+ */
+export const useShadowState = <T>(
+  baseState: T,
+  compare: (oldState: T, newState: T) => boolean = (v1, v2) => v1 === v2
+): [T, (newValue: T) => void] => {
+  // extends baseState
+  const valRef = useRef(baseState)
+
+  const lastbaseState = useRef(baseState)
+  if (!compare(lastbaseState.current, baseState)) {
+    // when baseState change will only re-render because of setbaseState method
+    lastbaseState.current = baseState
+    // and override current value
+    valRef.current = baseState
+  }
+
+  // only set shadowValue and don't change originState
+  const forceUpdate = useForceRerender()
+  const setVal = useCallback((newValue: T) => {
+    valRef.current = newValue
+    // only change shadowState and invoke re-render
+    forceUpdate()
+  }, [])
+
+  return [valRef.current, setVal]
+}
+
+type UseShadowInputResult = [
+  string,
+  (e: ChangeEvent<HTMLInputElement>) => void,
+  {
+    resetInput: () => void
+  }
+]
+
+export const useShadowInput = (
+  baseState: string,
+  compare: (oldState: string, newState: string) => boolean = (v1, v2) => v1 === v2
+): UseShadowInputResult => {
+  const [input, setInput] = useShadowState(baseState, compare)
+
+  const onInputChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+    setInput(e.target.value)
+  }, [])
+
+  const resetInput = useCallback(() => {
+    setInput(baseState)
+  }, [baseState])
+
+  return [input, onInputChange, { resetInput }]
 }

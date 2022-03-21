@@ -52,7 +52,7 @@ const TeamList: FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selfAllFolderId])
 
-  const { isOpen, handleModelClose, handleModelOpen } = useModalState()
+  const { isOpen, handleModalClose: handleModelClose, handleModalOpen: handleModelOpen } = useModalState()
 
   return (
     <Flex direction="column" flex="1" overflowY="hidden">

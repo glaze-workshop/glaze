@@ -1,7 +1,7 @@
 import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, Button, Input } from '@chakra-ui/react'
 import { ProjectApi } from '@glaze/common'
 import { useFolderInfo } from '../../../hooks/folder.hook'
-import React, { FC, memo, useCallback, useState } from 'react'
+import React, { FC, memo, useCallback, useEffect, useState } from 'react'
 import { useMutation } from 'react-query'
 
 export interface ProjectCreationModalProps {
@@ -11,6 +11,7 @@ export interface ProjectCreationModalProps {
 }
 const ProjectCreationModal:FC<ProjectCreationModalProps> = ({ folderId, isOpen, onClose }) => {
   const [name, setName] = useState('')
+  // close & clear name
   const handleCloseClick = useCallback(() => {
     setName('')
     onClose()
@@ -25,7 +26,7 @@ const ProjectCreationModal:FC<ProjectCreationModalProps> = ({ folderId, isOpen, 
   const createProjectMutation = useMutation(ProjectApi.createProject, {
     onSuccess: ({ data }) => {
       folderQuery.refetch()
-      onClose()
+      handleCloseClick()
     }
   })
 

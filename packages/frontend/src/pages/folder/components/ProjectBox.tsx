@@ -1,7 +1,7 @@
 import { AspectRatio, Box, Flex, IconButton, Image, Text, useToast } from '@chakra-ui/react'
 import { Entity, GlazeErr, ProjectApi } from '@glaze/common'
 import React, { FC, MouseEvent, useEffect } from 'react'
-import { FiTrash2 } from 'react-icons/fi'
+import { FiTrash2, FiEdit3 } from 'react-icons/fi'
 import { useMutation, UseQueryResult } from 'react-query'
 import { Link } from 'react-router-dom'
 
@@ -10,9 +10,10 @@ interface ProjectBoxProps {
   project: Entity.ProjectEntity
   folderQuery: UseQueryResult
   isArchived?: boolean
+  openEditModal: (project: Entity.ProjectEntity) => void
 }
 
-const ProjectBox: FC<ProjectBoxProps> = ({ project, folderQuery, isArchived }) => {
+const ProjectBox: FC<ProjectBoxProps> = ({ project, folderQuery, isArchived, openEditModal }) => {
   useEffect(() => {
     Log.HomeFolder(`ProjectBox ${project.id}`, project)
   }, [project])
@@ -46,6 +47,19 @@ const ProjectBox: FC<ProjectBoxProps> = ({ project, folderQuery, isArchived }) =
       }
     }
   })
+
+  // ========== actions ==========
+  /**
+   * 编辑项目
+   */
+  const editProject = (e: MouseEvent) => {
+    e.preventDefault()
+    openEditModal(project)
+  }
+
+  /**
+   * 删除项目
+   */
   const deleteProject = (e: MouseEvent) => {
     e.preventDefault()
     archiveProjectMutation.mutate(project.id)
@@ -70,7 +84,8 @@ const ProjectBox: FC<ProjectBoxProps> = ({ project, folderQuery, isArchived }) =
       </AspectRatio>
       <Flex p={3} justify="space-between" align="center">
         <Text fontWeight="bold">{project.name}</Text>
-        <Flex alignItems="center">
+        <Flex alignItems="center" gap={4}>
+          <IconButton aria-label="编辑项目" icon={<FiEdit3 />} onClick={editProject} />
           {!isArchived && (
             <IconButton
               colorScheme="red"
