@@ -6,4 +6,6 @@ export const TEAM_PREFIX = `${NETWORK_PREFIX}/team`
 export const FOLDER_PREFIX = `${NETWORK_PREFIX}/folder`
 export const PROJECT_PREFIX = `${NETWORK_PREFIX}/project`
 export const DEPLOYMENT_PREFIX = `${NETWORK_PREFIX}/deployment`
+export const PLUGIN_PREFIX = `${NETWORK_PREFIX}/plugin`
+export const COS_PREFIX = `${NETWORK_PREFIX}/cos`
 export const DOC_PREFIX = '/doc'

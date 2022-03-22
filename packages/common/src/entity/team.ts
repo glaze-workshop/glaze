@@ -59,7 +59,6 @@ export enum GlazeTeamRoleEnum {
 export type GlazeTeamRole = `${GlazeTeamRoleEnum}`
 
 export interface TeamMemberEntity {
-  id: number
   memberId: number
   teamId: number
   role: GlazeTeamRole

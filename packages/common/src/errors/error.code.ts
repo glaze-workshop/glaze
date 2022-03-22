@@ -41,4 +41,14 @@ export enum ErrorCode {
    * 部署 path 重复
    */
   DeploymentPathDuplicationError,
+
+  /**
+   * 插件 id 重复
+   */
+  PluginIdDuplicationError,
+
+  /**
+   * 权限不足
+   */
+  PermissionDeniedError,
 }

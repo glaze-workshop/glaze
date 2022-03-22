@@ -1,7 +1,7 @@
 import { Process, Processor } from '@nestjs/bull'
 import { Job } from 'bull'
 import { DeploymentApi, Entity, GlazeErr } from '@glaze/common'
-import { CosService } from '../global/cos.service'
+import { CosService } from '../cos/cos.service'
 import { PuppeteerService } from './puppeteer.service'
 import { DeploymentService } from '../deployment/deployment.service'
 import { DocService } from '../doc/doc.service'

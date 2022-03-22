@@ -10,7 +10,7 @@ import dateTime from 'date-time'
 export const stderr = console.error.bind(console)
 
 export function run (env: EnvType) {
-  const config = createRollupFullConfig(RollupConfig.name, env)
+  const config = createRollupFullConfig(RollupConfig, env)
   const customizedConfig = RollupConfig.customConfig?.(config) ?? config
 
   const { isEnvDevelopment } = envExtract(env)

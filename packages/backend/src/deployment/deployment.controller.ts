@@ -23,7 +23,7 @@ export class DeploymentController {
   @UseGuards(JwtGuard)
   @Post(DeploymentApi.DEPLOYMENT_PATH)
   async initDeployProject (@CurrentUser() user: Entity.UserEntity, @Param('projectId', ParseIntPipe) id: number) {
-    const deployment = await this.deploymentService.initDeployProject(id)
+    const deployment = await this.deploymentService.initDeployProject(id, user.id)
     this.screenshotService.addDeploymentJob({ user, deployment })
     return deployment
   }
@@ -31,7 +31,7 @@ export class DeploymentController {
   @UseGuards(JwtGuard)
   @Put(DeploymentApi.DEPLOYMENT_PATH)
   async updateDeployProject (@CurrentUser() user: Entity.UserEntity, @Param('projectId', ParseIntPipe) id: number) {
-    const deployment = await this.deploymentService.updateProjectDeployment(id)
+    const deployment = await this.deploymentService.updateProjectDeployment(id, user.id)
     this.screenshotService.addDeploymentJob({ user, deployment })
     return deployment
   }

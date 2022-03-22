@@ -16,13 +16,15 @@ export interface WebpackCustomConfig extends CommonConfig {
 }
 
 export interface RollupCustomConfig extends CommonConfig {
+  tenser: boolean
   customConfig?: (options: RollupWatchOptions) => RollupWatchOptions
 }
 
 const defaultConfig: WebpackCustomConfig | RollupCustomConfig = {
   name: 'index',
   tsconfigPath: 'tsconfig.build.json',
-  port: 12333
+  port: 12333,
+  tenser: true
 }
 
 export const WebpackConfig: WebpackCustomConfig = {

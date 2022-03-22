@@ -2,6 +2,7 @@
 https://docs.nestjs.com/providers#services
 */
 
+import { CosDto } from '@glaze/common'
 import { Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import COS from 'cos-nodejs-sdk-v5'
@@ -26,6 +27,10 @@ export class CosService {
       SecretId: this.secretId,
       SecretKey: this.secretKey
     })
+  }
+
+  getBasicInfo (): CosDto.CosBasicInfo {
+    return { region: this.region, bucket: this.bucket }
   }
 
   uploadImage (image: Buffer, path: string): Promise<COS.PutObjectResult> {
@@ -59,7 +64,7 @@ export class CosService {
       ],
       region: this.region,
       bucket: this.bucket,
-      prefix: 'user/*'
+      prefix: 'public/*'
     }])
     return STS.getCredential({
       secretId: this.secretId,

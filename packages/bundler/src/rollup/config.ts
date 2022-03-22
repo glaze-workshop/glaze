@@ -12,8 +12,9 @@ import commonjs from '@rollup/plugin-commonjs'
 import { envExtract } from '../utils.js'
 import peerDepsExternal from 'rollup-plugin-peer-deps-external'
 import clean from './plugin/clean.js'
+import { RollupCustomConfig } from '../custom'
 
-export function createRollupFullConfig (name: string, env: EnvType): RollupWatchOptions {
+export function createRollupFullConfig (config: RollupCustomConfig, env: EnvType): RollupWatchOptions {
   const { isEnvProduction } = envExtract(env)
 
   const outputCommon: OutputOptions = {
@@ -21,7 +22,7 @@ export function createRollupFullConfig (name: string, env: EnvType): RollupWatch
     // (i.e. import * as namespaceImportObject from...) that are accessed dynamically.
     freeze: false,
     // Respect tsconfig esModuleInterop when setting __esModule.
-    name,
+    name: config.name,
     sourcemap: true,
     globals: { react: 'React', 'react-native': 'ReactNative' },
     exports: 'named'
@@ -31,12 +32,12 @@ export function createRollupFullConfig (name: string, env: EnvType): RollupWatch
     input: FullPath.appIndex,
     output: [{
       ...outputCommon,
-      file: `${FullPath.appBuild}/${name}.cjs.js`,
+      file: `${FullPath.appBuild}/${config.name}.cjs.js`,
       format: 'cjs',
-      plugins: isEnvProduction ? [terser()] : []
+      plugins: (isEnvProduction && config.tenser) ? [terser()] : []
     }, {
       ...outputCommon,
-      file: `${FullPath.appBuild}/${name}.esm.js`,
+      file: `${FullPath.appBuild}/${config.name}.esm.js`,
       format: 'esm'
     }],
     plugins: [

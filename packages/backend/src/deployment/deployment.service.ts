@@ -1,7 +1,7 @@
 /*
 https://docs.nestjs.com/providers#services
 */
-import { Entity, GlazeErr } from '@glaze/common'
+import { DeploymentDto, Entity, GlazeErr } from '@glaze/common'
 
 import { Injectable } from '@nestjs/common'
 import { nanoid } from 'nanoid'
@@ -10,6 +10,7 @@ import { isUniqueConstraintError } from '../utils/prisma.error'
 import { PrismaService } from '../global/prisma.service'
 import { DocService } from '../doc/doc.service'
 import { ScreenshotService } from '../screenshot/screenshot.service'
+import { randomUrlLowerCase } from '../utils/random'
 
 @Injectable()
 export class DeploymentService {
@@ -25,7 +26,16 @@ export class DeploymentService {
       status: true,
       screenshot: true,
       createdAt: true,
-      updatedAt: true
+      updatedAt: true,
+      by: {
+        select: {
+          id: true,
+          nickname: true,
+          username: true,
+          phone: true,
+          avatar: true
+        }
+      }
     }
   }
 
@@ -46,27 +56,29 @@ export class DeploymentService {
     })
   }
 
-  async initDeployProject (projectId: number): Promise<Entity.DeploymentEntity> {
+  async initDeployProject (projectId: number, userId: number): Promise<Entity.DeploymentEntity> {
     const [updates] = await this.docService.getFullDocument(projectId)
 
     return this.prisma.glazeProjectDeployInfo.create({
       data: {
         projectId,
-        path: nanoid(8),
-        info: Buffer.from(updates)
+        path: `glaze-${randomUrlLowerCase()}`,
+        info: Buffer.from(updates),
+        byUserId: userId
       },
       select: this.selectWithoutData()
     })
   }
 
-  async updateProjectDeployment (projectId: number): Promise<Entity.DeploymentEntity> {
+  async updateProjectDeployment (projectId: number, userId: number): Promise<Entity.DeploymentEntity> {
     const [updates] = await this.docService.getFullDocument(projectId)
     return this.prisma.glazeProjectDeployInfo.update({
       where: {
         projectId
       },
       data: {
-        info: Buffer.from(updates)
+        info: Buffer.from(updates),
+        byUserId: userId
       },
       select: this.selectWithoutData()
     })
@@ -94,7 +106,7 @@ export class DeploymentService {
   }
 
   async updateDeploymentScreenshot (deploymentId: number, screenshot: string): Promise<Entity.DeploymentEntity> {
-    return await this.prisma.glazeProjectDeployInfo.update({
+    return this.prisma.glazeProjectDeployInfo.update({
       where: {
         id: deploymentId
       },
@@ -103,5 +115,31 @@ export class DeploymentService {
       },
       select: this.selectWithoutData()
     })
+  }
+
+  async basicDeploymentAnalysis (projectId: number): Promise<DeploymentDto.BasicDeploymentAnalysis | void> {
+    const deploymentInfo = await this.prisma.glazeProjectDeployInfo.findUnique({
+      where: {
+        id: projectId
+      },
+      select: {
+        id: true
+      }
+    })
+    if (deploymentInfo) {
+      const res = await this.prisma.glazeProjectLogInfo.aggregate({
+        where: {
+          deployInfoId: deploymentInfo.id
+        },
+        _sum: {
+          size: true
+        },
+        _count: true
+      })
+      return {
+        totalSize: res._sum.size ?? 0,
+        count: res._count ?? 0
+      }
+    }
   }
 }

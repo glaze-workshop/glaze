@@ -11,10 +11,12 @@ import { DeploymentModule } from '../deployment/deployment.module'
 import { MessageModule } from '../message/message.module'
 import { ScreenshotProcessor } from './screenshot.processor'
 import { ConfigModule } from '@nestjs/config'
+import { CosModule } from '../cos/cos.module'
 
 @Module({
   imports: [
     ConfigModule,
+    CosModule,
     BullModule.registerQueue({
       name: 'screenshot'
     }),

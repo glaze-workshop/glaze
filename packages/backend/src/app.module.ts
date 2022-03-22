@@ -1,3 +1,5 @@
+import { PluginModule } from './plugin/plugin.module'
+import { CosModule } from './cos/cos.module'
 import { ScreenshotModule } from './screenshot/screenshot.module'
 import { MessageModule } from './message/message.module'
 import { DeploymentModule } from './deployment/deployment.module'
@@ -19,6 +21,7 @@ import { BullModule } from '@nestjs/bull'
 
 @Module({
   imports: [
+    PluginModule,
     ScreenshotModule,
     MessageModule,
     DeploymentModule,
@@ -27,6 +30,7 @@ import { BullModule } from '@nestjs/bull'
     ProjectModule,
     SelfModule,
     ConfigModule.forRoot(),
+    CosModule,
     TeamModule,
     UserModule,
     GlobalModule,
