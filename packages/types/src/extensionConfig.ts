@@ -1,3 +1,36 @@
+
+export enum GlazePluginControlType {
+
+  /** a numeric text box input */
+  NUMBER = 'number',
+
+  /** simple text input */
+  TEXT = 'text',
+}
+
+export interface AbstractControl<
+  T extends GlazePluginControlType = GlazePluginControlType,
+  D = unknown
+> {
+  name: string
+  type: T
+  /**
+   * 没有默认值则必填
+   */
+  default?: D
+}
+
+export interface GlazePluginNumberControl
+  extends AbstractControl<GlazePluginControlType.NUMBER, number> {
+  min?: number
+  max?: number
+}
+
+export interface GlazePluginTextControl
+  extends AbstractControl<GlazePluginControlType.TEXT, string> {}
+
+export type GlazePluginControl = GlazePluginNumberControl | GlazePluginTextControl
+
 export interface GlazePluginConfig {
 
   /** 自定义，保证唯一性 */
@@ -17,6 +50,8 @@ export interface GlazePluginConfig {
 
   /** 插件文件入口 */
   main: string
+
+  config?: Record<string, GlazePluginControl>
 }
 
 export interface GlazeGeneratedConfig {

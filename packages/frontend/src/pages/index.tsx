@@ -10,6 +10,7 @@ import { useWebSocketMessage } from '../hooks/websocket'
 import Setting from './project/dashboard/setting/setting'
 import Analysis from './project/dashboard/analysis/analysis'
 import Overview from './project/dashboard/overview/overview'
+import TeamPlugin from './teamPlugin'
 
 const LazyEditor = React.lazy(() => import('./project/index'))
 
@@ -21,6 +22,7 @@ const RootPage: FC = () => {
     <Routes>
       <Route path='/' element={<Home/>}>
         <Route path='folder/:folderId' element={<Folder />}/>
+        <Route path='team-plugin/:teamId' element={<TeamPlugin/>}/>
       </Route>
       <Route path='/project/:projectId' element={
         <Suspense fallback={'loading'}>

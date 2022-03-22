@@ -49,7 +49,7 @@ export async function uploadAction () {
   }
 
   const res = await Promise.all(uploadResult.files.map(({ data }, index) => {
-    const { id, name, type, desc, icon } = configFile.plugins[index]
+    const { id, name, type, desc, icon, config } = configFile.plugins[index]
     const dto: PluginDto.GlazePluginDto = {
       id,
       name,
@@ -57,7 +57,8 @@ export async function uploadAction () {
       desc,
       icon,
       path: data.Location,
-      ownerTeamId: configFile.generated.ownerTeamId
+      ownerTeamId: configFile.generated.ownerTeamId,
+      configSchema: config
     }
     return PluginApi.createOrUpdatePlugin(dto)
   }))

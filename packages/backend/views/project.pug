@@ -5,8 +5,19 @@ html(lang="en")
     meta(name="viewport", content="width=device-width, initial-scale=1")
     title(lang="en") Project
     script(type="text/javascript").
+      window.GLAZE_PREVIEW = !{isPreview}
+      window.GLAZE_PROJECT_ID = !{projectId};
+      window.GLAZE_PLUGIN_CONFIG = !{pluginConfig};
       window.GLAZE_NODES = !{nodes};
       window.GLAZE_STRUCTURE = !{structure};
+
+      
+      window.GLAZE_ACTION = Object.freeze({
+        getUserConfig: (id) => window.GLAZE_PLUGIN_CONFIG[id]
+      });
     script(src="https://render.file.localhost/index.js" defer)
+
+    each src in pluginSrc.length ? pluginSrc : []
+      script(src=src defer)
   body
     div#root

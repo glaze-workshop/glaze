@@ -14,6 +14,7 @@ import { TeamModule } from '../team/team.module'
   controllers: [
     PluginController],
   providers: [
-    PluginService]
+    PluginService],
+  exports: [PluginService]
 })
 export class PluginModule {}

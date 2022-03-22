@@ -1,4 +1,5 @@
 import { GlazePluginType } from '../entity/plugin'
+import type { GlazePluginControl } from '@glaze/types'
 
 export interface GlazePluginDto {
   id: string
@@ -7,5 +8,6 @@ export interface GlazePluginDto {
   icon?: string
   path: string
   type?: GlazePluginType
+  configSchema?: Record<string, GlazePluginControl>
   ownerTeamId: number
 }

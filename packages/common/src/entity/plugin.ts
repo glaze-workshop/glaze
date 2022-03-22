@@ -1,3 +1,7 @@
+import { GlazePluginConfig } from '@glaze/types'
+import { CommonTimestamp } from './time'
+import { UserEntity } from './user'
+
 /**
  * 插件类型
  */
@@ -10,13 +14,15 @@ export enum GlazePluginTypeEnum {
 
 export type GlazePluginType = `${GlazePluginTypeEnum}`
 
-export interface GlazePluginEntity {
+export interface GlazePluginEntity extends CommonTimestamp {
   id: string
   name: string
-  desc?: string
-  icon?: string
+  desc?: string | null
+  icon?: string | null
   path: string
+  config: GlazePluginConfig
   type: GlazePluginType
+  lastUpdateBy?: UserEntity
   ownerTeamId: number
 }
 

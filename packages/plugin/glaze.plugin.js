@@ -7,17 +7,38 @@ const config = {
   plugins: [{
     id: '@glaze-plugin/click-heatmap',
     name: '点击热力图支持插件',
-    /** 插件描述 */
     desc: '点击热力图支持插件，监听所有 Glaze 节点的点击事件并上传 Glaze 分析服务器',
     type: 'PUBLIC',
-    main: './click-heatmap/index.ts'
+    main: './click-heatmap/index.ts',
+    icon: 'https://glaze-1257788062.cos.ap-nanjing.myqcloud.com/user/kunduin/icon.jpg'
   }, {
     id: '@glaze-plugin/focus-heatmap',
     name: '焦点热力图支持插件',
-    /** 插件描述 */
     desc: '焦点热力图支持插件，监听所有元素的在用户视窗内的时间并上传 Glaze 分析服务器',
     type: 'PUBLIC',
-    main: './focus-heatmap/index.ts'
+    main: './focus-heatmap/index.ts',
+    icon: 'https://glaze-1257788062.cos.ap-nanjing.myqcloud.com/user/kunduin/icon.jpg'
+  }, {
+    id: '@glaze-plugin/schema-test',
+    name: '配置信息测试插件',
+    desc: '测试动态配置是否有效',
+    type: 'PUBLIC',
+    main: './schema-test/index.ts',
+    icon: 'https://glaze-1257788062.cos.ap-nanjing.myqcloud.com/user/kunduin/icon.jpg',
+    config: {
+      string: {
+        name: '字符串测试',
+        type: 'text',
+        default: 'string'
+      },
+      number: {
+        name: '数字测试',
+        type: 'number',
+        default: 1,
+        min: 0,
+        max: 10
+      }
+    }
   }],
 
   // Never change this object.

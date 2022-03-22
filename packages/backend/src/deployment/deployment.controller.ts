@@ -9,11 +9,14 @@ import * as Y from 'yjs'
 import { CurrentUser } from '../auth/user.decorator'
 import { JwtGuard } from '../auth/jwt.guard'
 import { ScreenshotService } from '../screenshot/screenshot.service'
+import { RenderService } from '../global/render.service'
 
 @Controller(Prefix.DEPLOYMENT_PREFIX)
 export class DeploymentController {
-  constructor (private readonly deploymentService: DeploymentService,
-    private readonly screenshotService: ScreenshotService) {}
+  constructor (
+    private readonly deploymentService: DeploymentService,
+    private readonly screenshotService: ScreenshotService,
+    private readonly renderService: RenderService) {}
 
   @Get(DeploymentApi.DEPLOYMENT_PATH)
   getProjectDeployment (@Param('projectId', ParseIntPipe) id: number) {
@@ -50,8 +53,13 @@ export class DeploymentController {
       Y.applyUpdate(yDoc, deploymentInfo.info)
       const nodesRaw = yDoc.getMap('components').toJSON()
       const structureRaw = yDoc.getArray('structure').toJSON()
-      return { nodes: JSON.stringify(nodesRaw), structure: JSON.stringify(structureRaw) }
+      return this.renderService.generateTemplateConfig({
+        isPreview: false,
+        projectId: deploymentInfo.projectId,
+        nodes: nodesRaw,
+        structure: structureRaw
+      })
     }
-    return { nodes: '{}', structure: '[]' }
+    return this.renderService.generateTemplateConfig({ projectId: -1 })
   }
 }

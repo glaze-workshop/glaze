@@ -184,6 +184,7 @@ model GlazePlugin {
   ownerTeamId        Int
   lastUpdateBy       GlazeUser                @relation(fields: [lastUpdateByUserId], references: [id])
   lastUpdateByUserId Int
+  configSchema       Json?
   usedProjects       GlazeProjectUsedPlugin[]
   createdAt          DateTime                 @default(now()) @db.Timestamp(6) /// 创建时间
   updatedAt          DateTime                 @updatedAt @db.Timestamp(6) /// 更新时间
@@ -196,6 +197,7 @@ model GlazeProjectUsedPlugin {
   pluginId  String       @unique
   createdAt DateTime     @default(now()) @db.Timestamp(6) /// 创建时间
   updatedAt DateTime     @updatedAt @db.Timestamp(6) /// 更新时间
+  config    Json?
 
   @@id([projectId, pluginId])
 }

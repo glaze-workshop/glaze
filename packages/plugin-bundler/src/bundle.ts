@@ -11,7 +11,7 @@ export function buildFiles (files: string[], watch = false) {
     minify: !watch,
     target: 'es2020',
     bundle: true,
-    sourcemap: true,
+    sourcemap: watch,
     watch
   })
 }
