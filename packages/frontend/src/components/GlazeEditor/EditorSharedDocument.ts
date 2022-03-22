@@ -78,7 +78,6 @@ export default class EditorSharedDocument {
     const selectedNodeSubject = SelectedNodeInfoSubject.value && AllNodeInfoObservableMap.getValueSubject(SelectedNodeInfoSubject.value)?.value
     // 选中节点
     if (selectedNodeSubject) {
-      console.log('selectedNodeSubject', selectedNodeSubject)
       const { nodeProxy, parentStructureInfo, structureProxy } = selectedNodeSubject
 
       const { component: selectedComponent, config: selectedComponentConfig } =

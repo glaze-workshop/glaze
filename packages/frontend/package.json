@@ -62,7 +62,8 @@
     "rules": {
       "no-trailing-spaces": "warn",
       "comma-dangle": "warn",
-      "space-before-function-paren": "warn"
+      "space-before-function-paren": "warn",
+      "multiline-ternary": "warn"
     }
   }
 }

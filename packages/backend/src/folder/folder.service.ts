@@ -38,7 +38,11 @@ export class FolderService {
         id: folderId
       },
       include: {
-        projects: true,
+        projects: {
+          orderBy: {
+            updatedAt: 'desc'
+          }
+        },
         team: true
       }
     })

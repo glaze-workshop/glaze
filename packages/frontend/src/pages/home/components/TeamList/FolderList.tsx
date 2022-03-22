@@ -1,9 +1,10 @@
-import { Box, Flex, Icon, Stack, Text } from '@chakra-ui/react'
+import { Box, Flex, Icon, IconButton, Stack, Text } from '@chakra-ui/react'
 import { Entity } from '@glaze/common'
 import { useCurrentRouterMatch } from '../../../../hooks/router.hook'
 import React, { FC, memo, useCallback } from 'react'
-import { FiFolder, FiGrid, FiTrash2 } from 'react-icons/fi'
+import { FiFolder, FiGrid, FiTrash2, FiPlus } from 'react-icons/fi'
 import { Link, useMatch, useResolvedPath } from 'react-router-dom'
+import { IconType } from 'react-icons'
 
 const getIconByFolderType = (folderType: Entity.GlazeFolderType) => {
   switch (folderType) {
@@ -16,17 +17,58 @@ const getIconByFolderType = (folderType: Entity.GlazeFolderType) => {
   }
 }
 
+interface FolderOptionProps {
+  title: string
+  Icon: IconType
+  onClick?: () => void
+}
+
+const FolderOption: FC<FolderOptionProps> = ({ title, Icon, onClick }) => {
+  return (
+    <IconButton
+      aria-label={title}
+      title={title}
+      icon={<Icon />}
+      size="xs"
+      bg="transparent"
+      _hover={{ bg: 'gray.300' }}
+      _focus={{ borderColor: 'none' }}
+      onClick={onClick}
+    />
+  )
+}
+
 interface FolderProps {
   folder: Entity.ProjectFolderEntity
 }
 
 const Folder: FC<FolderProps> = ({ folder }) => {
   const path = `/folder/${folder.id}`
+  // 选中当前 folder
   const match = useCurrentRouterMatch(path)
   return (
-    <Flex as={Link} to={path} px="6px" py="4px" key={folder.id} alignItems="center" bg={match ? 'gray.200' : undefined} _hover={{ bg: 'gray.200' }} cursor="pointer" borderRadius="4px">
-      <Icon as={getIconByFolderType(folder.type)}/>
-      <Text ml="16px" fontSize="sm">{folder.name}</Text>
+    <Flex
+      as={Link}
+      to={path}
+      px="6px"
+      py="4px"
+      key={folder.id}
+      justifyContent="space-between"
+      alignItems="center"
+      bg={match ? 'gray.200' : undefined}
+      _hover={{ bg: 'gray.200' }}
+      cursor="pointer"
+      borderRadius="4px"
+    >
+      <Flex alignItems="center">
+        <Icon as={getIconByFolderType(folder.type)} />
+        <Text ml="16px" fontSize="sm">
+          {folder.name}
+        </Text>
+      </Flex>
+      {/* <Flex alignItems="center">
+        <FolderOption title="删除分类" Icon={FiTrash2} />
+      </Flex> */}
     </Flex>
   )
 }
@@ -34,10 +76,10 @@ const Folder: FC<FolderProps> = ({ folder }) => {
 export interface FolderListProps {
   folders?: Entity.ProjectFolderEntity[]
 }
-const FolderList:FC<FolderListProps> = ({ folders }) => {
+const FolderList: FC<FolderListProps> = ({ folders }) => {
   return (
     <Stack>
-      {folders?.map(folder => (
+      {folders?.map((folder) => (
         <Folder key={folder.id} folder={folder} />
       ))}
     </Stack>

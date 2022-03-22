@@ -37,6 +37,7 @@ export class ProjectController {
   /** 删除项目 */
   @Delete(ProjectApi.PROJECT_PATH_WITH_ID)
   deleteProject (@Param('id', ParseIntPipe) id: number) {
+    console.log('delete project', id)
     return this.projectService.deleteProject(id)
   }
 
