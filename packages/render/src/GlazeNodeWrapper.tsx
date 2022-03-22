@@ -23,40 +23,36 @@ const lengthToStyle = (length: Length) => {
       return `${num}%`
   }
 }
-export function useNodeLayout (layoutConfig: LayoutConfig) {
-  return useMemo(() => ({
-    width: lengthToStyle(layoutConfig.width),
-    height: lengthToStyle(layoutConfig.height),
-    top: `${layoutConfig.position.top}px`,
-    left: `${layoutConfig.position.left}px`
-  }), [layoutConfig])
+export function useNodeLayout (layoutConfig: LayoutConfig, enableLayout = true) {
+  return useMemo(() => enableLayout
+    ? ({
+        width: lengthToStyle(layoutConfig.width),
+        height: lengthToStyle(layoutConfig.height),
+        top: `${layoutConfig.position.top}px`,
+        left: `${layoutConfig.position.left}px`
+      })
+    : ({
+        height: lengthToStyle(layoutConfig.height)
+      }), [enableLayout, layoutConfig.height, layoutConfig.position.left, layoutConfig.position.top, layoutConfig.width])
 }
 
 function GlazeNodeWrapper ({ nodeInfo, structureInfo, enableLayout }: GlazeNodeWrapperProps) {
-  const layoutStyle = useNodeLayout(nodeInfo.layout)
+  const layoutStyle = useNodeLayout(nodeInfo.layout, enableLayout)
 
   const CurrentComponent = BasicComponents[nodeInfo.componentId]
 
-  const child = CurrentComponent &&
-    <CurrentComponent {...nodeInfo.props}>
-      {structureInfo.children.map(child => (
-        <GlazeNodeWrapper
+  return (
+    <NodeWrapper style={layoutStyle}>
+      {<CurrentComponent {...nodeInfo.props}>
+        {structureInfo.children.map(child => (
+          <GlazeNodeWrapper
           key={child.nodeId}
           nodeInfo={window.GLAZE_NODES[child.nodeId]}
           structureInfo={child}
           enableLayout />
-      ))}
-    </CurrentComponent>
-
-  if (enableLayout) {
-    return child
-  } else {
-    return (
-      <NodeWrapper style={enableLayout ? layoutStyle : undefined}>
-        {child}
-      </NodeWrapper>
-    )
-  }
+        ))}
+      </CurrentComponent>}
+    </NodeWrapper>)
 }
 
 export default memo(GlazeNodeWrapper)

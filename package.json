@@ -9,7 +9,7 @@
     "dev:frontend": "pnpm dev --filter *frontend",
     "dev:editor": "pnpm dev --filter *frontend --filter *editor --filter *common --stream --parallel",
     "dev:storybook": "pnpm storybook --filter *frontend",
-    "dev:basic": "pnpm dev --filter \"*types\" --filter \"*zoom\" --filter \"*common\" --filter \"*bundler\" --filter \"*toolkit\" --stream --parallel",
+    "dev:basic": "pnpm dev --filter \"*types\" --filter \"*zoom\" --filter \"*common\" --filter \"*bundler\" --filter \"*render\" --filter \"*toolkit\" --stream --parallel",
     "test": "echo \"Error: no test specified\" && exit 1",
     "debug:server": "pnpm start:debug --filter \"*backend\"",
     "debug:logserver": "pnpm logserver:dev --filter \"*backend\"",

@@ -37,6 +37,8 @@ export enum ControlType {
   MULTI_SELECT = 'multi_select',
 
   FONT = 'font',
+
+  BACKGROUND = 'background',
 }
 
 export interface AbstractControl<
@@ -47,6 +49,9 @@ export interface AbstractControl<
   type: T
   default: D
 }
+
+export interface BackgroundControl
+  extends AbstractControl<ControlType.BACKGROUND, {background: string; backgroundImage: string}> {}
 
 export interface BooleanControl
   extends AbstractControl<ControlType.BOOLEAN, boolean> {}
