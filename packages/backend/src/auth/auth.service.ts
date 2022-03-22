@@ -3,10 +3,11 @@ https://docs.nestjs.com/providers#services
 */
 
 import { Injectable } from '@nestjs/common'
-import { AuthDto, Entity, GlazeErr } from '@glaze/common'
+import { AuthDto, Entity, GlazeErr, notEmpty } from '@glaze/common'
 import * as bcrypt from 'bcrypt'
 import { UserService } from '../user/user.service'
 import { JwtService } from '@nestjs/jwt'
+import * as _ from 'lodash'
 
 @Injectable()
 export class AuthService {
@@ -54,5 +55,20 @@ export class AuthService {
   async registerUser (user: AuthDto.AuthRegisterDTO) {
     user.password = await bcrypt.hash(user.password, Number(process.env.SALT_ROUND ?? 10))
     return this.userService.addUser({ username: user.username, password: user.password })
+  }
+
+  async verifyToken (token?: string) {
+    if (notEmpty(token)) {
+      const payload = this.jwtService.verify(token)
+      if (!payload) {
+        throw new GlazeErr.JwtAuthError()
+      }
+      const user = await this.userService.findUserById(payload.sub)
+      if (!user) {
+        throw new GlazeErr.JwtAuthError()
+      }
+      return user
+    }
+    throw new GlazeErr.JwtAuthError()
   }
 }

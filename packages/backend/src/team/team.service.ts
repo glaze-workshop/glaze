@@ -126,4 +126,13 @@ export class TeamService {
       }
     })
   }
+
+  getTeamMember (teamId: number, memberId: number): Promise<Entity.TeamMemberEntity | null> {
+    return this.prisma.glazeTeamMember.findFirst({
+      where: {
+        memberId,
+        teamId
+      }
+    })
+  }
 }

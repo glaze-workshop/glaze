@@ -9,10 +9,7 @@
       "request": "launch",
       "type": "pwa-chrome",
       "url": "http://localhost:8888",
-      "webRoot": "${workspaceFolder}/packages/frontend",
-      "sourceMapPathOverrides": {
-        "webpack-internal:///./*": "${workspaceFolder}/packages/frontend/*"
-      }
+      "webRoot": "${workspaceFolder}"
     },
     // nestjs 的 debug 方式
     {

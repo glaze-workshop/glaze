@@ -2,7 +2,7 @@ import axios from 'axios'
 import { TEAM_PREFIX } from '../prefix'
 import { TeamCreationDTO, TeamUpdateDTO } from './team.dto'
 import { compile } from 'path-to-regexp'
-import { GlazeTeamRole } from '../entity'
+import { GlazeTeamRole, TeamEntity } from '../entity'
 
 export const TEAM_PATH = ''
 export const FULL_TEAM_PATH = `${TEAM_PREFIX}`
@@ -37,7 +37,7 @@ export const updateTeam = (teamDTO: TeamUpdateDTO) =>
  * @param id 团队id
  * @returns
  */
-export const getTeam = (id: number) => axios.get(FULL_TEAM_PATH_WITH_ID_TO_PATH({ id }))
+export const getTeam = (id: number) => axios.get<TeamEntity>(FULL_TEAM_PATH_WITH_ID_TO_PATH({ id }))
 
 /**
  * 删除团队

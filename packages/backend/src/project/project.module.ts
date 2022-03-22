@@ -5,9 +5,14 @@ https://docs.nestjs.com/modules
 */
 
 import { Module } from '@nestjs/common'
+import { DocModule } from '../doc/doc.module'
+import { PluginModule } from '../plugin/plugin.module'
 
 @Module({
-  imports: [],
+  imports: [
+    DocModule,
+    PluginModule
+  ],
   controllers: [
     ProjectController],
   providers: [

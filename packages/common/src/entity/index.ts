@@ -5,6 +5,8 @@ export * from './project'
 export * from './component'
 export * from './folder'
 export * from './jwt'
+export * from './plugin'
+export { DeploymentEntity } from './deployment'
 
 export type PureEntity<T> =
   Omit<T, 'id' | 'createdAt' | 'updatedAt'> & {

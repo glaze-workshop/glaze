@@ -2,14 +2,15 @@
 https://docs.nestjs.com/providers#services
 */
 
-import { Entity, ProjectDto } from '@glaze/common'
+import { AuthDto, Entity, GlazeErr, ProjectDto } from '@glaze/common'
 import { Injectable } from '@nestjs/common'
 import { Prisma } from '@prisma/client'
 import { PrismaService } from '../global/prisma.service'
+import { DocService } from '../doc/doc.service'
 
 @Injectable()
 export class ProjectService {
-  constructor (private prisma: PrismaService) {}
+  constructor (private prisma: PrismaService, private docService: DocService) {}
 
   getProject (projectId: number): Promise<Entity.ProjectEntity | null> {
     return this.prisma.glazeProject.findUnique({

@@ -57,7 +57,7 @@ const TeamList: FC = () => {
   return (
     <Flex direction="column" flex="1" overflowY="hidden">
       <Box px="16px">
-        <FolderList folders={selfTeamInfo?.projectFolders} />
+        <FolderList folders={selfTeamInfo?.projectFolders} teamId={selfTeamInfo?.id} />
       </Box>
       <Text px="20px" pt="10px" pb="5px" fontWeight="bold">
         Team
@@ -74,7 +74,7 @@ const TeamList: FC = () => {
                 <AccordionIcon />
               </AccordionButton>
               <AccordionPanel pb={4} px="12px">
-                <FolderList folders={team.projectFolders} />
+                <FolderList folders={team.projectFolders} teamId={team.id} />
               </AccordionPanel>
             </AccordionItem>
           ))}

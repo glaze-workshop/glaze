@@ -10,18 +10,20 @@ datasource db {
 
 /// 用户表
 model GlazeUser {
-  id         Int               @id @default(autoincrement())
-  username   String            @unique @db.Text /// 用户名
-  phone      String?           @unique @db.Text /// 手机号
-  password   String?           @db.Text /// 密码
-  avatar     String?           @db.Text /// 头像地址
-  nickname   String?           @db.Text /// 昵称
-  intro      String?           @db.Text /// 介绍
-  createdAt  DateTime          @default(now()) @db.Timestamp(6) /// 创建时间
-  updatedAt  DateTime          @updatedAt @db.Timestamp(6) /// 更新时间
-  inTeams    GlazeTeamMember[]
-  components GlazeComponent[]
+  id        Int               @id @default(autoincrement())
+  username  String            @unique @db.Text /// 用户名
+  phone     String?           @unique @db.Text /// 手机号
+  password  String?           @db.Text /// 密码
+  avatar    String?           @db.Text /// 头像地址
+  nickname  String?           @db.Text /// 昵称
+  intro     String?           @db.Text /// 介绍
+  createdAt DateTime          @default(now()) @db.Timestamp(6) /// 创建时间
+  updatedAt DateTime          @updatedAt @db.Timestamp(6) /// 更新时间
+  inTeams   GlazeTeamMember[]
 
+  deployments GlazeProjectDeployInfo[]
+
+  inLastUpdatePluginList GlazePlugin[]
   @@index([phone, username])
 }
 
@@ -63,6 +65,7 @@ model GlazeTeam {
   logo           String?              @db.Text /// 团队logo
   members        GlazeTeamMember[] /// 团队成员
   projectFolders GlazeProjectFolder[] /// 项目文件夹
+  createdPlugins GlazePlugin[] /// 创建的插件
   createdAt      DateTime             @default(now()) @db.Timestamp(6) /// 创建时间
   updatedAt      DateTime             @updatedAt @db.Timestamp(6) /// 更新时间
 }
@@ -90,24 +93,65 @@ model GlazeProjectFolder {
 }
 
 model GlazeProject {
-  id              Int                   @id @default(autoincrement())
-  name            String?               @unique @db.Text /// 项目名称
-  intro           String?               @db.Text /// 介绍
-  preview         String?               @db.Text /// 预览图片
-  projectFolder   GlazeProjectFolder    @relation(fields: [projectFolderId], references: [id])
-  projectFolderId Int
-  createdAt       DateTime              @default(now()) @db.Timestamp(6) /// 创建时间
-  updatedAt       DateTime              @updatedAt @db.Timestamp(6) /// 更新时间
-  documentUpdate  GlazeDocumentUpdate[]
+  id                 Int                      @id @default(autoincrement())
+  name               String?                  @unique @db.Text /// 项目名称
+  intro              String?                  @db.Text /// 介绍
+  preview            String?                  @db.Text /// 预览图片
+  projectFolder      GlazeProjectFolder       @relation(fields: [projectFolderId], references: [id])
+  projectFolderId    Int
+  createdAt          DateTime                 @default(now()) @db.Timestamp(6) /// 创建时间
+  updatedAt          DateTime                 @updatedAt @db.Timestamp(6) /// 更新时间
+  usingPlugins       GlazeProjectUsedPlugin[]
+  documentUpdate     GlazeDocumentUpdate[]
+  documentDeployInfo GlazeProjectDeployInfo?
 }
 
 model GlazeDocumentUpdate {
-  id        BigInt       @id @default(autoincrement())
+  id        Int          @id @default(autoincrement())
   project   GlazeProject @relation(fields: [projectId], references: [id])
   projectId Int
   update    Bytes        @db.ByteA
   createdAt DateTime     @default(now()) @db.Timestamp(6) /// 创建时间
   updatedAt DateTime     @updatedAt @db.Timestamp(6) /// 更新时间
+}
+
+enum GlazeProjectDeployStatus {
+  /// 执行中
+  RUNNING
+  /// 暂停
+  SUSPEND
+}
+
+model GlazeProjectDeployInfo {
+  id         Int                      @id @default(autoincrement())
+  info       Bytes                    @db.ByteA
+  path       String                   @unique @db.Text
+  createdAt  DateTime                 @default(now()) @db.Timestamp(6) /// 创建时间
+  updatedAt  DateTime                 @updatedAt @db.Timestamp(6) /// 更新时间
+  project    GlazeProject             @relation(fields: [projectId], references: [id])
+  projectId  Int                      @unique
+  log        GlazeProjectLogInfo[]
+  status     GlazeProjectDeployStatus @default(RUNNING)
+  screenshot String?                  @db.Text
+  by         GlazeUser                @relation(fields: [byUserId], references: [id])
+  byUserId   Int
+
+  @@index([path])
+}
+
+model GlazeProjectLogInfo {
+  id           Int                    @id @default(autoincrement())
+  deployInfo   GlazeProjectDeployInfo @relation(fields: [deployInfoId], references: [id])
+  deployInfoId Int
+  remoteAddr   String                 @db.Text
+  protocol     String                 @db.Text
+  method       String                 @db.Text
+  host         String                 @db.Text
+  uri          String                 @db.Text
+  status       Int                    @db.Integer
+  size         Int                    @db.Integer
+  duration     Float                  @db.DoublePrecision
+  time         DateTime
 }
 
 enum GlazeComponentType {
@@ -122,6 +166,38 @@ model GlazeComponent {
   icon      String?            @db.Text /// 图标
   createdAt DateTime           @default(now()) @db.Timestamp(6) /// 创建时间
   updatedAt DateTime           @updatedAt @db.Timestamp(6) /// 更新时间
-  owner     GlazeUser?         @relation(fields: [ownerId], references: [id])
-  ownerId   Int?
+}
+
+enum GlazePluginType {
+  PRIVATE /// 私有插件
+  PUBLIC /// 公开插件
+}
+
+model GlazePlugin {
+  id                 String                   @id
+  name               String                   @db.Text /// 插件名称
+  desc               String?                  @db.Text /// 插件描述
+  icon               String?                  @db.Text /// 插件图标
+  path               String                   @db.Text /// 插件资源地址
+  type               GlazePluginType          @default(PRIVATE)
+  ownerTeam          GlazeTeam                @relation(fields: [ownerTeamId], references: [id])
+  ownerTeamId        Int
+  lastUpdateBy       GlazeUser                @relation(fields: [lastUpdateByUserId], references: [id])
+  lastUpdateByUserId Int
+  configSchema       Json?
+  usedProjects       GlazeProjectUsedPlugin[]
+  createdAt          DateTime                 @default(now()) @db.Timestamp(6) /// 创建时间
+  updatedAt          DateTime                 @updatedAt @db.Timestamp(6) /// 更新时间
+}
+
+model GlazeProjectUsedPlugin {
+  project   GlazeProject @relation(fields: [projectId], references: [id])
+  projectId Int          @unique
+  plugin    GlazePlugin  @relation(fields: [pluginId], references: [id])
+  pluginId  String       @unique
+  createdAt DateTime     @default(now()) @db.Timestamp(6) /// 创建时间
+  updatedAt DateTime     @updatedAt @db.Timestamp(6) /// 更新时间
+  config    Json?
+
+  @@id([projectId, pluginId])
 }

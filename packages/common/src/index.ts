@@ -6,7 +6,6 @@ export * as GlazeErr from './errors'
 export * as Prefix from './prefix'
 export * as AuthDto from './auth/auth.dto'
 export * as AuthApi from './auth/auth.api'
-export * as AuthMock from './auth/auth.mock'
 
 export * as TeamDto from './team/team.dto'
 export * as TeamApi from './team/team.api'
@@ -22,6 +21,15 @@ export * as FolderApi from './folder/folder.api'
 
 export * as SelfApi from './self/self.api'
 
+export * as DeploymentApi from './deployment/deployment.api'
+export * as DeploymentDto from './deployment/deployment.dto'
+
+export * as CosApi from './cos/cos.api'
+export * as CosDto from './cos/cos.dto'
+
+export * as PluginApi from './plugin/plugin.api'
+export * as PluginDto from './plugin/plugin.dto'
+
 export * as Entity from './entity'
 export * as ResType from './res.types'
 
@@ -31,3 +39,5 @@ export * from './editor/editor.type'
 export * from './editor/lcp.type'
 export { default as LCPSocket } from './editor/LCPSocket'
 export { default as LCPClient } from './editor/LCPClient'
+
+export * from './utils/null'

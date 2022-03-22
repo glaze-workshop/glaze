@@ -23,6 +23,7 @@ module.exports = {
     '@typescript-eslint'
   ],
   rules: {
+    camelcase: 0,
     'no-use-before-define': 0,
     'no-unused-vars': 0,
     semi: 'off',
@@ -46,6 +47,7 @@ module.exports = {
     '@typescript-eslint/interface-name-prefix': 'off',
     '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
-    '@typescript-eslint/no-explicit-any': 'off'
+    '@typescript-eslint/no-explicit-any': 'off',
+    'node/no-callback-literal': 'off'
   }
 }
