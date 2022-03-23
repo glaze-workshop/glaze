@@ -16,3 +16,9 @@ export interface ProjectEntity extends CommonTimestamp {
 
   projectFolder?: ProjectFolderEntity
 }
+
+export interface ProjectUsedPluginEntity extends CommonTimestamp {
+  projectId: number
+  pluginId: string
+  config: any
+}

@@ -1,0 +1,20 @@
+{
+  "name": "@glaze/google-analytic",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "author": "Bay",
+  "license": "ISC",
+  "scripts": {
+    "login": "glaze-plugin login",
+    "init": "glaze-plugin init",
+    "build": "glaze-plugin build",
+    "upload": "glaze-plugin upload"
+  },
+  "devDependencies": {
+    "@glaze/plugin-bundler": "workspace:*",
+    "@glaze/types": "workspace:*",
+    "cos-nodejs-sdk-v5": ">=2.11.6",
+    "esbuild": "^0.14.25"
+  }
+}

@@ -9,9 +9,11 @@ import { QueryClient, QueryClientProvider } from 'react-query'
 import './mocks/init'
 import { BrowserRouter } from 'react-router-dom'
 import { ReactQueryDevtools } from 'react-query/devtools'
-
+import dayjs from 'dayjs'
+import relativeTime from 'dayjs/plugin/relativeTime'
 import 'systemjs'
 import { queryClient } from './utils/queryClient'
+dayjs.extend(relativeTime)
 
 // eslint-disable-next-line no-undef
 System.set('app:react', { default: React, __useDefault: true })

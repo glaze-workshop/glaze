@@ -1,4 +1,4 @@
-import { GlazePluginConfig } from '@glaze/types'
+import { GlazePluginConfig, GlazePluginControl } from '@glaze/types'
 import { CommonTimestamp } from './time'
 import { UserEntity } from './user'
 
@@ -20,7 +20,7 @@ export interface GlazePluginEntity extends CommonTimestamp {
   desc?: string | null
   icon?: string | null
   path: string
-  config: GlazePluginConfig
+  configSchema?: Record<string, GlazePluginControl>
   type: GlazePluginType
   lastUpdateBy?: UserEntity
   ownerTeamId: number

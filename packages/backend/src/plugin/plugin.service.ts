@@ -10,9 +10,12 @@ import { isUniqueConstraintError } from '../utils/prisma.error'
 
 @Injectable()
 export class PluginService {
-  constructor (private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) {}
 
-  createOrUpdatePlugin (user: Entity.UserEntity, pluginDto: PluginDto.GlazePluginDto) {
+  createOrUpdatePlugin(
+    user: Entity.UserEntity,
+    pluginDto: PluginDto.GlazePluginDto
+  ) {
     return this.prisma.glazePlugin.upsert({
       where: {
         id: pluginDto.id
@@ -41,7 +44,11 @@ export class PluginService {
     })
   }
 
-  usePlugin (projectId: number, pluginId: string, config: Prisma.InputJsonObject) {
+  usePlugin(
+    projectId: number,
+    pluginId: string,
+    config: Prisma.InputJsonObject
+  ) {
     return this.prisma.glazeProjectUsedPlugin.upsert({
       where: {
         projectId,
@@ -58,7 +65,7 @@ export class PluginService {
     })
   }
 
-  getPublicPlugins (pluginId: string) {
+  getPublicPlugins(pluginId: string) {
     return this.prisma.glazePlugin.findMany({
       where: {
         id: pluginId,
@@ -67,7 +74,7 @@ export class PluginService {
     })
   }
 
-  getPluginById (pluginId: string) {
+  getPluginById(pluginId: string) {
     return this.prisma.glazePlugin.findFirst({
       where: {
         id: pluginId
@@ -75,12 +82,12 @@ export class PluginService {
     })
   }
 
-  getPlugins (teamId?: number) {
+  getPlugins(teamId?: number) {
     const isInTeam = notEmpty(teamId)
     return this.prisma.glazePlugin.findMany({
       where: {
         ownerTeamId: teamId,
-        type: isInTeam ? undefined : GlazePluginType.PRIVATE
+        type: isInTeam ? undefined : GlazePluginType.PUBLIC
       },
       include: {
         lastUpdateBy: isInTeam
@@ -98,11 +105,11 @@ export class PluginService {
     })
   }
 
-  getProjectUsedPlugins (projectId: number) {
+  getProjectUsedPlugins(projectId: number) {
     return this.prisma.glazePlugin.findMany({
       where: {
         usedProjects: {
-          every: {
+          some: {
             projectId
           }
         }
@@ -110,20 +117,16 @@ export class PluginService {
     })
   }
 
-  getProjectUsedPlugin (projectId: number, pluginId: string) {
-    return this.prisma.glazePlugin.findFirst({
+  getProjectUsedPlugin(projectId: number, pluginId: string) {
+    return this.prisma.glazeProjectUsedPlugin.findFirst({
       where: {
-        usedProjects: {
-          every: {
-            projectId,
-            pluginId
-          }
-        }
+        projectId,
+        pluginId
       }
     })
   }
 
-  deleteProjectPlugin (projectId: number, pluginId: string) {
+  deleteProjectPlugin(projectId: number, pluginId: string) {
     return this.prisma.glazeProjectUsedPlugin.delete({
       where: {
         projectId,

@@ -15,8 +15,13 @@ import Dashboard from './project/dashboard/dashboard'
 import { useWebSocketMessage } from '../hooks/websocket'
 import Setting from './project/dashboard/setting/setting'
 import Analysis from './project/dashboard/analysis/analysis'
+import ProjectPlugin from './project/dashboard/analysis/plugin'
+import BasicAnalysis from './project/dashboard/analysis/basic'
 import Overview from './project/dashboard/overview/overview'
 import TeamPlugin from './teamPlugin'
+import PluginMarket from './project/dashboard/analysis/plugin-market'
+import Heatmap from './project/dashboard/analysis/heatmap'
+import PluginConfig from './project/dashboard/analysis/plugin/config'
 
 const LazyEditor = React.lazy(() => import('./project/index'))
 
@@ -40,7 +45,13 @@ const RootPage: FC = () => {
       />
       <Route path='/project/:projectId/dashboard' element={<Dashboard />}>
         <Route path='setting' element={<Setting />}/>
-        <Route path='analysis' element={<Analysis />}/>
+        <Route path='analysis' element={<Analysis />}>
+          <Route path='plugin' element={<ProjectPlugin />}/>
+          <Route path='plugin/:pluginId' element={<PluginConfig />}/>
+          <Route path='plugin-market' element={<PluginMarket />}/>
+          <Route path='heatmap' element={<Heatmap />}/>
+          <Route index element={<BasicAnalysis />}/>
+        </Route>
         <Route index element={<Overview />}/>
       </Route>
       <Route path="/login" element={<Login />} />

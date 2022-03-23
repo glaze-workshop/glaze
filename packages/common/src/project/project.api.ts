@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { compile } from 'path-to-regexp'
-import { DeploymentEntity, ProjectEntity } from '../entity'
+import { DeploymentEntity, ProjectEntity, ProjectUsedPluginEntity } from '../entity'
 import { GlazePluginEntity } from '../entity/plugin'
 import { PROJECT_PREFIX } from '../prefix'
 import { ProjectCreationDTO, ProjectUpdateDTO } from './project.dto'
@@ -67,7 +67,7 @@ export const archiveProject = (id: number) =>
 
 export const PROJECT_USED_PLUGIN_PATH = `${PROJECT_PATH_WITH_ID}/plugin`
 export const FULL_PROJECT_USED_PLUGIN_PATH = `${PROJECT_PREFIX}/${PROJECT_USED_PLUGIN_PATH}`
-export const FULL_PROJECT_USED_PLUGIN_PATH_TO_PATH = compile<{id: number}>(PROJECT_USED_PLUGIN_PATH)
+export const FULL_PROJECT_USED_PLUGIN_PATH_TO_PATH = compile<{id: number}>(FULL_PROJECT_USED_PLUGIN_PATH)
 
 /**
  * 获得项目使用中的全部插件
@@ -78,18 +78,18 @@ export const getProjectPlugins = (id: number) =>
   axios.get<GlazePluginEntity[]>(FULL_PROJECT_USED_PLUGIN_PATH_TO_PATH({ id }))
 
 export const PROJECT_USED_PLUGIN_PATH_WITH_ID = `${PROJECT_USED_PLUGIN_PATH}/:pluginId`
-export const FULL_PROJECT_USED_PLUGIN_PATH_WITH_ID = `${PROJECT_USED_PLUGIN_PATH}/${PROJECT_USED_PLUGIN_PATH_WITH_ID}`
+export const FULL_PROJECT_USED_PLUGIN_PATH_WITH_ID = `${PROJECT_PREFIX}/${PROJECT_USED_PLUGIN_PATH_WITH_ID}`
 export const FULL_PROJECT_USED_PLUGIN_PATH_WITH_ID_TO_PATH = (projectId: number, pluginId: string) =>
   compile<{id: number; pluginId: string}>(FULL_PROJECT_USED_PLUGIN_PATH_WITH_ID)({ id: projectId, pluginId: encodeURIComponent(pluginId) })
 
 /**
- * 获得项目使用的具体插件的详情
+ * 获得项目使用的具体插件的关系信息
  * @param projectId 项目 id
  * @param pluginId 插件 id
  * @returns
  */
-export const getProjectPlugin = (projectId: number, pluginId: string) =>
-  axios.get<GlazePluginEntity>(FULL_PROJECT_USED_PLUGIN_PATH_WITH_ID_TO_PATH(projectId, pluginId))
+export const getProjectPluginRelationship = (projectId: number, pluginId: string) =>
+  axios.get<ProjectUsedPluginEntity | null>(FULL_PROJECT_USED_PLUGIN_PATH_WITH_ID_TO_PATH(projectId, pluginId))
 
 /**
  * 更新项目使用的具体插件配置（并启用插件）
