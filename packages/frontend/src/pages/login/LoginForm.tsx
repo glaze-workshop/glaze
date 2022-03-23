@@ -11,7 +11,7 @@ import {
   VStack
 } from '@chakra-ui/react'
 import { AuthApi, AuthDto, GlazeErr } from '@glaze/common'
-import React, { FC } from 'react'
+import { FC } from 'react'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { DevTool } from '@hookform/devtools'

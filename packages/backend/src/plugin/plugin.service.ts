@@ -6,7 +6,6 @@ import { Entity, notEmpty, PluginDto } from '@glaze/common'
 import { Injectable } from '@nestjs/common'
 import { GlazePluginType, Prisma } from '@prisma/client'
 import { PrismaService } from '../global/prisma.service'
-import { isUniqueConstraintError } from '../utils/prisma.error'
 
 @Injectable()
 export class PluginService {
@@ -51,8 +50,10 @@ export class PluginService {
   ) {
     return this.prisma.glazeProjectUsedPlugin.upsert({
       where: {
-        projectId,
-        pluginId
+        projectId_pluginId: {
+          projectId,
+          pluginId
+        }
       },
       create: {
         projectId,
@@ -117,7 +118,7 @@ export class PluginService {
     })
   }
 
-  getProjectUsedPlugin(projectId: number, pluginId: string) {
+  getProjectUsedPluginConfig(projectId: number, pluginId: string) {
     return this.prisma.glazeProjectUsedPlugin.findFirst({
       where: {
         projectId,
@@ -126,11 +127,29 @@ export class PluginService {
     })
   }
 
+  getAllProjectUsedPluginConfig(projectId: number) {
+    return this.prisma.glazeProjectUsedPlugin.findMany({
+      where: {
+        projectId
+      },
+      include: {
+        plugin: {
+          select: {
+            id: true,
+            path: true
+          }
+        }
+      }
+    })
+  }
+
   deleteProjectPlugin(projectId: number, pluginId: string) {
     return this.prisma.glazeProjectUsedPlugin.delete({
       where: {
-        projectId,
-        pluginId
+        projectId_pluginId: {
+          projectId,
+          pluginId
+        }
       }
     })
   }

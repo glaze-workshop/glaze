@@ -15,15 +15,14 @@ export interface RenderConfig {
 
 @Injectable()
 export class RenderService {
-  generateTemplateConfig (
-    {
-      isPreview = true,
-      projectId,
-      pluginConfig = {},
-      nodes = {},
-      structure = [],
-      pluginSrc = []
-    }: RenderConfig) {
+  generateTemplateConfig({
+    isPreview = true,
+    projectId,
+    pluginConfig = {},
+    nodes = {},
+    structure = [],
+    pluginSrc = []
+  }: RenderConfig) {
     return {
       isPreview,
       projectId: projectId,

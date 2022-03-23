@@ -1,13 +1,12 @@
 import { Box, Flex, VStack } from '@chakra-ui/react'
 import { useProjectInfoUnderParam } from '../../../../hooks/project.hook'
-import React, { FC } from 'react'
+import { FC } from 'react'
 import NavLink from '../../../../components/NavList/NavLink'
 import { Outlet } from 'react-router-dom'
 
-export interface AnalysisProps {
+export interface AnalysisProps {}
 
-}
-const Analysis:FC<AnalysisProps> = () => {
+const Analysis: FC<AnalysisProps> = () => {
   const { projectId } = useProjectInfoUnderParam()
   return (
     <Flex>

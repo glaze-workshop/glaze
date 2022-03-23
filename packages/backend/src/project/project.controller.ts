@@ -73,7 +73,7 @@ export class ProjectController {
     @Param('id', ParseIntPipe) id: number,
     @Param('pluginId', DecodeUrlComponentPipe) pluginId: string
   ) {
-    return this.pluginService.getProjectUsedPlugin(id, pluginId)
+    return this.pluginService.getProjectUsedPluginConfig(id, pluginId)
   }
 
   @Put(ProjectApi.PROJECT_USED_PLUGIN_PATH_WITH_ID)

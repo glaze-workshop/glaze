@@ -17,10 +17,11 @@ import {
   NumberInputField,
   NumberInputStepper
 } from '@chakra-ui/react'
-import { notEmpty } from '@glaze/common'
+import { notEmpty, ProjectApi } from '@glaze/common'
 import { GlazePluginControlType } from '@glaze/types'
-import { FC, memo, useEffect } from 'react'
+import { FC, memo, useCallback, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
+import { useMutation } from 'react-query'
 import { usePluginById, usePluginParamId } from '../../../../../hooks/plugin.hook'
 import { useProjectInfoUnderParam, useProjectUsedPlugin } from '../../../../../hooks/project.hook'
 
@@ -51,6 +52,33 @@ const PluginConfig: FC<PluginConfigProps> = () => {
     }
   }, [projectUsedPluginInfo, reset])
 
+  const updateProjectPluginMutation = useMutation(ProjectApi.updateProjectPluginSettings, {
+    onSuccess: () => {
+      projectUsedPluginQuery.refetch()
+    }
+  })
+
+  const onUpdateSubmit = useCallback(
+    (e) => {
+      updateProjectPluginMutation.mutate({
+        projectId,
+        pluginId,
+        config: e
+      })
+    },
+    [pluginId, projectId, updateProjectPluginMutation]
+  )
+
+  const deleteProjectPluginMutation = useMutation(ProjectApi.deletePluginInProject, {
+    onSuccess: () => {
+      projectUsedPluginQuery.refetch()
+    }
+  })
+
+  const onDeleteSubmit = useCallback(() => {
+    deleteProjectPluginMutation.mutate({ pluginId, projectId })
+  }, [deleteProjectPluginMutation, pluginId, projectId])
+
   return (
     <Box>
       {pluginInfo && (
@@ -76,7 +104,7 @@ const PluginConfig: FC<PluginConfigProps> = () => {
             </Flex>
           </Flex>
 
-          <form onSubmit={handleSubmit((e) => console.log(e))}>
+          <form onSubmit={handleSubmit(onUpdateSubmit)}>
             <VStack maxW="500px" pt="20px">
               {pluginInfo.configSchema &&
                 Object.keys(pluginInfo.configSchema).map((key) => {
@@ -94,24 +122,20 @@ const PluginConfig: FC<PluginConfigProps> = () => {
                         )
                       case GlazePluginControlType.NUMBER:
                         return (
-                          <NumberInput>
-                            <NumberInputField
-                              {...register(key, {
-                                required:
-                                  notEmpty(config.default) && `配置项「${config.name}」不能为空`,
-                                min: notEmpty(config.min)
-                                  ? { value: config.min, message: `不能小于${config.min}` }
-                                  : undefined,
-                                max: notEmpty(config.max)
-                                  ? { value: config.max, message: `不能大于${config.max}` }
-                                  : undefined
-                              })}
-                            />
-                            <NumberInputStepper>
-                              <NumberIncrementStepper />
-                              <NumberDecrementStepper />
-                            </NumberInputStepper>
-                          </NumberInput>
+                          <Input
+                            type="number"
+                            {...register(key, {
+                              required:
+                                notEmpty(config.default) && `配置项「${config.name}」不能为空`,
+                              min: notEmpty(config.min)
+                                ? { value: config.min, message: `不能小于${config.min}` }
+                                : undefined,
+                              max: notEmpty(config.max)
+                                ? { value: config.max, message: `不能大于${config.max}` }
+                                : undefined,
+                              valueAsNumber: true
+                            })}
+                          />
                         )
                     }
                   }
@@ -125,10 +149,21 @@ const PluginConfig: FC<PluginConfigProps> = () => {
                 })}
               <FormControl>
                 <Flex align="center" justify="space-between">
-                  {pluginInfo.configSchema && (
-                    <Button type="submit">{projectUsedPluginInfo ? '更新配置' : '安装插件'}</Button>
+                  {((!projectUsedPluginInfo && !pluginInfo.configSchema) ||
+                    pluginInfo.configSchema) && (
+                    <Button isLoading={updateProjectPluginMutation.isLoading} type="submit">
+                      {projectUsedPluginInfo ? '更新配置' : '安装插件'}
+                    </Button>
                   )}
-                  {projectUsedPluginInfo && <Button colorScheme="pink">卸载插件</Button>}
+                  {projectUsedPluginInfo && (
+                    <Button
+                      isLoading={deleteProjectPluginMutation.isLoading}
+                      onClick={onDeleteSubmit}
+                      colorScheme="pink"
+                    >
+                      卸载插件
+                    </Button>
+                  )}
                 </Flex>
               </FormControl>
             </VStack>

@@ -29,11 +29,5 @@
     "axios": ">=0.26",
     "i18next": ">=21.5.2",
     "yup": ">=0.32.11"
-  },
-  "eslintConfig": {
-    "rules": {
-      "space-before-function-paren": "warn",
-      "indent": "warn"
-    }
   }
 }

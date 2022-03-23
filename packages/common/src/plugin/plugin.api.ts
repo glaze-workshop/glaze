@@ -9,7 +9,10 @@ export const PLUGIN_PATH = ''
 export const FULL_PLUGIN_PATH = PLUGIN_PREFIX
 
 export const createOrUpdatePlugin = (glazePluginDto: GlazePluginDto) =>
-  axios.post<GlazePluginEntity | PermissionDeniedError>(FULL_PLUGIN_PATH, glazePluginDto)
+  axios.post<GlazePluginEntity | PermissionDeniedError>(
+    FULL_PLUGIN_PATH,
+    glazePluginDto
+  )
 
 export interface GetPluginQueryParams {
   ownerTeamId?: number
@@ -21,7 +24,9 @@ export const getPlugins = (query: GetPluginQueryParams = {}) =>
 export const PLUGIN_PATH_WITH_ID = ':pluginId'
 export const FULL_PLUGIN_PATH_WITH_ID = `${PLUGIN_PREFIX}/${PLUGIN_PATH_WITH_ID}`
 export const FULL_PLUGIN_PATH_WITH_ID_TO_PATH = (pluginId: string) =>
-  compile<{pluginId: string}>(FULL_PLUGIN_PATH_WITH_ID)({ pluginId: encodeURIComponent(pluginId) })
+  compile<{ pluginId: string }>(FULL_PLUGIN_PATH_WITH_ID)({
+    pluginId: encodeURIComponent(pluginId)
+  })
 
 export const getPluginById = (pluginId: string) =>
   axios.get<GlazePluginEntity>(FULL_PLUGIN_PATH_WITH_ID_TO_PATH(pluginId))

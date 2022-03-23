@@ -1,9 +1,13 @@
 import axios from 'axios'
 import { compile } from 'path-to-regexp'
-import { DeploymentEntity, ProjectEntity, ProjectUsedPluginEntity } from '../entity'
+import { ProjectEntity, ProjectUsedPluginEntity } from '../entity'
 import { GlazePluginEntity } from '../entity/plugin'
 import { PROJECT_PREFIX } from '../prefix'
-import { ProjectCreationDTO, ProjectUpdateDTO } from './project.dto'
+import {
+  ProjectCreationDTO,
+  ProjectPluginSettingDto,
+  ProjectUpdateDTO
+} from './project.dto'
 
 export const PROJECT_PATH = ''
 export const FULL_PROJECT_PATH = `${PROJECT_PREFIX}`
@@ -26,7 +30,9 @@ export const getProjects = (folderId: number) =>
 
 export const PROJECT_PATH_WITH_ID = ':id'
 export const FULL_PROJECT_PATH_WITH_ID = `${PROJECT_PREFIX}/${PROJECT_PATH_WITH_ID}`
-export const FULL_PROJECT_PATH_WITH_ID_TO_PATH = compile<{id: number}>(FULL_PROJECT_PATH_WITH_ID)
+export const FULL_PROJECT_PATH_WITH_ID_TO_PATH = compile<{ id: number }>(
+  FULL_PROJECT_PATH_WITH_ID
+)
 
 /**
  * 更新项目
@@ -34,7 +40,10 @@ export const FULL_PROJECT_PATH_WITH_ID_TO_PATH = compile<{id: number}>(FULL_PROJ
  * @returns
  */
 export const updateProject = (projectDTO: ProjectUpdateDTO) => {
-  return axios.put<ProjectEntity>(FULL_PROJECT_PATH_WITH_ID_TO_PATH({ id: projectDTO.id }), projectDTO)
+  return axios.put<ProjectEntity>(
+    FULL_PROJECT_PATH_WITH_ID_TO_PATH({ id: projectDTO.id }),
+    projectDTO
+  )
 }
 
 /**
@@ -55,7 +64,9 @@ export const deleteProject = (id: number) =>
 
 export const PROJECT_ARCHIVE_PATH = `${PROJECT_PATH_WITH_ID}/archive`
 export const FULL_PROJECT_ARCHIVE_PATH = `${PROJECT_PREFIX}/${PROJECT_ARCHIVE_PATH}`
-export const FULL_PROJECT_ARCHIVE_PATH_TO_PATH = compile<{id: number}>(FULL_PROJECT_ARCHIVE_PATH)
+export const FULL_PROJECT_ARCHIVE_PATH_TO_PATH = compile<{ id: number }>(
+  FULL_PROJECT_ARCHIVE_PATH
+)
 
 /**
  * 存档项目
@@ -67,7 +78,9 @@ export const archiveProject = (id: number) =>
 
 export const PROJECT_USED_PLUGIN_PATH = `${PROJECT_PATH_WITH_ID}/plugin`
 export const FULL_PROJECT_USED_PLUGIN_PATH = `${PROJECT_PREFIX}/${PROJECT_USED_PLUGIN_PATH}`
-export const FULL_PROJECT_USED_PLUGIN_PATH_TO_PATH = compile<{id: number}>(FULL_PROJECT_USED_PLUGIN_PATH)
+export const FULL_PROJECT_USED_PLUGIN_PATH_TO_PATH = compile<{ id: number }>(
+  FULL_PROJECT_USED_PLUGIN_PATH
+)
 
 /**
  * 获得项目使用中的全部插件
@@ -79,8 +92,13 @@ export const getProjectPlugins = (id: number) =>
 
 export const PROJECT_USED_PLUGIN_PATH_WITH_ID = `${PROJECT_USED_PLUGIN_PATH}/:pluginId`
 export const FULL_PROJECT_USED_PLUGIN_PATH_WITH_ID = `${PROJECT_PREFIX}/${PROJECT_USED_PLUGIN_PATH_WITH_ID}`
-export const FULL_PROJECT_USED_PLUGIN_PATH_WITH_ID_TO_PATH = (projectId: number, pluginId: string) =>
-  compile<{id: number; pluginId: string}>(FULL_PROJECT_USED_PLUGIN_PATH_WITH_ID)({ id: projectId, pluginId: encodeURIComponent(pluginId) })
+export const FULL_PROJECT_USED_PLUGIN_PATH_WITH_ID_TO_PATH = (
+  projectId: number,
+  pluginId: string
+) =>
+  compile<{ id: number; pluginId: string }>(
+    FULL_PROJECT_USED_PLUGIN_PATH_WITH_ID
+  )({ id: projectId, pluginId: encodeURIComponent(pluginId) })
 
 /**
  * 获得项目使用的具体插件的关系信息
@@ -88,8 +106,13 @@ export const FULL_PROJECT_USED_PLUGIN_PATH_WITH_ID_TO_PATH = (projectId: number,
  * @param pluginId 插件 id
  * @returns
  */
-export const getProjectPluginRelationship = (projectId: number, pluginId: string) =>
-  axios.get<ProjectUsedPluginEntity | null>(FULL_PROJECT_USED_PLUGIN_PATH_WITH_ID_TO_PATH(projectId, pluginId))
+export const getProjectPluginRelationship = (
+  projectId: number,
+  pluginId: string
+) =>
+  axios.get<ProjectUsedPluginEntity | null>(
+    FULL_PROJECT_USED_PLUGIN_PATH_WITH_ID_TO_PATH(projectId, pluginId)
+  )
 
 /**
  * 更新项目使用的具体插件配置（并启用插件）
@@ -98,8 +121,23 @@ export const getProjectPluginRelationship = (projectId: number, pluginId: string
  * @param config 配置
  * @returns
  */
-export const updateProjectPluginSettings = (projectId: number, pluginId: string, config: Record<string, any>) =>
-  axios.put<GlazePluginEntity>(FULL_PROJECT_USED_PLUGIN_PATH_WITH_ID_TO_PATH(projectId, pluginId), config)
+export const updateProjectPluginSettings = ({
+  projectId,
+  pluginId,
+  config
+}: ProjectPluginSettingDto) =>
+  axios.put<GlazePluginEntity>(
+    FULL_PROJECT_USED_PLUGIN_PATH_WITH_ID_TO_PATH(projectId, pluginId),
+    config
+  )
 
-export const deletePluginInProject = (projectId: number, pluginId: string) =>
-  axios.delete(FULL_PROJECT_USED_PLUGIN_PATH_WITH_ID_TO_PATH(projectId, pluginId))
+export const deletePluginInProject = ({
+  projectId,
+  pluginId
+}: {
+  projectId: number
+  pluginId: string
+}) =>
+  axios.delete(
+    FULL_PROJECT_USED_PLUGIN_PATH_WITH_ID_TO_PATH(projectId, pluginId)
+  )
