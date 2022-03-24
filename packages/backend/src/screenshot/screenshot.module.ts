@@ -25,11 +25,7 @@ import { CosModule } from '../cos/cos.module'
     forwardRef(() => DeploymentModule)
   ],
   controllers: [],
-  providers: [
-    ScreenshotService,
-    PuppeteerService,
-    ScreenshotProcessor
-  ],
+  providers: [ScreenshotService, PuppeteerService, ScreenshotProcessor],
   exports: [ScreenshotService]
 })
 export class ScreenshotModule {}

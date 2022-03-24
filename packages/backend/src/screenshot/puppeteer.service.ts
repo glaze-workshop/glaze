@@ -9,28 +9,31 @@ import puppeteer from 'puppeteer'
 export class PuppeteerService implements OnModuleDestroy {
   private browser?: puppeteer.Browser
 
-  async getBrowserInstance () {
+  async getBrowserInstance() {
     if (!this.browser) {
       this.browser = await puppeteer.launch()
     }
     return this.browser
   }
 
-  async getPageInstance (url: string) {
+  async getPageInstance(url: string) {
     const browser = await this.getBrowserInstance()
     const page = await browser.newPage()
     await page.goto(url)
     return page
   }
 
-  async takeScreenshot (url: string) {
+  async takeScreenshot(url: string) {
     const page = await this.getPageInstance(url)
-    const pageScreenshot = await page.screenshot({ fullPage: true, type: 'webp' })
+    const pageScreenshot = await page.screenshot({
+      fullPage: true,
+      type: 'webp'
+    })
     await page.close()
     return pageScreenshot as Buffer // screenshot is a Buffer
   }
 
-  onModuleDestroy () {
+  onModuleDestroy() {
     if (this.browser) {
       this.browser.close()
     }

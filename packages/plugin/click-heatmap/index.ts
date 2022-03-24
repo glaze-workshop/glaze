@@ -24,8 +24,6 @@ window.GLAZE_ACTION.registerPlugin('@glaze-plugin/click-heatmap', (config) => {
         path: location.pathname,
         position: { x: pageX - realLeft, y: pageY - realTop },
       })
-
-      console.log('@glaze-plugin/click-heatmap', e, node, nodeRef)
     },
   }
 })

@@ -9,18 +9,22 @@ import * as Y from 'yjs'
 import { WSSharedDoc } from './WsSharedDoc'
 import * as ws from 'ws'
 import BidirectionalMap from '../utils/BidirectionalMap'
+import { RedisService } from '../global/redis.service'
 
 @Injectable()
 export class DocService {
   private docMap = new BidirectionalMap<number, WSSharedDoc>()
 
-  constructor (private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private redisService: RedisService
+  ) {}
 
-  removeDoc (doc: WSSharedDoc) {
+  removeDoc(doc: WSSharedDoc) {
     this.docMap.deleteByValue(doc)
   }
 
-  closeClientByProjectId (projectId: number, client: ws.WebSocket) {
+  closeClientByProjectId(projectId: number, client: ws.WebSocket) {
     const doc = this.docMap.getByKey(projectId)
     if (doc) {
       doc.close(client)
@@ -31,15 +35,15 @@ export class DocService {
     if (this.docMap.has(projectId)) {
       return this.docMap.get(projectId)!
     } else {
-      const doc = new WSSharedDoc(projectId, this)
-      this.docMap.set(projectId, doc)
+      const doc = new WSSharedDoc(projectId, this, this.redisService)
       const [fullDocumentUpdate] = await this.getFullDocument(projectId)
       Y.applyUpdate(doc, fullDocumentUpdate, 'database')
+      this.docMap.set(projectId, doc)
       return doc
     }
   }
 
-  persistUpdate (projectId: number, update: Uint8Array) {
+  persistUpdate(projectId: number, update: Uint8Array) {
     return this.prisma.glazeDocumentUpdate.create({
       data: {
         project: { connect: { id: projectId } },
@@ -48,34 +52,33 @@ export class DocService {
     })
   }
 
-  async getFullDocument (projectId: number): Promise<[Uint8Array, Y.Doc]> {
-    return this.prisma.$transaction(async (prisma) => {
-      const fullDocUpdates = await prisma.glazeDocumentUpdate.findMany({
-        where: { project: { id: projectId } }
-      })
-      const dbYDoc = new Y.Doc()
+  async getFullDocument(projectId: number): Promise<[Uint8Array, Y.Doc]> {
+    const fullDocUpdates = await this.prisma.glazeDocumentUpdate.findMany({
+      where: { project: { id: projectId } }
+    })
+    const dbYDoc = new Y.Doc()
 
-      dbYDoc.transact(() => {
-        for (const u of fullDocUpdates) {
-          Y.applyUpdate(dbYDoc, u.update)
-        }
-      })
+    dbYDoc.transact(() => {
+      for (const u of fullDocUpdates) {
+        Y.applyUpdate(dbYDoc, u.update)
+      }
+    })
 
-      const encodedUpdates = Y.encodeStateAsUpdate(dbYDoc)
+    const encodedUpdates = Y.encodeStateAsUpdate(dbYDoc)
 
-      if (fullDocUpdates.length > 10) {
-        await prisma.glazeDocumentUpdate.deleteMany({ where: { id: { in: fullDocUpdates.map(u => u.id) } } })
-        await prisma.glazeDocumentUpdate.create({
+    if (fullDocUpdates.length > 10) {
+      this.prisma.$transaction([
+        this.prisma.glazeDocumentUpdate.deleteMany({
+          where: { id: { in: fullDocUpdates.map((u) => u.id) } }
+        }),
+        this.prisma.glazeDocumentUpdate.create({
           data: {
             project: { connect: { id: projectId } },
             update: Buffer.from(encodedUpdates)
           }
         })
-      }
-      return [encodedUpdates, dbYDoc]
-    }, {
-      maxWait: 5000, // default: 2000
-      timeout: 10000 // default: 5000
-    })
+      ])
+    }
+    return [encodedUpdates, dbYDoc]
   }
 }

@@ -12,25 +12,39 @@ import { MessageGateway } from '../message/message.gateway'
 
 @Processor('screenshot')
 export class ScreenshotProcessor {
-  constructor (
+  constructor(
     private cosService: CosService,
     private puppeteerService: PuppeteerService,
     private deploymentService: DeploymentService,
     private docService: DocService,
     private configService: ConfigService,
-    private messageGateway: MessageGateway) {}
+    private messageGateway: MessageGateway
+  ) {}
 
   @Process('deployment')
-  async deployment (job: Job<DeploymentScreenshotJob>) {
-    const { deployment: { path, projectId, id }, user } = job.data
-    const deploymentUrl = `https://${path}.${this.configService.get<string>('DEPLOYMENT_PATH')}`
+  async deployment(job: Job<DeploymentScreenshotJob>) {
+    const {
+      deployment: { path, projectId, id },
+      user
+    } = job.data
+    const deploymentUrl = `https://${path}.${this.configService.get<string>(
+      'DEPLOYMENT_PATH'
+    )}`
     const image = await this.puppeteerService.takeScreenshot(deploymentUrl)
-    const imageInfo = await this.cosService.uploadImage(image, `/project/${projectId}/deployment/screenshot.webp`)
-    await this.deploymentService.updateDeploymentScreenshot(id, imageInfo.Location)
-    this.messageGateway.sendMessageToUser(user.id, DeploymentApi.FULL_DEPLOYMENT_PATH_TO_PATH({ projectId }))
+    const imageInfo = await this.cosService.uploadImage(
+      image,
+      `/project/${projectId}/deployment/screenshot.webp`
+    )
+    await this.deploymentService.updateDeploymentScreenshot(
+      id,
+      imageInfo.Location
+    )
+    this.messageGateway.sendMessageToUser(
+      user.id,
+      DeploymentApi.FULL_DEPLOYMENT_PATH_TO_PATH({ projectId })
+    )
   }
 
   @Process('preview')
-  async preview (job: Job<any>) {
-  }
+  async preview(job: Job<any>) {}
 }

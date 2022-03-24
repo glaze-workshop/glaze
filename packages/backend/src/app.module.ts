@@ -40,7 +40,8 @@ import { BullModule } from '@nestjs/bull'
       useFactory: async (configService: ConfigService) => ({
         redis: {
           host: configService.get('REDIS_HOST'),
-          port: Number(configService.get('REDIS_PORT'))
+          port: Number(configService.get('REDIS_PORT')),
+          keyPrefix: configService.get('REDIS_PREFIX')
         }
       }),
       inject: [ConfigService]
@@ -52,6 +53,7 @@ import { BullModule } from '@nestjs/bull'
       provide: APP_FILTER,
       useClass: AllExceptionsFilter
     },
-    AppService]
+    AppService
+  ]
 })
 export class AppModule {}

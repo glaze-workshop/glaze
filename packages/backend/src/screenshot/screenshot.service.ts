@@ -10,14 +10,15 @@ import { DeploymentScreenshotJob } from './screenshot.types'
 
 @Injectable()
 export class ScreenshotService {
-  constructor (@InjectQueue('screenshot') private readonly screenshotQueue: Queue) {
-  }
+  constructor(
+    @InjectQueue('screenshot') private readonly screenshotQueue: Queue
+  ) {}
 
-  addDeploymentJob (deployment: DeploymentScreenshotJob) {
+  addDeploymentJob(deployment: DeploymentScreenshotJob) {
     return this.screenshotQueue.add('deployment', deployment)
   }
 
-  addPreviewQueue (preview: any) {
+  addPreviewQueue(preview: any) {
     return this.screenshotQueue.add('preview', preview)
   }
 }

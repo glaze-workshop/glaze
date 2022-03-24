@@ -3,13 +3,20 @@ import { EnvType } from '../type.js'
 import { createRollupFullConfig } from './config.js'
 import { RollupConfig } from '../custom.js'
 import { envExtract } from '../utils.js'
-import { rollup, RollupError, RollupWatcher, RollupWatchOptions, VERSION, watch } from 'rollup'
+import {
+  rollup,
+  RollupError,
+  RollupWatcher,
+  RollupWatchOptions,
+  VERSION,
+  watch,
+} from 'rollup'
 import ms from 'pretty-ms'
 import dateTime from 'date-time'
 
 export const stderr = console.error.bind(console)
 
-export function run (env: EnvType) {
+export function run(env: EnvType) {
   const config = createRollupFullConfig(RollupConfig, env)
   const customizedConfig = RollupConfig.customConfig?.(config) ?? config
 
@@ -27,7 +34,7 @@ export function run (env: EnvType) {
  * @private
  * @param configs 配置
  */
-function startWatching (configs: RollupWatchOptions) {
+function startWatching(configs: RollupWatchOptions) {
   let watcher: RollupWatcher
   try {
     watcher = watch(configs)
@@ -35,7 +42,7 @@ function startWatching (configs: RollupWatchOptions) {
     return handleError(err)
   }
 
-  watcher.on('event', event => {
+  watcher.on('event', (event) => {
     switch (event.code) {
       case 'ERROR':
         handleError(event.error, true)
@@ -53,19 +60,11 @@ function startWatching (configs: RollupWatchOptions) {
             ? input.join(', ')
             : Object.values(input as Record<string, string>).join(', ')
         }
-        stderr(
-          cyan(`bundles ${bold(input)}...`)
-        )
+        stderr(cyan(`bundles ${bold(input)}...`))
         break
 
       case 'BUNDLE_END':
-        stderr(
-          green(
-              `created in ${bold(
-                ms(event.duration)
-              )}`
-          )
-        )
+        stderr(green(`created in ${bold(ms(event.duration))}`))
         break
 
       case 'END':
@@ -73,19 +72,19 @@ function startWatching (configs: RollupWatchOptions) {
     }
 
     if ('result' in event && event.result) {
-      event.result.close().catch((error: RollupError) => handleError(error, true))
+      event.result
+        .close()
+        .catch((error: RollupError) => handleError(error, true))
     }
   })
 }
 
-async function build (
-  inputOptions: RollupWatchOptions
-): Promise<unknown> {
+async function build(inputOptions: RollupWatchOptions): Promise<unknown> {
   const outputOptions = Array.isArray(inputOptions.output)
     ? inputOptions.output
     : inputOptions.output
-      ? [inputOptions.output]
-      : []
+    ? [inputOptions.output]
+    : []
 
   const start = Date.now()
   const useStdout = !outputOptions[0].file && !outputOptions[0].dir
@@ -95,7 +94,8 @@ async function build (
     if (output.sourcemap && output.sourcemap !== 'inline') {
       handleError({
         code: 'ONLY_INLINE_SOURCEMAPS',
-        message: 'Only inline sourcemaps are supported when bundling to stdout.'
+        message:
+          'Only inline sourcemaps are supported when bundling to stdout.',
       })
     }
     const { output: outputs } = await bundle.generate(output)
@@ -106,7 +106,8 @@ async function build (
       } else {
         source = file.code
       }
-      if (outputs.length > 1) process.stdout.write(`\n${cyan(bold(`//→ ${file.fileName}:`))}\n`)
+      if (outputs.length > 1)
+        process.stdout.write(`\n${cyan(bold(`//→ ${file.fileName}:`))}\n`)
       process.stdout.write(source as Buffer)
     }
     return
@@ -123,10 +124,11 @@ async function build (
  * @param err 错误
  * @param recover 是否重启
  */
-function handleError (err: RollupError, recover = false): void {
+function handleError(err: RollupError, recover = false): void {
   let description = err.message || err
   if (err.name) description = `${err.name}: ${description}`
-  const message = (err.plugin ? `(plugin ${err.plugin}) ${description}` : description) || err
+  const message =
+    (err.plugin ? `(plugin ${err.plugin}) ${description}` : description) || err
 
   stderr(bold(red(`[!] ${bold(message.toString())}`)))
 
@@ -135,7 +137,7 @@ function handleError (err: RollupError, recover = false): void {
   }
 
   if (err.loc) {
-    stderr(`${(err.loc.file || err.id)} (${err.loc.line}:${err.loc.column})`)
+    stderr(`${err.loc.file || err.id} (${err.loc.line}:${err.loc.column})`)
   }
 
   if (err.frame) {

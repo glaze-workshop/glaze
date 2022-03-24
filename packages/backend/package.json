@@ -44,6 +44,7 @@
     "bull": "^4.7.0",
     "cos-nodejs-sdk-v5": "^2.11.6",
     "fastify-static": "^4.5.0",
+    "ioredis": "^4.28.5",
     "passport": "^0.5.2",
     "passport-jwt": "^4.0.0",
     "point-of-view": "^5.1.0",
