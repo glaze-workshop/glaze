@@ -6,13 +6,13 @@ import { BasicComponentId } from '../basicComponentInfo'
 const ScreenConfig: ComponentConfig<ScreenProps> = {
   id: BasicComponentId.Screen,
   name: 'Screen',
-  props: {
-  },
+  props: {},
   defaultSize: {
     width: [LengthUnit.FIXED, 375],
     height: [LengthUnit.FIXED, 800]
   },
-  hasChildren: true
+  hasChildren: true,
+  path: '/default_Screen_Path',
 }
 
 export default ScreenConfig

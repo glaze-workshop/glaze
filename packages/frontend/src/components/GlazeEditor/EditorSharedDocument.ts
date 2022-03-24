@@ -26,7 +26,7 @@ export default class EditorSharedDocument {
   nodeList
   webSocketProvider: WebSocketProvider | null = null
 
-  constructor () {
+  constructor() {
     this.doc = new Y.Doc()
     this.structureTree = this.doc.getArray<Y.Map<any>>('structure')
     this.nodeList = this.doc.getMap<Y.Map<any>>('components')
@@ -37,12 +37,16 @@ export default class EditorSharedDocument {
     })
   }
 
-  connect (projectId: number) {
-    this.webSocketProvider = new WebSocketProvider(`ws://localhost:3000/ws-doc?projectId=${projectId}`, String(projectId), this.doc)
+  connect(projectId: number) {
+    this.webSocketProvider = new WebSocketProvider(
+      `ws://localhost:3000/ws-doc?projectId=${projectId}`,
+      String(projectId),
+      this.doc
+    )
   }
 
   /** TODO: close websocket */
-  close () {
+  close() {
     this.webSocketProvider?.disconnect()
   }
 
@@ -57,10 +61,13 @@ export default class EditorSharedDocument {
   createNodeByComponentId = (componentId: string) => {
     const { component, config } = AllComponentsSubject.value.get(componentId) ?? {}
     if (componentId === BasicComponentId.Screen && config) {
-      const leftMax = this.structureTree.toArray().map((item) => {
-        const node = this.mapStructureTreeNodeToNode(item)
-        return node?.get('layout')
-      }).filter(Boolean)
+      const leftMax = this.structureTree
+        .toArray()
+        .map((item) => {
+          const node = this.mapStructureTreeNodeToNode(item)
+          return node?.get('layout')
+        })
+        .filter(Boolean)
         .reduce((acc, cur: Y.Map<any>) => {
           const width = cur.get('width')[1] ?? 0
           const positionLeft = cur.get('position').left ?? 0
@@ -74,7 +81,9 @@ export default class EditorSharedDocument {
     }
     console.log('createNodeByComponentId 2', SelectedNodeInfoSubject)
 
-    const selectedNodeSubject = SelectedNodeInfoSubject.value && AllNodeInfoObservableMap.getValueSubject(SelectedNodeInfoSubject.value)?.value
+    const selectedNodeSubject =
+      SelectedNodeInfoSubject.value &&
+      AllNodeInfoObservableMap.getValueSubject(SelectedNodeInfoSubject.value)?.value
     // 选中节点
     if (selectedNodeSubject) {
       const { nodeProxy, parentStructureInfo, structureProxy } = selectedNodeSubject
@@ -88,7 +97,8 @@ export default class EditorSharedDocument {
           ? structureProxy.children
           : parentStructureInfo?.get('children')
         const calculatePosition = (): PositionConfig => {
-          const maxTop = targetChildrenArray.toArray()
+          const maxTop = targetChildrenArray
+            .toArray()
             .map(this.mapStructureTreeNodeToNode)
             .filter(Boolean)
             .reduce((acc, cur) => {
@@ -103,21 +113,27 @@ export default class EditorSharedDocument {
             type: [PositionType.LEFT, PositionType.TOP]
           }
         }
-        this.createNode(config,
+        this.createNode(
+          config,
           selectedComponentConfig.hasChildren ? structureProxy.yNode : parentStructureInfo,
-          calculatePosition())
+          calculatePosition()
+        )
       }
     }
   }
 
-  createNode = (componentConfig: ComponentConfig, inParent?: Y.Map<any> | null, position: PositionConfig = {
-    left: 0,
-    top: 0,
-    type: [PositionType.LEFT, PositionType.TOP]
-  }) => {
+  createNode = (
+    componentConfig: ComponentConfig,
+    inParent?: Y.Map<any> | null,
+    position: PositionConfig = {
+      left: 0,
+      top: 0,
+      type: [PositionType.LEFT, PositionType.TOP]
+    }
+  ) => {
     const nodeId = nanoid()
     // 创建节点流程:  props -> props, default layout -> layout
-    const { id: componentId, props, defaultSize, name } = componentConfig
+    const { id: componentId, props, defaultSize, name, path, to } = componentConfig
 
     this.doc.transact(() => {
       {
@@ -138,6 +154,8 @@ export default class EditorSharedDocument {
         node.id = nodeId
         node.name = name
         node.componentId = componentId
+        node.path = path
+        node.to = to
 
         const yLayoutMap = new Y.Map()
         const layout = createYjsMapProxy<LayoutConfig>(yLayoutMap)

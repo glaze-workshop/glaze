@@ -17,7 +17,7 @@ const RightBar: FC<RightBarProps> = () => {
   useEffect(() => {
     const selectCertainNode = (nodeId: string) => {
       const nodeInfo = editorSharedDocument.getNodeById(nodeId)
-      // console.log('[selectedCertainNode]', nodeInfo)
+      console.log('[selectedCertainNode]', nodeInfo)
       nodeInfo && yjsMapExtractor(nodeInfo)
     }
 
