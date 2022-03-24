@@ -1,3 +1,11 @@
-const config = window.GLAZE_ACTION.getUserConfig('@glaze-plugin/schema-test')
+import '@glaze/types'
 
-console.log('@glaze-plugin/schema-test', config)
+window.GLAZE_ACTION.registerPlugin('@glaze-plugin/schema-test', (config) => {
+  console.log('@glaze-plugin/schema-test', config)
+
+  return {
+    click: (e, node, nodeRef) => {
+      console.log('@glaze-plugin/schema-test', e, node, nodeRef)
+    },
+  }
+})

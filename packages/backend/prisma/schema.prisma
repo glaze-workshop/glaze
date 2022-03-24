@@ -123,18 +123,19 @@ enum GlazeProjectDeployStatus {
 }
 
 model GlazeProjectDeployInfo {
-  id         Int                      @id @default(autoincrement())
-  info       Bytes                    @db.ByteA
-  path       String                   @unique @db.Text
-  createdAt  DateTime                 @default(now()) @db.Timestamp(6) /// 创建时间
-  updatedAt  DateTime                 @updatedAt @db.Timestamp(6) /// 更新时间
-  project    GlazeProject             @relation(fields: [projectId], references: [id])
-  projectId  Int                      @unique
-  log        GlazeProjectLogInfo[]
-  status     GlazeProjectDeployStatus @default(RUNNING)
-  screenshot String?                  @db.Text
-  by         GlazeUser                @relation(fields: [byUserId], references: [id])
-  byUserId   Int
+  id          Int                      @id @default(autoincrement())
+  info        Bytes                    @db.ByteA
+  path        String                   @unique @db.Text
+  createdAt   DateTime                 @default(now()) @db.Timestamp(6) /// 创建时间
+  updatedAt   DateTime                 @updatedAt @db.Timestamp(6) /// 更新时间
+  project     GlazeProject             @relation(fields: [projectId], references: [id])
+  projectId   Int                      @unique
+  log         GlazeProjectLogInfo[]
+  clickEvents GlazeProjectClickEvent[]
+  status      GlazeProjectDeployStatus @default(RUNNING)
+  screenshot  String?                  @db.Text
+  by          GlazeUser                @relation(fields: [byUserId], references: [id])
+  byUserId    Int
 
   @@index([path])
 }
@@ -192,12 +193,22 @@ model GlazePlugin {
 
 model GlazeProjectUsedPlugin {
   project   GlazeProject @relation(fields: [projectId], references: [id])
-  projectId Int          @unique
+  projectId Int
   plugin    GlazePlugin  @relation(fields: [pluginId], references: [id])
-  pluginId  String       @unique
+  pluginId  String
   createdAt DateTime     @default(now()) @db.Timestamp(6) /// 创建时间
   updatedAt DateTime     @updatedAt @db.Timestamp(6) /// 更新时间
   config    Json?
 
   @@id([projectId, pluginId])
+}
+
+model GlazeProjectClickEvent {
+  id           String                 @id
+  nodeId       String
+  time         DateTime               @default(now()) @db.Timestamp(6) /// 点击时间
+  path         String                 @db.Text
+  position     Json
+  deployment   GlazeProjectDeployInfo @relation(fields: [deploymentId], references: [id])
+  deploymentId Int
 }

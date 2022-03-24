@@ -3,7 +3,7 @@ import axios from 'axios'
 import COS from 'cos-nodejs-sdk-v5'
 
 const cosClient = new COS({
-  getAuthorization (params, callback) {
+  getAuthorization(params, callback) {
     CosApi.getUploadCredential().then(({ data }) => {
       const { credentials } = data
       callback({
@@ -25,7 +25,9 @@ export interface UploadInfo {
   key: string
 }
 
-export const uploadFiles = async (infos: UploadInfo[]): Promise<COS.UploadFilesResult> => {
+export const uploadFiles = async (
+  infos: UploadInfo[]
+): Promise<COS.UploadFilesResult> => {
   const { data } = await CosApi.getCosBasicInfo()
   return cosClient.uploadFiles({
     files: infos.map(info => ({

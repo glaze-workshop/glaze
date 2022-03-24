@@ -5,27 +5,33 @@ https://docs.nestjs.com/providers#services
 import { Injectable } from '@nestjs/common'
 
 export interface RenderConfig {
+  deploymentId?: number
   isPreview?: boolean
-  projectId: number
+  projectId?: number
   pluginConfig?: Record<string, unknown>
   nodes?: unknown
   structure?: unknown
   pluginSrc?: string[]
+  heatmap?: boolean
 }
 
 @Injectable()
 export class RenderService {
   generateTemplateConfig({
+    deploymentId = -1,
     isPreview = true,
-    projectId,
+    projectId = -1,
     pluginConfig = {},
     nodes = {},
     structure = [],
-    pluginSrc = []
+    pluginSrc = [],
+    heatmap = false
   }: RenderConfig) {
     return {
+      heatmap,
       isPreview,
-      projectId: projectId,
+      deploymentId,
+      projectId,
       pluginConfig: JSON.stringify(pluginConfig),
       nodes: JSON.stringify(nodes),
       structure: JSON.stringify(structure),

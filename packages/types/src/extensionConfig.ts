@@ -1,6 +1,6 @@
+import { GlazeNode } from './component'
 
 export enum GlazePluginControlType {
-
   /** a numeric text box input */
   NUMBER = 'number',
 
@@ -29,10 +29,11 @@ export interface GlazePluginNumberControl
 export interface GlazePluginTextControl
   extends AbstractControl<GlazePluginControlType.TEXT, string> {}
 
-export type GlazePluginControl = GlazePluginNumberControl | GlazePluginTextControl
+export type GlazePluginControl =
+  | GlazePluginNumberControl
+  | GlazePluginTextControl
 
 export interface GlazePluginConfig {
-
   /** 自定义，保证唯一性 */
   id: string
 
@@ -60,9 +61,13 @@ export interface GlazeGeneratedConfig {
 }
 
 export interface GlazeConfig {
-
   plugins: GlazePluginConfig[]
 
   /** 不要修改 */
   generated: GlazeGeneratedConfig
+}
+
+export interface RegisterPluginConfig {
+  click?: (e: MouseEvent, node: GlazeNode, nodeRef: HTMLElement) => void
+  scroll?: (e: Event) => void
 }

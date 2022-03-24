@@ -4,7 +4,6 @@ https://docs.nestjs.com/providers#services
 import { DeploymentDto, Entity, GlazeErr } from '@glaze/common'
 
 import { Injectable } from '@nestjs/common'
-import { nanoid } from 'nanoid'
 import { Buffer } from 'buffer'
 import { isUniqueConstraintError } from '../utils/prisma.error'
 import { PrismaService } from '../global/prisma.service'
@@ -14,11 +13,13 @@ import { randomUrlLowerCase } from '../utils/random'
 
 @Injectable()
 export class DeploymentService {
-  constructor (
+  constructor(
     private screenshotService: ScreenshotService,
-    private prisma: PrismaService, private docService: DocService) {}
+    private prisma: PrismaService,
+    private docService: DocService
+  ) {}
 
-  selectWithoutData () {
+  selectWithoutData() {
     return {
       id: true,
       projectId: true,
@@ -39,7 +40,7 @@ export class DeploymentService {
     }
   }
 
-  getDeployment (projectId: number): Promise<Entity.DeploymentEntity | null> {
+  getDeployment(projectId: number): Promise<Entity.DeploymentEntity | null> {
     return this.prisma.glazeProjectDeployInfo.findUnique({
       where: {
         projectId
@@ -48,7 +49,7 @@ export class DeploymentService {
     })
   }
 
-  getDeploymentByPath (path: string) {
+  getDeploymentByPath(path: string) {
     return this.prisma.glazeProjectDeployInfo.findUnique({
       where: {
         path
@@ -56,7 +57,10 @@ export class DeploymentService {
     })
   }
 
-  async initDeployProject (projectId: number, userId: number): Promise<Entity.DeploymentEntity> {
+  async initDeployProject(
+    projectId: number,
+    userId: number
+  ): Promise<Entity.DeploymentEntity> {
     const [updates] = await this.docService.getFullDocument(projectId)
 
     return this.prisma.glazeProjectDeployInfo.create({
@@ -70,7 +74,10 @@ export class DeploymentService {
     })
   }
 
-  async updateProjectDeployment (projectId: number, userId: number): Promise<Entity.DeploymentEntity> {
+  async updateProjectDeployment(
+    projectId: number,
+    userId: number
+  ): Promise<Entity.DeploymentEntity> {
     const [updates] = await this.docService.getFullDocument(projectId)
     return this.prisma.glazeProjectDeployInfo.update({
       where: {
@@ -84,7 +91,10 @@ export class DeploymentService {
     })
   }
 
-  async updateProjectDeploymentPath (projectId: number, path: string): Promise<Entity.DeploymentEntity> {
+  async updateProjectDeploymentPath(
+    projectId: number,
+    path: string
+  ): Promise<Entity.DeploymentEntity> {
     try {
       return await this.prisma.glazeProjectDeployInfo.update({
         where: {
@@ -105,7 +115,10 @@ export class DeploymentService {
     }
   }
 
-  async updateDeploymentScreenshot (deploymentId: number, screenshot: string): Promise<Entity.DeploymentEntity> {
+  async updateDeploymentScreenshot(
+    deploymentId: number,
+    screenshot: string
+  ): Promise<Entity.DeploymentEntity> {
     return this.prisma.glazeProjectDeployInfo.update({
       where: {
         id: deploymentId
@@ -117,7 +130,9 @@ export class DeploymentService {
     })
   }
 
-  async basicDeploymentAnalysis (projectId: number): Promise<DeploymentDto.BasicDeploymentAnalysis | void> {
+  async basicDeploymentAnalysis(
+    projectId: number
+  ): Promise<DeploymentDto.BasicDeploymentAnalysis | void> {
     const deploymentInfo = await this.prisma.glazeProjectDeployInfo.findUnique({
       where: {
         id: projectId
@@ -141,5 +156,30 @@ export class DeploymentService {
         count: res._count ?? 0
       }
     }
+  }
+
+  clickEvent({ time, ...other }: DeploymentDto.DeploymentClickEventDto) {
+    return this.prisma.glazeProjectClickEvent.create({
+      data: {
+        ...other,
+        time: new Date(time)
+      }
+    })
+  }
+
+  async getClickEvent(projectId: number, start: number, end: number) {
+    const deployInfo = await this.prisma.glazeProjectDeployInfo.findFirst({
+      where: { projectId },
+      select: { id: true }
+    })
+    return this.prisma.glazeProjectClickEvent.findMany({
+      where: {
+        deploymentId: deployInfo?.id ?? -1,
+        time: {
+          gte: new Date(start),
+          lte: new Date(end)
+        }
+      }
+    })
   }
 }

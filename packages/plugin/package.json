@@ -12,9 +12,13 @@
     "upload": "glaze-plugin upload"
   },
   "devDependencies": {
+    "@glaze/common": "workspace:*",
     "@glaze/plugin-bundler": "workspace:*",
     "@glaze/types": "workspace:*",
     "cos-nodejs-sdk-v5": ">=2.11.6",
     "esbuild": "^0.14.25"
+  },
+  "dependencies": {
+    "nanoid": "^3.3.1"
   }
 }

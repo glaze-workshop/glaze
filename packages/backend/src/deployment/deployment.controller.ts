@@ -2,7 +2,7 @@
 https://docs.nestjs.com/controllers#controllers
 */
 
-import { DeploymentApi, Entity, Prefix } from '@glaze/common'
+import { DeploymentApi, DeploymentDto, Entity, Prefix } from '@glaze/common'
 import {
   Body,
   Controller,
@@ -11,6 +11,7 @@ import {
   ParseIntPipe,
   Post,
   Put,
+  Query,
   Render,
   UseGuards
 } from '@nestjs/common'
@@ -89,6 +90,7 @@ export class DeploymentController {
       return this.renderService.generateTemplateConfig({
         isPreview: false,
         projectId: deploymentInfo.projectId,
+        deploymentId: deploymentInfo.id,
         nodes: nodesRaw,
         structure: structureRaw,
         pluginConfig: plugins.reduce(
@@ -96,10 +98,46 @@ export class DeploymentController {
           {}
         ),
         pluginSrc: plugins.map(
-          (pluginConfig) => `https://${pluginConfig.plugin.path}`
+          pluginConfig => `https://${pluginConfig.plugin.path}`
         )
       })
     }
     return this.renderService.generateTemplateConfig({ projectId: -1 })
+  }
+
+  @Get(DeploymentApi.DEPLOYMENT_HEATMAP_RENDER_PATH)
+  @Render('project.pug')
+  async deploymentWithHeatmap(@Param('path') path: string) {
+    const deploymentInfo = await this.deploymentService.getDeploymentByPath(
+      path
+    )
+    if (deploymentInfo) {
+      const yDoc = new Y.Doc()
+      Y.applyUpdate(yDoc, deploymentInfo.info)
+      const nodesRaw = yDoc.getMap('components').toJSON()
+      const structureRaw = yDoc.getArray('structure').toJSON()
+      return this.renderService.generateTemplateConfig({
+        isPreview: false,
+        projectId: deploymentInfo.projectId,
+        deploymentId: deploymentInfo.id,
+        nodes: nodesRaw,
+        structure: structureRaw,
+        heatmap: true
+      })
+    }
+    return this.renderService.generateTemplateConfig({ projectId: -1 })
+  }
+
+  @Post(DeploymentApi.DEPLOYMENT_CLICK_EVENT_PATH)
+  clickEvent(@Body() event: DeploymentDto.DeploymentClickEventDto) {
+    return this.deploymentService.clickEvent(event)
+  }
+  @Get(DeploymentApi.DEPLOYMENT_CLICK_EVENT_PATH)
+  getClickEvent(
+    @Param('projectId', ParseIntPipe) projectId: number,
+    @Query('start', ParseIntPipe) start: number,
+    @Query('end', ParseIntPipe) end: number
+  ) {
+    return this.deploymentService.getClickEvent(projectId, start, end)
   }
 }

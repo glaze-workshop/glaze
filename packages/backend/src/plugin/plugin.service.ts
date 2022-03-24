@@ -43,7 +43,7 @@ export class PluginService {
     })
   }
 
-  usePlugin(
+  async usePlugin(
     projectId: number,
     pluginId: string,
     config: Prisma.InputJsonObject

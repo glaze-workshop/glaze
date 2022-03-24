@@ -1,3 +1,6 @@
 import './global'
 export * from './extensionConfig'
 export * from './component'
+export * from './ObservableMap'
+export * from './listener'
+export * from './postMessage'

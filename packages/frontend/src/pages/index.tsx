@@ -1,11 +1,5 @@
 import React, { FC, Suspense } from 'react'
-import {
-  BrowserRouter,
-  Navigate,
-  Route,
-  Router,
-  Routes
-} from 'react-router-dom'
+import { BrowserRouter, Navigate, Route, Router, Routes } from 'react-router-dom'
 import { useAxiosConfig } from '../hooks/axios'
 import Folder from './folder'
 import Home from './home'
@@ -33,7 +27,7 @@ const RootPage: FC = () => {
     <Routes>
       <Route path="/" element={<Home />}>
         <Route path="folder/:folderId" element={<Folder />} />
-        <Route path='team-plugin/:teamId' element={<TeamPlugin/>}/>
+        <Route path="team-plugin/:teamId" element={<TeamPlugin />} />
       </Route>
       <Route
         path="/project/:projectId"
@@ -43,16 +37,16 @@ const RootPage: FC = () => {
           </Suspense>
         }
       />
-      <Route path='/project/:projectId/dashboard' element={<Dashboard />}>
-        <Route path='setting' element={<Setting />}/>
-        <Route path='analysis' element={<Analysis />}>
-          <Route path='plugin' element={<ProjectPlugin />}/>
-          <Route path='plugin/:pluginId' element={<PluginConfig />}/>
-          <Route path='plugin-market' element={<PluginMarket />}/>
-          <Route path='heatmap' element={<Heatmap />}/>
-          <Route index element={<BasicAnalysis />}/>
+      <Route path="/project/:projectId/dashboard" element={<Dashboard />}>
+        <Route path="setting" element={<Setting />} />
+        <Route path="analysis" element={<Analysis />}>
+          <Route path="plugin" element={<ProjectPlugin />} />
+          <Route path="plugin/:pluginId" element={<PluginConfig />} />
+          <Route path="plugin-market" element={<PluginMarket />} />
+          <Route path="heatmap" element={<Heatmap />} />
+          <Route index element={<BasicAnalysis />} />
         </Route>
-        <Route index element={<Overview />}/>
+        <Route index element={<Overview />} />
       </Route>
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />

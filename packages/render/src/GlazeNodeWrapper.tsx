@@ -1,11 +1,14 @@
-import React, { FC, memo, useMemo } from 'react'
-import { GlazeNode, GlazeStructure, LayoutConfig, Length, LengthUnit } from './glaze.type'
-import styled from '@emotion/styled'
+import { memo, useMemo, useRef } from 'react'
 import { BasicComponents } from './BasicComponents'
+import {
+  GlazeNode,
+  GlazeStructure,
+  Length,
+  LengthUnit,
+  LayoutConfig,
+} from '@glaze/types'
+import { useNodeInfoObserve } from './state'
 
-const NodeWrapper = styled.div`
-  position: absolute;
-`
 export interface GlazeNodeWrapperProps {
   nodeInfo: GlazeNode
   structureInfo: GlazeStructure
@@ -23,36 +26,60 @@ const lengthToStyle = (length: Length) => {
       return `${num}%`
   }
 }
-export function useNodeLayout (layoutConfig: LayoutConfig, enableLayout = true) {
-  return useMemo(() => enableLayout
-    ? ({
-        width: lengthToStyle(layoutConfig.width),
-        height: lengthToStyle(layoutConfig.height),
-        top: `${layoutConfig.position.top}px`,
-        left: `${layoutConfig.position.left}px`
-      })
-    : ({
-        height: lengthToStyle(layoutConfig.height)
-      }), [enableLayout, layoutConfig.height, layoutConfig.position.left, layoutConfig.position.top, layoutConfig.width])
+export function useNodeLayout(layoutConfig: LayoutConfig, enableLayout = true) {
+  return useMemo<React.CSSProperties>(
+    () =>
+      enableLayout
+        ? {
+            position: 'absolute',
+            width: lengthToStyle(layoutConfig.width),
+            height: lengthToStyle(layoutConfig.height),
+            top: `${layoutConfig.position.top}px`,
+            left: `${layoutConfig.position.left}px`,
+          }
+        : {
+            position: 'relative',
+            height: lengthToStyle(layoutConfig.height),
+          },
+    [
+      enableLayout,
+      layoutConfig.height,
+      layoutConfig.position.left,
+      layoutConfig.position.top,
+      layoutConfig.width,
+    ]
+  )
 }
 
-function GlazeNodeWrapper ({ nodeInfo, structureInfo, enableLayout }: GlazeNodeWrapperProps) {
+function GlazeNodeWrapper({
+  nodeInfo,
+  structureInfo,
+  enableLayout,
+}: GlazeNodeWrapperProps) {
   const layoutStyle = useNodeLayout(nodeInfo.layout, enableLayout)
 
   const CurrentComponent = BasicComponents[nodeInfo.componentId]
 
+  const nodeRef = useRef<HTMLDivElement>(null)
+
+  useNodeInfoObserve(nodeInfo, nodeRef)
+
   return (
-    <NodeWrapper style={layoutStyle}>
-      {<CurrentComponent {...nodeInfo.props}>
-        {structureInfo.children.map(child => (
-          <GlazeNodeWrapper
-          key={child.nodeId}
-          nodeInfo={window.GLAZE_NODES[child.nodeId]}
-          structureInfo={child}
-          enableLayout />
-        ))}
-      </CurrentComponent>}
-    </NodeWrapper>)
+    <div ref={nodeRef} data-glaze-id={nodeInfo.id} style={layoutStyle}>
+      {
+        <CurrentComponent {...nodeInfo.props}>
+          {structureInfo.children.map((child) => (
+            <GlazeNodeWrapper
+              key={child.nodeId}
+              nodeInfo={window.GLAZE_NODES[child.nodeId]}
+              structureInfo={child}
+              enableLayout
+            />
+          ))}
+        </CurrentComponent>
+      }
+    </div>
+  )
 }
 
 export default memo(GlazeNodeWrapper)

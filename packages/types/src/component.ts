@@ -1,10 +1,13 @@
 export enum LengthUnit {
   FIXED = 'fixed',
   PERCENT = 'percent',
-  AUTO = 'auto'
+  AUTO = 'auto',
 }
 
-export type Length = [LengthUnit.AUTO] | [LengthUnit.FIXED, number] | [LengthUnit.PERCENT, number]
+export type Length =
+  | [LengthUnit.AUTO]
+  | [LengthUnit.FIXED, number]
+  | [LengthUnit.PERCENT, number]
 
 export enum PositionType {
   TOP = 'top',

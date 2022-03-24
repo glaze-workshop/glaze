@@ -6,7 +6,7 @@ localhost {
 }
 
 api.localhost {
-    reverse_proxy 127.0.0.1:3000
+	reverse_proxy 127.0.0.1:3000
 }
 
 *.preview.localhost {
@@ -15,8 +15,14 @@ api.localhost {
 	reverse_proxy 127.0.0.1:3000
 }
 
+*.glaze-heatmap.localhost {
+	encode gzip
+	uri path_regexp /.* /api/deployment/render/{labels.2}/heatmap
+	reverse_proxy 127.0.0.1:3000
+}
+
 *.glaze.localhost {
-    encode gzip
+	encode gzip
 	log {
 		format json
 		output net 127.0.0.1:2329 {

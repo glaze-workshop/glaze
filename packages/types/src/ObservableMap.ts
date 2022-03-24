@@ -1,4 +1,4 @@
-import { BehaviorSubject, filter, from, map, mergeMap, of, switchMap } from 'rxjs'
+import { BehaviorSubject, map, of, switchMap } from 'rxjs'
 
 export class ObservableMap<K, V> {
   mapSubject = new BehaviorSubject(new Map<K, BehaviorSubject<V>>())
@@ -28,8 +28,8 @@ export class ObservableMap<K, V> {
 
   observeKey = (key: K) => {
     return this.mapSubject.pipe(
-      map(map => map.get(key)),
-      switchMap(valueSubject => valueSubject || of(null))
+      map((map) => map.get(key)),
+      switchMap((valueSubject) => valueSubject || of(null))
     )
   }
 }
