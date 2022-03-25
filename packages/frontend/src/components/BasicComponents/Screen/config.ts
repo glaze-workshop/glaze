@@ -12,7 +12,8 @@ const ScreenConfig: ComponentConfig<ScreenProps> = {
     height: [LengthUnit.FIXED, 800]
   },
   hasChildren: true,
-  path: '/default_Screen_Path',
+  path: 'default_Screen_Path',
+  to: 'default_Screen_To'
 }
 
 export default ScreenConfig

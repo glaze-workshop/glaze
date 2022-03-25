@@ -9,11 +9,7 @@ import {
   AccordionItem,
   AccordionButton
 } from '@chakra-ui/react'
-import {
-  LRpositionOption,
-  TBpositionOption,
-  lengthOption
-} from './layout.panel'
+import { LRpositionOption, TBpositionOption, lengthOption } from './layout.panel'
 import { PositionType } from '../../../../schema/layout'
 import LayoutPanelUnit from './LayoutPanelUnit'
 import { widthUpdater, heightUpdater, positionUpdater } from './yjsMapUpdater'
@@ -22,13 +18,9 @@ export interface LayoutPanelProps {
   layoutInfo: Y.Map<any>
 }
 
-const LayoutPanel: FC<LayoutPanelProps> = ({
-  layoutInfo
-}: LayoutPanelProps) => {
-  const [LRposOption, setLRPosOption] =
-    useState<Array<PositionType>>(LRpositionOption)
-  const [TBposOption, setTBPosOption] =
-    useState<Array<PositionType>>(TBpositionOption)
+const LayoutPanel: FC<LayoutPanelProps> = ({ layoutInfo }: LayoutPanelProps) => {
+  const [LRposOption, setLRPosOption] = useState<Array<PositionType>>(LRpositionOption)
+  const [TBposOption, setTBPosOption] = useState<Array<PositionType>>(TBpositionOption)
   const [posInfo, setPosInfo] = useState<any>()
   const [widthInfo, setWidthInfo] = useState<any>()
   const [heightInfo, setHeightInfo] = useState<any>()
@@ -48,7 +40,7 @@ const LayoutPanel: FC<LayoutPanelProps> = ({
 
   return (
     <>
-      <Tag size="md" variant="solid" colorScheme="teal" marginBottom="10px">
+      <Tag size="md" variant="solid" colorScheme="teal" marginBottom="10px" width="60px">
         Layout
       </Tag>
       <Accordion allowMultiple>

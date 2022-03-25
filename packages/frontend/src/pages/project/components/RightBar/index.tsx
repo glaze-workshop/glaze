@@ -2,23 +2,28 @@ import React, { FC, memo, useState, useEffect } from 'react'
 import * as Y from 'yjs'
 import { SelectedNodeInfoSubject } from '../../../../components/GlazeEditor/state'
 import { editorSharedDocument } from '../../../../components/GlazeEditor/EditorSharedDocument'
-import { Box, Tag, Divider } from '@chakra-ui/react'
+import { Box, Divider, Flex } from '@chakra-ui/react'
 import LayoutPanel from './LayoutPanel'
 import NameIdPanel from './NameIdPanel'
+import RoutePanel from './RoutePanel'
+import PropsPanel from './PropsPanel'
 
 export interface RightBarProps {}
 const RightBar: FC<RightBarProps> = () => {
   const [selectedNode, setSelectedNode] = useState<any>(null)
+  const [selectedYMap, setSelectedYMap] = useState<Y.Map<any>>()
   const [idInfo, setIdInfo] = useState<string>('')
   const [nameInfo, setNameInfo] = useState<any>()
   const [propsInfo, setPropsInfo] = useState<any>()
   const [layoutInfo, setLayoutInfo] = useState<Y.Map<any>>()
+  const [pathInfo, setPathInfo] = useState<string>('')
+  const [toInfo, setToInfo] = useState<string>('')
 
   useEffect(() => {
     const selectCertainNode = (nodeId: string) => {
       const nodeInfo = editorSharedDocument.getNodeById(nodeId)
       console.log('[selectedCertainNode]', nodeInfo)
-      nodeInfo && yjsMapExtractor(nodeInfo)
+      nodeInfo && setSelectedYMap(nodeInfo) && yjsMapExtractor(nodeInfo)
     }
 
     const yjsMapExtractor = (YMap: Y.Map<any>) => {
@@ -26,6 +31,8 @@ const RightBar: FC<RightBarProps> = () => {
       const nameInfo = YMap.get('name')
       const propsInfo = YMap.get('props')
       const layoutInfo = YMap.get('layout')
+      const pathInfo = YMap.get('path')
+      const toInfo = YMap.get('to')
       // console.log('[yjsMapExtractor nameInfo]', nameInfo)
       // console.log('[yjsMapExtractor props]', propsInfo)
       // console.log('[yjsMapExtractor layout]', layoutInfo)
@@ -33,6 +40,8 @@ const RightBar: FC<RightBarProps> = () => {
       setNameInfo(nameInfo)
       setPropsInfo(propsInfo)
       setLayoutInfo(layoutInfo)
+      setPathInfo(pathInfo)
+      setToInfo(toInfo)
     }
 
     const subscriber = SelectedNodeInfoSubject.subscribe((node) => {
@@ -52,12 +61,11 @@ const RightBar: FC<RightBarProps> = () => {
           {' '}
           <NameIdPanel nameInfo={nameInfo} idInfo={idInfo} />
           <Divider margin="10px 0" />
-          <Box overflow="scroll" h="500px">
+          <Flex overflow="scroll" h="500px" flexDirection="column">
             {layoutInfo && <LayoutPanel layoutInfo={layoutInfo} />}
-            <Tag size="md" variant="solid" colorScheme="teal" margin="10px 0">
-              Props
-            </Tag>{' '}
-          </Box>
+            <PropsPanel />
+            {selectedYMap && <RoutePanel path={pathInfo} to={toInfo} yMap={selectedYMap} />}
+          </Flex>
         </>
       ) : (
         '尚未选中元素'
