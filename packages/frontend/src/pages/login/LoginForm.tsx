@@ -1,6 +1,17 @@
-import { Button, Flex, FormControl, FormErrorMessage, FormLabel, Input, Link, Spacer, useToast, VStack } from '@chakra-ui/react'
+import {
+  Button,
+  Flex,
+  FormControl,
+  FormErrorMessage,
+  FormLabel,
+  Input,
+  Link,
+  Spacer,
+  useToast,
+  VStack
+} from '@chakra-ui/react'
 import { AuthApi, AuthDto, GlazeErr } from '@glaze/common'
-import React, { FC } from 'react'
+import { FC } from 'react'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { DevTool } from '@hookform/devtools'
@@ -9,11 +20,15 @@ import { Link as RouterLink, useNavigate } from 'react-router-dom'
 import { UserSubject } from '../../global/status'
 import { writeToken } from '../../utils/token'
 
-export interface LoginFormProps {
-}
+export interface LoginFormProps {}
 
-const LoginForm:FC<LoginFormProps> = () => {
-  const { register, handleSubmit, formState: { errors }, control } = useForm<AuthDto.AuthLoginDTO>({
+const LoginForm: FC<LoginFormProps> = () => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    control
+  } = useForm<AuthDto.AuthLoginDTO>({
     resolver: yupResolver(AuthDto.AuthLoginSchema)
   })
 
@@ -55,19 +70,23 @@ const LoginForm:FC<LoginFormProps> = () => {
         <VStack>
           <FormControl isInvalid={Boolean(errors.username?.message)}>
             <FormLabel>用户名</FormLabel>
-            <Input {...register('username')}/>
+            <Input {...register('username')} />
             <FormErrorMessage>{errors.username?.message}</FormErrorMessage>
           </FormControl>
           <FormControl isInvalid={Boolean(errors.password?.message)}>
             <FormLabel>密码</FormLabel>
-            <Input type='password' {...register('password')}/>
+            <Input type="password" {...register('password')} />
             <FormErrorMessage>{errors.password?.message}</FormErrorMessage>
           </FormControl>
           <FormControl>
             <Flex align="center">
-              <Button isLoading={loginMutation.isLoading} type='submit'>登录</Button>
+              <Button isLoading={loginMutation.isLoading} type="submit">
+                登录
+              </Button>
               <Spacer />
-              <Link color="blue.400" as={RouterLink} to='/register'>注册账号</Link>
+              <Link color="blue.400" as={RouterLink} to="/register">
+                注册账号
+              </Link>
             </Flex>
           </FormControl>
         </VStack>

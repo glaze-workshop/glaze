@@ -20,21 +20,15 @@
   },
   "devDependencies": {
     "@glaze/bundler": "workspace:*",
+    "@glaze/types": "workspace:*",
     "@types/uuid": "^8.3.4",
     "i18next": "^21.6.7",
-    "msw": "^0.36.7",
     "yup": "^0.32.11"
   },
   "peerDependencies": {
     "axios": ">=0.26",
     "i18next": ">=21.5.2",
-    "msw": ">=0.35.0",
-    "yup": ">=0.32.11"
-  },
-  "eslintConfig": {
-    "rules": {
-      "space-before-function-paren": "warn",
-      "indent": "warn"
-    }
+    "yup": ">=0.32.11",
+    "rxjs": ">=7"
   }
 }

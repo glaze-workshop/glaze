@@ -21,9 +21,9 @@ import { StructureProxy, createYjsMapProxy, NodeProxy } from './yjs.hook'
  */
 
 export default class EditorSharedDocument {
-  doc
-  structureTree
-  nodeList
+  doc: Y.Doc
+  structureTree: Y.Array<Y.Map<any>>
+  nodeList: Y.Map<Y.Map<any>>
   webSocketProvider: WebSocketProvider | null = null
 
   constructor() {
@@ -48,6 +48,9 @@ export default class EditorSharedDocument {
   /** TODO: close websocket */
   close() {
     this.webSocketProvider?.disconnect()
+    this.doc = new Y.Doc()
+    this.structureTree = this.doc.getArray<Y.Map<any>>('structure')
+    this.nodeList = this.doc.getMap<Y.Map<any>>('components')
   }
 
   getNodeById = (nodeId: string) => {
@@ -60,6 +63,7 @@ export default class EditorSharedDocument {
 
   createNodeByComponentId = (componentId: string) => {
     const { component, config } = AllComponentsSubject.value.get(componentId) ?? {}
+    console.log('createNodeByComponentId 1', config)
     if (componentId === BasicComponentId.Screen && config) {
       const leftMax = this.structureTree
         .toArray()

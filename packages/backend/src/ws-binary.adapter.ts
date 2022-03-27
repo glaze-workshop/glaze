@@ -18,7 +18,7 @@ enum READY_STATE {
   CONNECTING_STATE = 0,
   OPEN_STATE = 1,
   CLOSING_STATE = 2,
-  CLOSED_STATE = 3,
+  CLOSED_STATE = 3
 }
 
 type HttpServerRegistryKey = number
@@ -40,14 +40,18 @@ export class WsBinaryAdapter extends AbstractWsAdapter {
     WsServerRegistryEntry
   >()
 
-  constructor (appOrHttpServer?: INestApplicationContext | any) {
+  constructor(appOrHttpServer?: INestApplicationContext | any) {
     super(appOrHttpServer)
     wsPackage = loadPackage('ws', 'WsAdapter', () => require('ws'))
   }
 
-  public create (
+  public create(
     port: number,
-    options: Record<string, any> & { namespace?: string; server?: any; path?: string } = {}
+    options: Record<string, any> & {
+      namespace?: string
+      server?: any
+      path?: string
+    } = {}
   ) {
     const { server, ...wsOptions } = options ?? {}
     if (wsOptions?.namespace) {
@@ -99,7 +103,7 @@ export class WsBinaryAdapter extends AbstractWsAdapter {
     return wsServer
   }
 
-  public bindMessageHandlers (
+  public bindMessageHandlers(
     client: ws.WebSocket,
     handlers: MessageMappingProperties[],
     transform: (data: any) => Observable<any>
@@ -122,7 +126,7 @@ export class WsBinaryAdapter extends AbstractWsAdapter {
     source$.subscribe(onMessage)
   }
 
-  public bindMessageHandler (
+  public bindMessageHandler(
     buffer: any,
     handlers: MessageMappingProperties[],
     transform: (data: any) => Observable<any>
@@ -131,10 +135,8 @@ export class WsBinaryAdapter extends AbstractWsAdapter {
       const decoder = decoding.createDecoder(new Uint8Array(buffer.data))
       const event = decoding.readVarUint(decoder)
 
-      const messageHandler = handlers.find(
-        handler => handler.message === event
-      )
-      const { callback } = messageHandler !
+      const messageHandler = handlers.find(handler => handler.message === event)
+      const { callback } = messageHandler!
       return transform(callback(decoder))
     } catch (e) {
       this.logger.error(e)
@@ -142,7 +144,7 @@ export class WsBinaryAdapter extends AbstractWsAdapter {
     }
   }
 
-  public bindErrorHandler (server: ws.Server) {
+  public bindErrorHandler(server: ws.Server) {
     server.on(CONNECTION_EVENT, (ws: any) =>
       ws.on(ERROR_EVENT, (err: any) => this.logger.error(err))
     )
@@ -151,11 +153,11 @@ export class WsBinaryAdapter extends AbstractWsAdapter {
     return server
   }
 
-  public bindClientDisconnect (client: any, callback: Function) {
+  public bindClientDisconnect(client: any, callback: Function) {
     client.on(CLOSE_EVENT, callback)
   }
 
-  public async dispose () {
+  public async dispose() {
     const closeEventSignals = Array.from(this.httpServersRegistry)
       .filter(([port]) => port !== UNDERLYING_HTTP_SERVER_PORT)
       .map(([_, server]) => new Promise(resolve => server.close(resolve)))
@@ -165,7 +167,7 @@ export class WsBinaryAdapter extends AbstractWsAdapter {
     this.wsServersRegistry.clear()
   }
 
-  protected ensureHttpServerExists (
+  protected ensureHttpServerExists(
     port: number,
     httpServer = http.createServer()
   ) {
@@ -176,13 +178,13 @@ export class WsBinaryAdapter extends AbstractWsAdapter {
 
     httpServer.on('upgrade', (request, socket, head) => {
       const baseUrl = 'ws://' + request.headers.host + '/'
-      const pathname = new URL(request.url !, baseUrl).pathname
+      const pathname = new URL(request.url!, baseUrl).pathname
       const wsServersCollection = this.wsServersRegistry.get(port)
 
       let isRequestDelegated = false
       for (const wsServer of wsServersCollection ?? []) {
         if (pathname === wsServer.path) {
-          wsServer.handleUpgrade(request, socket, head, (ws) => {
+          wsServer.handleUpgrade(request, socket, head, ws => {
             wsServer.emit('connection', ws, request)
           })
           isRequestDelegated = true
@@ -196,7 +198,7 @@ export class WsBinaryAdapter extends AbstractWsAdapter {
     return httpServer
   }
 
-  protected addWsServerToRegistry (
+  protected addWsServerToRegistry(
     wsServer: ws.Server,
     port: number,
     path: string

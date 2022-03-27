@@ -44,3 +44,30 @@ export class JwtAuthError extends AbstractError<ErrorCode.JwtAuthError> {
     )
   }
 }
+
+export class DeploymentPathDuplicationError extends AbstractError<ErrorCode.DeploymentPathDuplicationError> {
+  constructor (path: string) {
+    super(
+      `部署路径「${path}」重复`,
+      ErrorCode.DeploymentPathDuplicationError
+    )
+  }
+}
+
+export class PluginIdDuplicationError extends AbstractError<ErrorCode.PluginIdDuplicationError> {
+  constructor (id: string) {
+    super(
+      `插件ID「${id}」重复`,
+      ErrorCode.PluginIdDuplicationError
+    )
+  }
+}
+
+export class PermissionDeniedError extends AbstractError<ErrorCode.PermissionDeniedError> {
+  constructor (message?: string) {
+    super(
+      message ?? '用户权限不足',
+      ErrorCode.PermissionDeniedError
+    )
+  }
+}

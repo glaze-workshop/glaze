@@ -25,7 +25,7 @@ async function bootstrap () {
     engine: {
       pug: require('pug')
     },
-    templates: join(__dirname, '..', 'views')
+    templates: join(__dirname, '../../views')
   })
   app.useWebSocketAdapter(new WsBinaryAdapter(app))
   await app.listen(3000, '127.0.0.1')

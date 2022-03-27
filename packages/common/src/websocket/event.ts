@@ -7,5 +7,20 @@ export enum EditorMessageEvent {
   /**
    * 用户消息同步
    */
-  AWARENESS = 1
+  AWARENESS = 1,
+
+  /**
+   * 异常
+   */
+  ERROR = 2,
+
+  /**
+   * 消息
+   */
+  MESSAGE = 3,
+
+  /**
+   * 权限验证
+   */
+  AUTH = 4
 }

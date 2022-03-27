@@ -1,0 +1,24 @@
+{
+  "name": "@glaze/plugin",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.cjs.js",
+  "module": "dist/index.esm.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "login": "glaze-plugin login",
+    "init": "glaze-plugin init",
+    "build": "glaze-plugin build",
+    "upload": "glaze-plugin upload"
+  },
+  "devDependencies": {
+    "@glaze/common": "workspace:*",
+    "@glaze/plugin-bundler": "workspace:*",
+    "@glaze/types": "workspace:*",
+    "cos-nodejs-sdk-v5": ">=2.11.6",
+    "esbuild": "^0.14.25"
+  },
+  "dependencies": {
+    "nanoid": "^3.3.1"
+  }
+}

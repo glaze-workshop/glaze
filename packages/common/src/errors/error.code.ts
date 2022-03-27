@@ -35,5 +35,20 @@ export enum ErrorCode {
   /**
    * jwt 验证错误
    */
-  JwtAuthError
+  JwtAuthError,
+
+  /**
+   * 部署 path 重复
+   */
+  DeploymentPathDuplicationError,
+
+  /**
+   * 插件 id 重复
+   */
+  PluginIdDuplicationError,
+
+  /**
+   * 权限不足
+   */
+  PermissionDeniedError,
 }

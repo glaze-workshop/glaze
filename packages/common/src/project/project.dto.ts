@@ -8,3 +8,9 @@ export interface ProjectUpdateDTO {
   name?: string
   intro?: string
 }
+
+export interface ProjectPluginSettingDto {
+  projectId: number
+  pluginId: string
+  config: Record<string, any>
+}

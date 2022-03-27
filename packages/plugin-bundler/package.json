@@ -1,0 +1,35 @@
+{
+  "name": "@glaze/plugin-bundler",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.cjs.js",
+  "module": "dist/index.esm.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "glaze-plugin": "./dist/index.cjs.js"
+  },
+  "scripts": {
+    "dev": "glaze-bundle -d -r",
+    "build": "glaze-bundle -b -r",
+    "prepare": "npm run build"
+  },
+  "devDependencies": {
+    "@glaze/bundler": "workspace:*",
+    "@glaze/common": "workspace:*",
+    "@glaze/types": "workspace:*",
+    "@glaze/sdk-toolkit": "workspace:*",
+    "@types/prompts": "^2.0.14",
+    "lodash": "^4.17.21"
+  },
+  "dependencies": {
+    "axios": "^0.26.0",
+    "commander": ">=8.3.0",
+    "cos-nodejs-sdk-v5": ">=2.11.6",
+    "esbuild": "^0.14.25",
+    "prompts": ">=2.4.2"
+  },
+  "peerDependencies": {
+    "esbuild": "^0.14.25",
+    "cos-nodejs-sdk-v5": ">=2.11.6"
+  }
+}

@@ -5,8 +5,28 @@ html(lang="en")
     meta(name="viewport", content="width=device-width, initial-scale=1")
     title(lang="en") Project
     script(type="text/javascript").
+      window.GLAZE_PREVIEW = !{isPreview}
+      window.GLAZE_PROJECT_ID = !{projectId};
+      window.GLAZE_DEPLOYMENT_ID = !{deploymentId};
+      window.GLAZE_PLUGIN_CONFIG = !{pluginConfig};
       window.GLAZE_NODES = !{nodes};
       window.GLAZE_STRUCTURE = !{structure};
+
+      window.GLAZE_REGISTERED_PLUGIN_MAP = [];
+      window.GLAZE_NODE_LISTENER = [];
+      window.GLAZE_ACTION = Object.freeze({
+        getUserConfig: (id) => window.GLAZE_PLUGIN_CONFIG[id],
+        registerPlugin: (id, e) => window.GLAZE_REGISTERED_PLUGIN_MAP.push([id, e(window.GLAZE_PLUGIN_CONFIG[id])]),
+        registerNodeListener: (e) => window.GLAZE_NODE_LISTENER.push(e),
+      });
+    link(rel="stylesheet", href="https://render.file.localhost/index.css")
     script(src="https://render.file.localhost/index.js" defer)
+
+    if heatmap 
+      script(src="https://render.file.localhost/heatmap.js")
+
+    each src in pluginSrc.length ? pluginSrc : []
+      script(src=src defer)
+
   body
     div#root

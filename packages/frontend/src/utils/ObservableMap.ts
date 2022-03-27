@@ -3,7 +3,7 @@ import { BehaviorSubject, filter, from, map, mergeMap, of, switchMap } from 'rxj
 export class ObservableMap<K, V> {
   mapSubject = new BehaviorSubject(new Map<K, BehaviorSubject<V>>())
 
-  get map (): Map<K, BehaviorSubject<V>> {
+  get map(): Map<K, BehaviorSubject<V>> {
     return this.mapSubject.value
   }
 
@@ -27,12 +27,9 @@ export class ObservableMap<K, V> {
   }
 
   observeKey = (key: K) => {
-    return this.mapSubject
-      .pipe(
-        map(map => map.get(key)),
-        switchMap(valueSubject =>
-          valueSubject || of(null)
-        )
-      )
+    return this.mapSubject.pipe(
+      map(map => map.get(key)),
+      switchMap(valueSubject => valueSubject || of(null))
+    )
   }
 }

@@ -3,7 +3,16 @@ https://docs.nestjs.com/websockets/gateways#gateways
 */
 
 import { EditorMessageEvent } from '@glaze/common'
-import { MessageBody, SubscribeMessage, WebSocketGateway, WebSocketServer, OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit, ConnectedSocket } from '@nestjs/websockets'
+import {
+  MessageBody,
+  SubscribeMessage,
+  WebSocketGateway,
+  WebSocketServer,
+  OnGatewayConnection,
+  OnGatewayDisconnect,
+  OnGatewayInit,
+  ConnectedSocket
+} from '@nestjs/websockets'
 import { IncomingMessage } from 'http'
 import * as ws from 'ws'
 import * as encoding from 'lib0/encoding'
@@ -13,13 +22,18 @@ import qs from 'query-string'
 import { DocService } from './doc.service'
 
 @WebSocketGateway({ path: '/ws-doc' })
-export class DocGateway implements OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit {
+export class DocGateway
+  implements OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit
+{
   private clientProjectIdMap = new Map<ws.WebSocket, number>()
 
-  constructor (private docService: DocService) {}
+  constructor(private docService: DocService) {}
 
   @SubscribeMessage(EditorMessageEvent.SYNC)
-  async handleSyncMessage (@MessageBody() decoder: decoding.Decoder, @ConnectedSocket() conn: ws.WebSocket) {
+  async handleSyncMessage(
+    @MessageBody() decoder: decoding.Decoder,
+    @ConnectedSocket() conn: ws.WebSocket
+  ) {
     const projectId = this.clientProjectIdMap.get(conn)
     if (projectId !== undefined) {
       const doc = await this.docService.getDocByProjectId(projectId)
@@ -33,7 +47,10 @@ export class DocGateway implements OnGatewayConnection, OnGatewayDisconnect, OnG
   }
 
   @SubscribeMessage(EditorMessageEvent.AWARENESS)
-  async handleAwarenessMessage (@MessageBody() decoder: decoding.Decoder, @ConnectedSocket() conn: ws.WebSocket) {
+  async handleAwarenessMessage(
+    @MessageBody() decoder: decoding.Decoder,
+    @ConnectedSocket() conn: ws.WebSocket
+  ) {
     const projectId = this.clientProjectIdMap.get(conn)
     if (projectId !== undefined) {
       const doc = await this.docService.getDocByProjectId(projectId)
@@ -41,7 +58,7 @@ export class DocGateway implements OnGatewayConnection, OnGatewayDisconnect, OnG
     }
   }
 
-  async handleConnection (client: ws.WebSocket, req: IncomingMessage) {
+  async handleConnection(client: ws.WebSocket, req: IncomingMessage) {
     client.binaryType = 'arraybuffer'
 
     if (req.url) {
@@ -57,7 +74,7 @@ export class DocGateway implements OnGatewayConnection, OnGatewayDisconnect, OnG
     console.log('User connected')
   }
 
-  handleDisconnect (client: ws.WebSocket) {
+  handleDisconnect(client: ws.WebSocket) {
     const projectId = this.clientProjectIdMap.get(client)
     if (projectId !== undefined) {
       this.docService.closeClientByProjectId(projectId, client)
@@ -66,7 +83,7 @@ export class DocGateway implements OnGatewayConnection, OnGatewayDisconnect, OnG
     console.log('User disconnected')
   }
 
-  afterInit (server: ws.WebSocket) {
+  afterInit(server: ws.WebSocket) {
     console.log('Socket is live')
   }
 }

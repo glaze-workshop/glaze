@@ -1,4 +1,3 @@
-import type { JsonValue } from 'type-fest'
 import { ProjectFolderEntity } from './folder'
 import { CommonTimestamp } from './time'
 
@@ -16,4 +15,10 @@ export interface ProjectEntity extends CommonTimestamp {
   projectFolderId: number
 
   projectFolder?: ProjectFolderEntity
+}
+
+export interface ProjectUsedPluginEntity extends CommonTimestamp {
+  projectId: number
+  pluginId: string
+  config: any
 }

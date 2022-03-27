@@ -89,133 +89,152 @@ export const createCommonConfig = (env: EnvType): WebpackConfiguration => {
       new webpack.ProvidePlugin({
         PIXI: 'pixi.js'
       }),
-      new HtmlWebpackPlugin(Object.assign({
-        template: FullPath.appHtml,
-        inject: true
-      }, isEnvProduction
-        ? {
-            minify: {
-              removeComments: true,
-              collapseWhitespace: true,
-              removeRedundantAttributes: true,
-              useShortDoctype: true,
-              removeEmptyAttributes: true,
-              removeStyleLinkTypeAttributes: true,
-              keepClosingSlash: true,
-              minifyJS: true,
-              minifyCSS: true,
-              minifyURLs: true
-            }
-          }
-        : undefined)),
+      new HtmlWebpackPlugin(
+        Object.assign(
+          {
+            template: FullPath.appHtml,
+            inject: true
+          },
+          isEnvProduction
+            ? {
+                minify: {
+                  removeComments: true,
+                  collapseWhitespace: true,
+                  removeRedundantAttributes: true,
+                  useShortDoctype: true,
+                  removeEmptyAttributes: true,
+                  removeStyleLinkTypeAttributes: true,
+                  keepClosingSlash: true,
+                  minifyJS: true,
+                  minifyCSS: true,
+                  minifyURLs: true
+                }
+              }
+            : undefined
+        )
+      ),
       isEnvDevelopment && new ReactRefreshWebpackPlugin(),
       isEnvProduction && new MiniCssExtractPlugin(),
       isEnvProduction && new BundleAnalyzerPlugin({ analyzerMode: 'static' }),
-      isEnvProduction && new CopyPlugin({
-        patterns: [{
-          from: FullPath.appPublic,
-          globOptions: {
-            ignore: [FullPath.appHtml]
-          }
-        }]
-      })
+      isEnvProduction &&
+        new CopyPlugin({
+          patterns: [
+            {
+              from: FullPath.appPublic,
+              globOptions: {
+                ignore: [FullPath.appHtml]
+              }
+            }
+          ]
+        })
     ].filter(Boolean) as any[],
     module: {
-      rules: [{
-        test: /\.(jsx?|tsx?)$/i,
-        exclude: [/node_modules/],
-        use: [
-          {
-            loader: require.resolve('babel-loader'),
-            options: {
-              presets: [
-                ['@babel/preset-env', {
-                  targets: {
-                    browsers: ['last 2 versions']
-                  },
-                  modules: false
-                }],
-                '@babel/preset-react',
-                '@babel/preset-typescript'
-              ],
-              plugins: [!isEnvProduction && require('react-refresh/babel')].filter(Boolean),
-              cacheDirectory: true,
-              // See #6846 for context on why cacheCompression is disabled
-              cacheCompression: false,
-              compact: isEnvProduction
+      rules: [
+        {
+          test: /\.(jsx?|tsx?)$/i,
+          exclude: [/node_modules/],
+          use: [
+            {
+              loader: require.resolve('babel-loader'),
+              options: {
+                presets: [
+                  [
+                    '@babel/preset-env',
+                    {
+                      targets: {
+                        browsers: ['last 2 versions']
+                      },
+                      modules: false
+                    }
+                  ],
+                  [
+                    '@babel/preset-react',
+                    {
+                      runtime: 'automatic'
+                    }
+                  ],
+                  '@babel/preset-typescript'
+                ],
+                plugins: [
+                  !isEnvProduction && require('react-refresh/babel')
+                ].filter(Boolean),
+                cacheDirectory: true,
+                // See #6846 for context on why cacheCompression is disabled
+                cacheCompression: false,
+                compact: isEnvProduction
+              }
             }
-          }
-
-        ]
-      },
-      // "postcss" loader applies autoprefixer to our CSS.
-      // "css" loader resolves paths in CSS and adds assets as dependencies.
-      // "style" loader turns CSS into JS modules that inject <style> tags.
-      // In production, we use MiniCSSExtractPlugin to extract that CSS
-      // to a file, but in development "style" loader enables hot editing
-      // of CSS.
-      // By default we support CSS Modules with the extension .module.css
-      {
-        test: cssRegex,
-        exclude: cssModuleRegex,
-        use: getStyleLoaders({
-          importLoaders: 1,
-          modules: {
-            mode: 'icss'
-          }
-        }),
-        // Don't consider CSS imports dead code even if the
-        // containing package claims to have no side effects.
-        // Remove this when webpack adds a warning or an error for this.
-        // See https://github.com/webpack/webpack/issues/6571
-        sideEffects: true
-      },
-      // Adds support for CSS Modules (https://github.com/css-modules/css-modules)
-      // using the extension .module.css
-      {
-        test: cssModuleRegex,
-        use: getStyleLoaders({
-          importLoaders: 1,
-          modules: {
-            mode: 'local'
-          }
-        })
-      },
-      // Opt-in support for SASS (using .scss or .sass extensions).
-      // By default we support SASS Modules with the
-      // extensions .module.scss or .module.sass
-      {
-        test: sassRegex,
-        exclude: sassModuleRegex,
-        use: getStyleLoaders(
-          {
-            importLoaders: 3,
+          ]
+        },
+        // "postcss" loader applies autoprefixer to our CSS.
+        // "css" loader resolves paths in CSS and adds assets as dependencies.
+        // "style" loader turns CSS into JS modules that inject <style> tags.
+        // In production, we use MiniCSSExtractPlugin to extract that CSS
+        // to a file, but in development "style" loader enables hot editing
+        // of CSS.
+        // By default we support CSS Modules with the extension .module.css
+        {
+          test: cssRegex,
+          exclude: cssModuleRegex,
+          use: getStyleLoaders({
+            importLoaders: 1,
             modules: {
               mode: 'icss'
             }
-          },
-          'sass-loader'
-        ),
-        // Don't consider CSS imports dead code even if the
-        // containing package claims to have no side effects.
-        // Remove this when webpack adds a warning or an error for this.
-        // See https://github.com/webpack/webpack/issues/6571
-        sideEffects: true
-      },
-      // Adds support for CSS Modules, but using SASS
-      // using the extension .module.scss or .module.sass
-      {
-        test: sassModuleRegex,
-        use: getStyleLoaders(
-          {
-            importLoaders: 3,
+          }),
+          // Don't consider CSS imports dead code even if the
+          // containing package claims to have no side effects.
+          // Remove this when webpack adds a warning or an error for this.
+          // See https://github.com/webpack/webpack/issues/6571
+          sideEffects: true
+        },
+        // Adds support for CSS Modules (https://github.com/css-modules/css-modules)
+        // using the extension .module.css
+        {
+          test: cssModuleRegex,
+          use: getStyleLoaders({
+            importLoaders: 1,
             modules: {
               mode: 'local'
             }
-          },
-          'sass-loader'
-        )
-      }]
+          })
+        },
+        // Opt-in support for SASS (using .scss or .sass extensions).
+        // By default we support SASS Modules with the
+        // extensions .module.scss or .module.sass
+        {
+          test: sassRegex,
+          exclude: sassModuleRegex,
+          use: getStyleLoaders(
+            {
+              importLoaders: 3,
+              modules: {
+                mode: 'icss'
+              }
+            },
+            'sass-loader'
+          ),
+          // Don't consider CSS imports dead code even if the
+          // containing package claims to have no side effects.
+          // Remove this when webpack adds a warning or an error for this.
+          // See https://github.com/webpack/webpack/issues/6571
+          sideEffects: true
+        },
+        // Adds support for CSS Modules, but using SASS
+        // using the extension .module.scss or .module.sass
+        {
+          test: sassModuleRegex,
+          use: getStyleLoaders(
+            {
+              importLoaders: 3,
+              modules: {
+                mode: 'local'
+              }
+            },
+            'sass-loader'
+          )
+        }
+      ]
     },
     resolve: {
       extensions: ['.tsx', '.ts', '.js']
