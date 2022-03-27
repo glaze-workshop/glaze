@@ -6,6 +6,7 @@ import type { DocService } from './doc.service'
 import { EditorMessageEvent } from '@glaze/common'
 import * as syncProtocol from 'y-protocols/sync'
 import { RedisService } from '../global/redis.service'
+import WebSocket from 'ws'
 
 export class WSSharedDoc extends Y.Doc {
   private readonly docChannel: string
@@ -20,6 +21,7 @@ export class WSSharedDoc extends Y.Doc {
     private readonly redisService: RedisService
   ) {
     super()
+    this.awareness.setLocalState(null)
 
     this.docChannel = `channel:doc:${projectId}`
     this.awarenessChannel = `channel:awareness:${projectId}`
@@ -64,7 +66,6 @@ export class WSSharedDoc extends Y.Doc {
         connControlledIds.delete(clientId)
       })
     }
-
     const encoder = encoding.createEncoder()
     encoding.writeVarUint(encoder, EditorMessageEvent.AWARENESS)
     encoding.writeVarUint8Array(
@@ -105,9 +106,11 @@ export class WSSharedDoc extends Y.Doc {
   }
 
   send = (client: ws.WebSocket, message: Uint8Array) => {
-    client.send(message, (err) => {
-      err !== undefined && this.close(client)
-    })
+    if (client.readyState === WebSocket.OPEN) {
+      client.send(message, (err) => {
+        err !== undefined && this.close(client)
+      })
+    }
   }
 
   close = (client: ws.WebSocket) => {
@@ -131,6 +134,19 @@ export class WSSharedDoc extends Y.Doc {
 
   initClient(client: ws.WebSocket) {
     this.clients.set(client, new Set())
+    const awarenessStates = this.awareness.getStates()
+    if (awarenessStates.size > 0) {
+      const encoder = encoding.createEncoder()
+      encoding.writeVarUint(encoder, EditorMessageEvent.AWARENESS)
+      encoding.writeVarUint8Array(
+        encoder,
+        awarenessProtocol.encodeAwarenessUpdate(
+          this.awareness,
+          Array.from(awarenessStates.keys())
+        )
+      )
+      this.send(client, encoding.toUint8Array(encoder))
+    }
   }
 
   applyAwarenessUpdate(client: ws.WebSocket, update: Uint8Array) {

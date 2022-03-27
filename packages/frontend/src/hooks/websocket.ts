@@ -7,7 +7,7 @@ import { useMatch } from 'react-router-dom'
 import { queryClient } from '../utils/queryClient'
 import { useQueryClient } from 'react-query'
 
-export function useWebSocketMessage () {
+export function useWebSocketMessage() {
   const matchLogin = useMatch('/login')
   const matchRegister = useMatch('/register')
   const enableWebSocket = !matchLogin && !matchRegister
@@ -28,14 +28,14 @@ export function useWebSocketMessage () {
         client.current?.send(encoding.toUint8Array(encoder))
       }
 
-      function handleError (decoder: decoding.Decoder) {
+      function handleError(decoder: decoding.Decoder) {
         const errorCode = decoding.readVarUint(decoder)
         if (errorCode === GlazeErr.ErrorCode.JwtAuthError) {
           location.href = '/login?redirect=' + encodeURIComponent(location.href)
         }
       }
 
-      function handleRefreshMessage (decoder: decoding.Decoder) {
+      function handleRefreshMessage(decoder: decoding.Decoder) {
         const message = decoding.readVarString(decoder)
         queryClient.refetchQueries(message)
       }

@@ -10,9 +10,9 @@ import { DocService } from '../doc/doc.service'
 
 @Injectable()
 export class ProjectService {
-  constructor (private prisma: PrismaService, private docService: DocService) {}
+  constructor(private prisma: PrismaService, private docService: DocService) {}
 
-  getProject (projectId: number): Promise<Entity.ProjectEntity | null> {
+  getProject(projectId: number): Promise<Entity.ProjectEntity | null> {
     return this.prisma.glazeProject.findUnique({
       where: {
         id: projectId
@@ -27,7 +27,7 @@ export class ProjectService {
     })
   }
 
-  deleteProject (projectId: number): Promise<Entity.ProjectEntity> {
+  deleteProject(projectId: number): Promise<Entity.ProjectEntity> {
     return this.prisma.glazeProject.delete({
       where: {
         id: projectId
@@ -35,7 +35,7 @@ export class ProjectService {
     })
   }
 
-  async archiveProject (projectId: number) {
+  async archiveProject(projectId: number) {
     const projectWithFolders = await this.prisma.glazeProject.findUnique({
       where: {
         id: projectId
@@ -57,7 +57,10 @@ export class ProjectService {
         }
       }
     })
-    const archiveFolderId = projectWithFolders?.projectFolder?.team?.projectFolders.find(folder => folder.type === Entity.GlazeFolderTypeEnum.ARCHIVED)?.id
+    const archiveFolderId =
+      projectWithFolders?.projectFolder?.team?.projectFolders.find(
+        (folder) => folder.type === Entity.GlazeFolderTypeEnum.ARCHIVED
+      )?.id
 
     if (archiveFolderId) {
       await this.prisma.glazeProject.update({
@@ -71,7 +74,7 @@ export class ProjectService {
     }
   }
 
-  getProjects (folderId: number): Promise<Entity.ProjectEntity[]> {
+  getProjects(folderId: number): Promise<Entity.ProjectEntity[]> {
     return this.prisma.glazeProject.findMany({
       where: {
         projectFolderId: { equals: folderId }
@@ -79,18 +82,33 @@ export class ProjectService {
     })
   }
 
-  createProject (creationInfo: ProjectDto.ProjectCreationDTO): Promise<Entity.ProjectEntity> {
+  createProject(
+    creationInfo: ProjectDto.ProjectCreationDTO
+  ): Promise<Entity.ProjectEntity> {
     return this.prisma.glazeProject.create({
       data: creationInfo
     })
   }
 
-  updateProject (projectUpdateDTO: ProjectDto.ProjectUpdateDTO): Promise<Entity.ProjectEntity> {
+  updateProject(
+    projectUpdateDTO: ProjectDto.ProjectUpdateDTO
+  ): Promise<Entity.ProjectEntity> {
     return this.prisma.glazeProject.update({
       where: {
         id: projectUpdateDTO.id
       },
       data: projectUpdateDTO
+    })
+  }
+
+  updateProjectImage(projectId: number, image: string) {
+    return this.prisma.glazeProject.update({
+      where: {
+        id: projectId
+      },
+      data: {
+        preview: image
+      }
     })
   }
 }
