@@ -8,26 +8,27 @@ import * as syncProtocol from 'y-protocols/sync'
 import { RedisService } from '../global/redis.service'
 import WebSocket from 'ws'
 
-export class WSSharedDoc extends Y.Doc {
+export class WSSharedDoc {
   private readonly docChannel: string
   private readonly awarenessChannel: string
   private readonly clients: Map<ws.WebSocket, Set<number>> = new Map()
-  public readonly awareness: awarenessProtocol.Awareness =
-    new awarenessProtocol.Awareness(this)
+  private readonly awareness: awarenessProtocol.Awareness
+
+  public readonly doc = new Y.Doc()
 
   constructor(
     private readonly projectId: number,
     private readonly docService: DocService,
     private readonly redisService: RedisService
   ) {
-    super()
+    this.awareness = new awarenessProtocol.Awareness(this.doc)
     this.awareness.setLocalState(null)
 
     this.docChannel = `channel:doc:${projectId}`
     this.awarenessChannel = `channel:awareness:${projectId}`
 
     this.awareness.on('update', this.awarenessChangeHandler)
-    this.on('update', this.updateHandler)
+    this.doc.on('update', this.updateHandler)
 
     redisService.sub
       .subscribe(this.docChannel, this.awarenessChannel)
@@ -36,7 +37,7 @@ export class WSSharedDoc extends Y.Doc {
           console.log(other)
           const channelId = channel.toString()
           if (channelId === this.docChannel) {
-            Y.applyUpdate(this, update, 'redis')
+            Y.applyUpdate(this.doc, update, 'redis')
           } else if (channelId === this.awarenessChannel) {
             awarenessProtocol.applyAwarenessUpdate(
               this.awareness,
@@ -101,7 +102,7 @@ export class WSSharedDoc extends Y.Doc {
   }
 
   destroy = () => {
-    super.destroy()
+    this.doc.destroy()
     this.redisService.sub.unsubscribe([this.docChannel, this.awarenessChannel])
   }
 
@@ -149,11 +150,15 @@ export class WSSharedDoc extends Y.Doc {
     }
   }
 
-  applyAwarenessUpdate(client: ws.WebSocket, update: Uint8Array) {
+  applyAwarenessUpdate(update: Uint8Array, client: ws.WebSocket) {
     return awarenessProtocol.applyAwarenessUpdate(
       this.awareness,
       update,
       client
     )
+  }
+
+  applyUpdate(update: Uint8Array, origin: any) {
+    Y.applyUpdate(this.doc, update, origin)
   }
 }

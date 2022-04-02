@@ -29,7 +29,7 @@ export class MessageGateway
   constructor(private authService: AuthService) {}
 
   @SubscribeMessage(EditorMessageEvent.AUTH)
-  async handleEvent(
+  async handleAuth(
     @MessageBody() decoder: decoding.Decoder,
     @ConnectedSocket() conn: ws.WebSocket
   ) {

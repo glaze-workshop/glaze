@@ -47,7 +47,6 @@ export class WebSocketProvider {
     resyncInterval = -1
   ) {
     this.url = serverUrl
-    console.log(this.url)
     this.room = room
     this.doc = doc
     this.awareness = new awarenessProtocol.Awareness(doc)

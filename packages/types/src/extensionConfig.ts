@@ -14,10 +14,8 @@ export interface AbstractControl<
 > {
   name: string
   type: T
-  /**
-   * 没有默认值则必填
-   */
   default?: D
+  required?: boolean
 }
 
 export interface GlazePluginNumberControl

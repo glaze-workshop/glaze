@@ -18,7 +18,6 @@ export class ScreenshotProcessor {
     private puppeteerService: PuppeteerService,
     private deploymentService: DeploymentService,
     private projectService: ProjectService,
-    private docService: DocService,
     private configService: ConfigService,
     private messageGateway: MessageGateway
   ) {}

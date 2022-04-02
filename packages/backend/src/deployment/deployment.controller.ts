@@ -75,7 +75,7 @@ export class DeploymentController {
 
   @Get(DeploymentApi.DEPLOYMENT_RENDER_PATH)
   @Render('project.pug')
-  async deployment(@Param('path') path: string) {
+  async deploymentRender(@Param('path') path: string) {
     const deploymentInfo = await this.deploymentService.getDeploymentByPath(
       path
     )
@@ -98,7 +98,7 @@ export class DeploymentController {
           {}
         ),
         pluginSrc: plugins.map(
-          pluginConfig => `https://${pluginConfig.plugin.path}`
+          (pluginConfig) => `https://${pluginConfig.plugin.path}`
         )
       })
     }

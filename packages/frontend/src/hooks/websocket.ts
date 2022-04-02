@@ -4,7 +4,6 @@ import * as encoding from 'lib0/encoding'
 import * as decoding from 'lib0/decoding'
 import { EditorMessageEvent, GlazeErr } from '@glaze/common'
 import { useMatch } from 'react-router-dom'
-import { queryClient } from '../utils/queryClient'
 import { useQueryClient } from 'react-query'
 
 export function useWebSocketMessage() {

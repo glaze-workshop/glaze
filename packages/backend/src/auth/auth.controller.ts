@@ -12,7 +12,7 @@ import { AuthService } from './auth.service'
  */
 @Controller(Prefix.AUTH_PREFIX)
 export class AuthController {
-  constructor (private authService: AuthService) {}
+  constructor(private authService: AuthService) {}
 
   /**
    * 登录
@@ -21,7 +21,9 @@ export class AuthController {
    * @returns 登录行为最重要的是提供 jwt 的 cookie
    */
   @Post(AuthApi.AUTH_LOGIN_PATH)
-  login (@Body(new YupPipe(AuthDto.AuthLoginSchema)) loginDTO: AuthDto.AuthLoginDTO) {
+  login(
+    @Body(new YupPipe(AuthDto.AuthLoginSchema)) loginDTO: AuthDto.AuthLoginDTO
+  ) {
     return this.authService.login(loginDTO)
   }
 
@@ -32,7 +34,7 @@ export class AuthController {
    * @returns 注册是创建用户的行为
    */
   @Post(AuthApi.AUTH_REGISTER_PATH)
-  register (@Body() registerDTO: AuthDto.AuthRegisterDTO) {
+  register(@Body() registerDTO: AuthDto.AuthRegisterDTO) {
     return this.authService.registerUser(registerDTO)
   }
 }

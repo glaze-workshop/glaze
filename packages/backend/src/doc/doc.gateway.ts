@@ -20,7 +20,6 @@ import * as syncProtocol from 'y-protocols/sync'
 import qs from 'query-string'
 import { DocService } from './doc.service'
 import { AuthService } from '../auth/auth.service'
-import { ProjectService } from '../project/project.service'
 
 @WebSocketGateway({ path: '/ws-doc' })
 export class DocGateway
@@ -43,7 +42,7 @@ export class DocGateway
       const doc = await this.docService.getDocByProjectId(projectId)
       const encoder = encoding.createEncoder()
       encoding.writeVarUint(encoder, EditorMessageEvent.SYNC)
-      syncProtocol.readSyncMessage(decoder, encoder, doc, null)
+      syncProtocol.readSyncMessage(decoder, encoder, doc.doc, null)
       if (encoding.length(encoder) > 1) {
         doc.send(conn, encoding.toUint8Array(encoder))
       }
@@ -58,12 +57,12 @@ export class DocGateway
     const projectId = this.clientProjectIdMap.get(conn)
     if (projectId !== undefined) {
       const doc = await this.docService.getDocByProjectId(projectId)
-      doc.applyAwarenessUpdate(conn, decoding.readVarUint8Array(decoder))
+      doc.applyAwarenessUpdate(decoding.readVarUint8Array(decoder), conn)
     }
   }
 
   @SubscribeMessage(EditorMessageEvent.AUTH)
-  async handleEvent(
+  async handleAuth(
     @MessageBody() decoder: decoding.Decoder,
     @ConnectedSocket() conn: ws.WebSocket
   ) {

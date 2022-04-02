@@ -8,16 +8,11 @@ import { Buffer } from 'buffer'
 import { isUniqueConstraintError } from '../utils/prisma.error'
 import { PrismaService } from '../global/prisma.service'
 import { DocService } from '../doc/doc.service'
-import { ScreenshotService } from '../screenshot/screenshot.service'
 import { randomUrlLowerCase } from '../utils/random'
 
 @Injectable()
 export class DeploymentService {
-  constructor(
-    private screenshotService: ScreenshotService,
-    private prisma: PrismaService,
-    private docService: DocService
-  ) {}
+  constructor(private prisma: PrismaService, private docService: DocService) {}
 
   selectWithoutData() {
     return {

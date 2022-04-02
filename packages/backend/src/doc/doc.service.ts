@@ -39,7 +39,7 @@ export class DocService {
     } else {
       const doc = new WSSharedDoc(projectId, this, this.redisService)
       const [fullDocumentUpdate] = await this.getFullDocument(projectId)
-      Y.applyUpdate(doc, fullDocumentUpdate, 'database')
+      doc.applyUpdate(fullDocumentUpdate, 'database')
       this.docMap.set(projectId, doc)
       return doc
     }

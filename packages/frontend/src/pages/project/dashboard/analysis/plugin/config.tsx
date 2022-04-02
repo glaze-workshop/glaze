@@ -10,15 +10,11 @@ import {
   FormControl,
   FormErrorMessage,
   FormLabel,
-  Button,
-  NumberDecrementStepper,
-  NumberIncrementStepper,
-  NumberInput,
-  NumberInputField,
-  NumberInputStepper
+  Button
 } from '@chakra-ui/react'
 import { notEmpty, ProjectApi } from '@glaze/common'
 import { GlazePluginControlType } from '@glaze/types'
+import _ from 'lodash'
 import { FC, memo, useCallback, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { useMutation } from 'react-query'
@@ -51,6 +47,15 @@ const PluginConfig: FC<PluginConfigProps> = () => {
       }
     }
   }, [projectUsedPluginInfo, reset])
+
+  useEffect(() => {
+    if (notEmpty(pluginInfo)) {
+      const { configSchema } = pluginInfo
+      if (notEmpty(configSchema)) {
+        reset(_.mapValues(configSchema, (each) => each.default))
+      }
+    }
+  }, [pluginInfo, reset])
 
   const updateProjectPluginMutation = useMutation(ProjectApi.updateProjectPluginSettings, {
     onSuccess: () => {
@@ -115,8 +120,7 @@ const PluginConfig: FC<PluginConfigProps> = () => {
                         return (
                           <Input
                             {...register(key, {
-                              required:
-                                notEmpty(config.default) && `配置项「${config.name}」不能为空`
+                              required: config.required && `配置项「${config.name}」不能为空`
                             })}
                           />
                         )
@@ -125,8 +129,7 @@ const PluginConfig: FC<PluginConfigProps> = () => {
                           <Input
                             type="number"
                             {...register(key, {
-                              required:
-                                notEmpty(config.default) && `配置项「${config.name}」不能为空`,
+                              required: config.required && `配置项「${config.name}」不能为空`,
                               min: notEmpty(config.min)
                                 ? { value: config.min, message: `不能小于${config.min}` }
                                 : undefined,
