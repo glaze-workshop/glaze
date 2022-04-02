@@ -21,12 +21,13 @@ server.on('connection', (socket) => {
   })
 })
 
-async function insertLogByPath (path: string, log: Log) {
+async function insertLogByPath(path: string, log: Log) {
   const deployInfo = await prisma.glazeProjectDeployInfo.findFirst({
     where: {
       path
     }
   })
+
   if (deployInfo) {
     await prisma.glazeProjectLogInfo.create({
       data: {

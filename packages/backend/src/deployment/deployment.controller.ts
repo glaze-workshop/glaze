@@ -140,4 +140,18 @@ export class DeploymentController {
   ) {
     return this.deploymentService.getClickEvent(projectId, start, end)
   }
+
+  @Get(DeploymentApi.DEPLOYMENT_ANALYSIS_BASIC_PATH)
+  getAnalysisBasic(@Param('projectId', ParseIntPipe) projectId: number) {
+    return this.deploymentService.getAnalysisBasic(projectId)
+  }
+
+  @Get(DeploymentApi.DEPLOYMENT_ANALYSIS_PATH)
+  getAnalysis(
+    @Param('projectId', ParseIntPipe) projectId: number,
+    @Query('start', ParseIntPipe) start: number,
+    @Query('end', ParseIntPipe) end: number
+  ) {
+    return this.deploymentService.getAnalysis(projectId, start, end)
+  }
 }
