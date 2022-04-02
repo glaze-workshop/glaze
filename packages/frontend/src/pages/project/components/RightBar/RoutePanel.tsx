@@ -1,7 +1,6 @@
-import React, { FC, useState, useEffect } from 'react'
+import React, { FC, useState, useEffect, ChangeEvent } from 'react'
 import * as Y from 'yjs'
 import {
-  Tag,
   Table,
   Thead,
   Tr,
@@ -22,17 +21,22 @@ const RoutePanel: FC<RoutePanelProps> = ({ path, to, yMap }: RoutePanelProps) =>
   const [pathVal, setPathVal] = useState('')
   const [toVal, setToVal] = useState('')
 
+  const handlePathChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setPathVal(e.target.value)
+  }
+
+  const handleToChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setToVal(e.target.value)
+  }
+
   useEffect(() => {
     path && setPathVal(path)
     to && setToVal(to)
-    console.log('[selectedyMap]', yMap)
+    // console.log('[selectedyMap]', yMap)
   }, [path, to])
 
   return (
     <>
-      <Tag size="md" variant="solid" colorScheme="teal" margin="10px 0" width="60px">
-        Routes
-      </Tag>
       {pathVal && (
         <Table size="sm" marginBottom="10px">
           <Thead>
@@ -44,7 +48,7 @@ const RoutePanel: FC<RoutePanelProps> = ({ path, to, yMap }: RoutePanelProps) =>
             <Tr>
               <InputGroup size="sm">
                 <InputLeftAddon children="/" />
-                <Input value={pathVal} />
+                <Input value={pathVal} onChange={handlePathChange} />
               </InputGroup>
             </Tr>
           </Tbody>
@@ -61,7 +65,7 @@ const RoutePanel: FC<RoutePanelProps> = ({ path, to, yMap }: RoutePanelProps) =>
             <Tr>
               <InputGroup size="sm">
                 <InputLeftAddon children="/" />
-                <Input value={toVal} />
+                <Input value={toVal} onChange={handleToChange} />
               </InputGroup>
             </Tr>
           </Tbody>

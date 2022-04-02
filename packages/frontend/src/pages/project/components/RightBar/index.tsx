@@ -2,7 +2,7 @@ import React, { FC, memo, useState, useEffect } from 'react'
 import * as Y from 'yjs'
 import { SelectedNodeInfoSubject } from '../../../../components/GlazeEditor/state'
 import { editorSharedDocument } from '../../../../components/GlazeEditor/EditorSharedDocument'
-import { Box, Divider, Flex } from '@chakra-ui/react'
+import { Box, Divider, Flex, Tag } from '@chakra-ui/react'
 import LayoutPanel from './LayoutPanel'
 import NameIdPanel from './NameIdPanel'
 import RoutePanel from './RoutePanel'
@@ -23,7 +23,8 @@ const RightBar: FC<RightBarProps> = () => {
     const selectCertainNode = (nodeId: string) => {
       const nodeInfo = editorSharedDocument.getNodeById(nodeId)
       console.log('[selectedCertainNode]', nodeInfo)
-      nodeInfo && setSelectedYMap(nodeInfo) && yjsMapExtractor(nodeInfo)
+      nodeInfo && yjsMapExtractor(nodeInfo)
+      nodeInfo && setSelectedYMap(nodeInfo)
     }
 
     const yjsMapExtractor = (YMap: Y.Map<any>) => {
@@ -64,7 +65,11 @@ const RightBar: FC<RightBarProps> = () => {
           <Flex overflow="scroll" h="500px" flexDirection="column">
             {layoutInfo && <LayoutPanel layoutInfo={layoutInfo} />}
             <PropsPanel />
-            {selectedYMap && <RoutePanel path={pathInfo} to={toInfo} yMap={selectedYMap} />}
+            <Tag size="md" variant="solid" colorScheme="teal" margin="10px 0" width="60px">
+              Routes
+            </Tag>
+            {selectedYMap && pathInfo !== '' && <RoutePanel path={pathInfo} yMap={selectedYMap} />}
+            {selectedYMap && toInfo !== '' && <RoutePanel to={toInfo} yMap={selectedYMap} />}
           </Flex>
         </>
       ) : (
