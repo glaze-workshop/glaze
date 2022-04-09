@@ -5,9 +5,11 @@ import { DeploymentEntity } from '../entity'
 import { DeploymentPathDuplicationError } from '../errors'
 import {
   BasicDeploymentAnalysis,
-  DeploymentClickEventDto
+  DeploymentClickEventDto,
+  FullDeploymentAnalysis
 } from './deployment.dto'
 import { ClickData } from '@glaze/types'
+import { number } from 'lib0'
 
 export const DEPLOYMENT_PATH = ':projectId'
 export const FULL_DEPLOYMENT_PATH = `${DEPLOYMENT_PREFIX}/${DEPLOYMENT_PATH}`
@@ -42,6 +44,19 @@ export const DEPLOYMENT_RENDER_PATH = '/render/:path'
 export const DEPLOYMENT_HEATMAP_RENDER_PATH = '/render/:path/heatmap'
 
 export const DEPLOYMENT_ANALYSIS_PATH = `${DEPLOYMENT_PATH}/analysis`
+export const FULL_DEPLOYMENT_ANALYSIS_PATH = `${DEPLOYMENT_PREFIX}/${DEPLOYMENT_ANALYSIS_PATH}`
+export const FULL_DEPLOYMENT_ANALYSIS_PATH_TO_PATH = compile<{
+  projectId: number
+}>(FULL_DEPLOYMENT_ANALYSIS_PATH)
+export const getProjectDeploymentAnalysis = (
+  projectId: number,
+  start: number,
+  end: number
+) =>
+  axios.get<FullDeploymentAnalysis>(
+    FULL_DEPLOYMENT_ANALYSIS_PATH_TO_PATH({ projectId }),
+    { params: { start, end } }
+  )
 
 export const DEPLOYMENT_ANALYSIS_BASIC_PATH = `${DEPLOYMENT_ANALYSIS_PATH}/basic`
 export const FULL_DEPLOYMENT_ANALYSIS_BASIC_PATH = `${DEPLOYMENT_PREFIX}/${DEPLOYMENT_ANALYSIS_BASIC_PATH}`

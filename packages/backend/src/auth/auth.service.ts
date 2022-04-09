@@ -11,9 +11,10 @@ import * as _ from 'lodash'
 
 @Injectable()
 export class AuthService {
-  constructor (
+  constructor(
     private userService: UserService,
-    private jwtService: JwtService) {}
+    private jwtService: JwtService
+  ) {}
 
   /**
    * 登录
@@ -21,12 +22,17 @@ export class AuthService {
    * @param loginInfo 登录信息
    * @returns token 数据
    */
-  async login (loginInfo: AuthDto.AuthLoginDTO): Promise<AuthDto.UserInfoWithToken> {
-    const userInfo = await this.userService.findUserByUsername(loginInfo.username, true)
+  async login(
+    loginInfo: AuthDto.AuthLoginDTO
+  ): Promise<AuthDto.UserInfoWithToken> {
+    const userInfo = await this.userService.findUserByUsername(
+      loginInfo.username,
+      true
+    )
     if (
       loginInfo.password &&
       userInfo?.password &&
-      await bcrypt.compare(loginInfo?.password, userInfo.password)
+      (await bcrypt.compare(loginInfo?.password, userInfo.password))
     ) {
       const token = this.generateJwtToken(userInfo)
       const { password, ...userInfoWithoutPassword } = userInfo
@@ -40,7 +46,7 @@ export class AuthService {
    * @param user 用户信息
    * @returns jwt token
    */
-  generateJwtToken (user: Entity.UserEntity) {
+  generateJwtToken(user: Entity.UserEntity) {
     const payload: Entity.JwtPayload = { sub: user.id, username: user.username }
     return this.jwtService.sign(payload)
   }
@@ -52,12 +58,18 @@ export class AuthService {
    * @returns 新建的用户
    * @throws {@link GlazeErr.UsernameDuplicationError}
    */
-  async registerUser (user: AuthDto.AuthRegisterDTO) {
-    user.password = await bcrypt.hash(user.password, Number(process.env.SALT_ROUND ?? 10))
-    return this.userService.addUser({ username: user.username, password: user.password })
+  async registerUser(user: AuthDto.AuthRegisterDTO) {
+    user.password = await bcrypt.hash(
+      user.password,
+      Number(process.env.SALT_ROUND ?? 10)
+    )
+    return this.userService.addUser({
+      username: user.username,
+      password: user.password
+    })
   }
 
-  async verifyToken (token?: string) {
+  async verifyToken(token?: string) {
     if (notEmpty(token)) {
       const payload = this.jwtService.verify(token)
       if (!payload) {

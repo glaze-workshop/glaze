@@ -11,19 +11,20 @@ import { TeamService } from '../team/team.service'
 
 @Controller(Prefix.SELF_PREFIX)
 export class SelfController {
-  constructor (
+  constructor(
     private teamService: TeamService,
-    private projectService: ProjectService) {}
+    private projectService: ProjectService
+  ) {}
 
   @UseGuards(JwtGuard)
   @Get(SelfApi.SELF_INFO_PATH)
-  getSelfInfo (@CurrentUser() user: Entity.UserEntity) {
+  getSelfInfo(@CurrentUser() user: Entity.UserEntity) {
     return user
   }
 
   @UseGuards(JwtGuard)
   @Get(SelfApi.SELF_TEAMS_PATH)
-  getSelfTeams (@CurrentUser() user: Entity.UserEntity) {
+  getSelfTeams(@CurrentUser() user: Entity.UserEntity) {
     return this.teamService.getTeams(user.id)
   }
 }

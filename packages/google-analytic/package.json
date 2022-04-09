@@ -6,8 +6,8 @@
   "author": "Bay",
   "license": "ISC",
   "scripts": {
-    "login": "glaze-plugin login",
-    "init": "glaze-plugin init",
+    "glaze-login": "glaze-plugin login",
+    "glaze-init": "glaze-plugin init",
     "build": "glaze-plugin build",
     "upload": "glaze-plugin upload"
   },

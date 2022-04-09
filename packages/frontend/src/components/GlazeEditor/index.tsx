@@ -6,9 +6,7 @@ import EditorActionDetect from './EditorActionDetect'
 import EditorContent from './EditorContent'
 import EditorUpper from './EditorUpper'
 import { EditorPositionSubject, useProjectIdChange } from './state'
-
-export const zoom = new Zoom()
-
+import { zoom } from './state'
 export interface GlazeEditorProps {}
 
 const EditorContainer = styled.div`
@@ -24,9 +22,7 @@ const GlazeEditor: FC<GlazeEditorProps> = () => {
   useProjectIdChange()
 
   useEffect(() => {
-    EditorPositionSubject.next(
-      container.current?.getBoundingClientRect() ?? null
-    )
+    EditorPositionSubject.next(container.current?.getBoundingClientRect() ?? null)
   }, [])
 
   useEffect(() => {

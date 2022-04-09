@@ -76,10 +76,10 @@ const ProjectBox: FC<ProjectBoxProps> = ({ project, folderQuery, isArchived, ope
     >
       <AspectRatio ratio={16 / 9}>
         <Image
-          src={project.preview ?? ''}
+          src={project.preview ? `https://${project.preview}` : ''}
           fallbackSrc="https://bit.ly/naruto-sage"
           alt="naruto"
-          objectFit="cover"
+          objectFit="contain"
         />
       </AspectRatio>
       <Flex p={3} justify="space-between" align="center">

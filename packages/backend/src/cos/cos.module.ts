@@ -9,8 +9,7 @@ import { ConfigModule } from '@nestjs/config'
 
 @Module({
   imports: [ConfigModule],
-  controllers: [
-    CosController],
+  controllers: [CosController],
   providers: [CosService],
   exports: [CosService]
 })

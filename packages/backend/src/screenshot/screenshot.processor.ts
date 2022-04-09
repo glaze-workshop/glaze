@@ -6,9 +6,10 @@ import { PuppeteerService } from './puppeteer.service'
 import { DeploymentService } from '../deployment/deployment.service'
 import { DocService } from '../doc/doc.service'
 import { ConfigService } from '@nestjs/config'
-import { forwardRef, Inject } from '@nestjs/common'
 import { DeploymentScreenshotJob } from './screenshot.types'
 import { MessageGateway } from '../message/message.gateway'
+import { ProjectService } from '../project/project.service'
+import { Logger } from '@nestjs/common'
 
 @Processor('screenshot')
 export class ScreenshotProcessor {
@@ -16,10 +17,12 @@ export class ScreenshotProcessor {
     private cosService: CosService,
     private puppeteerService: PuppeteerService,
     private deploymentService: DeploymentService,
-    private docService: DocService,
+    private projectService: ProjectService,
     private configService: ConfigService,
     private messageGateway: MessageGateway
   ) {}
+
+  private readonly logger = new Logger(ScreenshotProcessor.name)
 
   @Process('deployment')
   async deployment(job: Job<DeploymentScreenshotJob>) {
@@ -46,5 +49,20 @@ export class ScreenshotProcessor {
   }
 
   @Process('preview')
-  async preview(job: Job<any>) {}
+  async preview(job: Job<number>) {
+    const projectId = job.data
+
+    const previewUrl = `https://${projectId}.${this.configService.get<string>(
+      'PREVIEW_PATH'
+    )}`
+
+    this.logger.log(`Taking screenshot of ${previewUrl}`)
+    const image = await this.puppeteerService.takeScreenshot(previewUrl)
+    const imageInfo = await this.cosService.uploadImage(
+      image,
+      `/project/${projectId}/preview/screenshot.webp`
+    )
+    this.logger.log(`ImageInfo ${imageInfo.Location}`)
+    await this.projectService.updateProjectImage(projectId, imageInfo.Location)
+  }
 }

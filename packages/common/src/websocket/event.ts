@@ -22,5 +22,10 @@ export enum EditorMessageEvent {
   /**
    * 权限验证
    */
-  AUTH = 4
+  AUTH = 4,
+
+  /**
+   * 权限验证成功
+   */
+  AUTH_SUCCESS = 5
 }

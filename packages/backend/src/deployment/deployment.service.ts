@@ -1,23 +1,18 @@
 /*
 https://docs.nestjs.com/providers#services
 */
-import { DeploymentDto, Entity, GlazeErr } from '@glaze/common'
+import { DeploymentApi, DeploymentDto, Entity, GlazeErr } from '@glaze/common'
 
 import { Injectable } from '@nestjs/common'
 import { Buffer } from 'buffer'
 import { isUniqueConstraintError } from '../utils/prisma.error'
 import { PrismaService } from '../global/prisma.service'
 import { DocService } from '../doc/doc.service'
-import { ScreenshotService } from '../screenshot/screenshot.service'
 import { randomUrlLowerCase } from '../utils/random'
 
 @Injectable()
 export class DeploymentService {
-  constructor(
-    private screenshotService: ScreenshotService,
-    private prisma: PrismaService,
-    private docService: DocService
-  ) {}
+  constructor(private prisma: PrismaService, private docService: DocService) {}
 
   selectWithoutData() {
     return {
@@ -181,5 +176,75 @@ export class DeploymentService {
         }
       }
     })
+  }
+
+  async getAnalysisBasic(
+    projectId: number
+  ): Promise<DeploymentDto.BasicDeploymentAnalysis | void> {
+    const deployInfo = await this.prisma.glazeProjectDeployInfo.findFirst({
+      where: { projectId },
+      select: { id: true }
+    })
+    if (deployInfo) {
+      const basic = await this.prisma.glazeProjectLogInfo.aggregate({
+        where: {
+          deployInfoId: deployInfo.id
+        },
+        _sum: {
+          size: true
+        },
+        _count: true
+      })
+      return {
+        totalSize: basic._sum.size ?? 0,
+        count: basic._count ?? 0
+      }
+    }
+  }
+
+  async getAnalysis(
+    projectId: number,
+    start: number,
+    end: number
+  ): Promise<DeploymentDto.FullDeploymentAnalysis | void> {
+    const deployInfo = await this.prisma.glazeProjectDeployInfo.findFirst({
+      where: { projectId },
+      select: { id: true }
+    })
+    if (deployInfo) {
+      const analysis = await this.prisma.$queryRaw<
+        DeploymentDto.EachDayDeploymentAnalysis[]
+      >`
+          select date_trunc('day', "GlazeProjectLogInfo".time) as      "day",
+                 count(*) as                                           "requestCount",
+                 count(DISTINCT "GlazeProjectLogInfo"."remoteAddr") as "userCount",
+                 sum("GlazeProjectLogInfo".size) as                    "size"
+          from "GlazeProjectLogInfo"
+          where "GlazeProjectLogInfo"."deployInfoId" = ${deployInfo.id}
+            and "GlazeProjectLogInfo".time >= ${new Date(start)}
+            and "GlazeProjectLogInfo".time <= ${new Date(end)}
+          group by 1
+          order by 1;
+      `
+      const range = await this.prisma.glazeProjectLogInfo.aggregate({
+        where: {
+          deployInfoId: deployInfo.id,
+          time: {
+            gte: new Date(start),
+            lte: new Date(end)
+          }
+        },
+        _sum: {
+          size: true
+        },
+        _count: true
+      })
+
+      return {
+        count: range._count ?? 0,
+        totalSize: range._sum.size ?? 0,
+        eachDay: analysis
+      }
+    }
   }
 }
