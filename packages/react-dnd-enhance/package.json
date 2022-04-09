@@ -1,0 +1,24 @@
+{
+  "name": "react-dnd-enhance",
+  "version": "1.0.0",
+  "description": "Re-develop based on react-dnd for enhanced features.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/react-rnd": "^8.0.0",
+    "classnames": "^2.3.1",
+    "react-rnd": "^10.3.5"
+  },
+  "devDependencies": {
+    "@types/react": "^17.0.39",
+    "@types/react-dom": "^17.0.11",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "tsdx": "^0.14.1",
+    "typescript": "^4.6.2"
+  }
+}
