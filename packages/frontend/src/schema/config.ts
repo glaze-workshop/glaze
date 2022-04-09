@@ -111,5 +111,5 @@ export interface FieldNode {
   h?: number
   displayName?: string
   module?: string
-  props: Record<string, any>
+  props?: Record<string, any>
 }
