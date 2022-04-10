@@ -2,12 +2,11 @@
 https://docs.nestjs.com/websockets/gateways#gateways
 */
 
-import { EditorMessageEvent } from '@glaze/common'
+import { EditorMessageEvent, GlazeErr, notEmpty } from '@glaze/common'
 import {
   MessageBody,
   SubscribeMessage,
   WebSocketGateway,
-  WebSocketServer,
   OnGatewayConnection,
   OnGatewayDisconnect,
   OnGatewayInit,
@@ -20,6 +19,7 @@ import * as decoding from 'lib0/decoding'
 import * as syncProtocol from 'y-protocols/sync'
 import qs from 'query-string'
 import { DocService } from './doc.service'
+import { AuthService } from '../auth/auth.service'
 
 @WebSocketGateway({ path: '/ws-doc' })
 export class DocGateway
@@ -27,7 +27,10 @@ export class DocGateway
 {
   private clientProjectIdMap = new Map<ws.WebSocket, number>()
 
-  constructor(private docService: DocService) {}
+  constructor(
+    private docService: DocService,
+    private authService: AuthService
+  ) {}
 
   @SubscribeMessage(EditorMessageEvent.SYNC)
   async handleSyncMessage(
@@ -39,7 +42,7 @@ export class DocGateway
       const doc = await this.docService.getDocByProjectId(projectId)
       const encoder = encoding.createEncoder()
       encoding.writeVarUint(encoder, EditorMessageEvent.SYNC)
-      syncProtocol.readSyncMessage(decoder, encoder, doc, null)
+      syncProtocol.readSyncMessage(decoder, encoder, doc.doc, null)
       if (encoding.length(encoder) > 1) {
         doc.send(conn, encoding.toUint8Array(encoder))
       }
@@ -54,7 +57,40 @@ export class DocGateway
     const projectId = this.clientProjectIdMap.get(conn)
     if (projectId !== undefined) {
       const doc = await this.docService.getDocByProjectId(projectId)
-      doc.applyAwarenessUpdate(conn, decoding.readVarUint8Array(decoder))
+      doc.applyAwarenessUpdate(decoding.readVarUint8Array(decoder), conn)
+    }
+  }
+
+  @SubscribeMessage(EditorMessageEvent.AUTH)
+  async handleAuth(
+    @MessageBody() decoder: decoding.Decoder,
+    @ConnectedSocket() conn: ws.WebSocket
+  ) {
+    try {
+      const token = decoding.readVarString(decoder)
+      const user = await this.authService.verifyToken(token)
+      const projectId = this.clientProjectIdMap.get(conn)
+      if (notEmpty(projectId)) {
+        const project = await this.docService.checkUserInProject(
+          projectId,
+          user.id
+        )
+        if (project) {
+          const encoder = encoding.createEncoder()
+          encoding.writeVarUint(encoder, EditorMessageEvent.AUTH_SUCCESS)
+          conn.send(encoding.toUint8Array(encoder))
+          return
+        }
+      }
+      const encoder = encoding.createEncoder()
+      encoding.writeVarUint(encoder, EditorMessageEvent.ERROR)
+      encoding.writeVarUint(encoder, GlazeErr.ErrorCode.PermissionDeniedError)
+      conn.send(encoding.toUint8Array(encoder))
+    } catch (error) {
+      const encoder = encoding.createEncoder()
+      encoding.writeVarUint(encoder, EditorMessageEvent.ERROR)
+      encoding.writeVarUint(encoder, GlazeErr.ErrorCode.JwtAuthError)
+      conn.send(encoding.toUint8Array(encoder))
     }
   }
 

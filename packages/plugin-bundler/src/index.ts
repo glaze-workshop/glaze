@@ -1,5 +1,10 @@
 import { createCommandLine } from '@glaze/sdk-toolkit'
-import { buildAction, generatePluginConfigAction, uploadAction, watchAction } from './action'
+import {
+  buildAction,
+  generatePluginConfigAction,
+  uploadAction,
+  watchAction,
+} from './action'
 
 createCommandLine((program) => {
   program

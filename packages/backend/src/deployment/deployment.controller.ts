@@ -75,7 +75,7 @@ export class DeploymentController {
 
   @Get(DeploymentApi.DEPLOYMENT_RENDER_PATH)
   @Render('project.pug')
-  async deployment(@Param('path') path: string) {
+  async deploymentRender(@Param('path') path: string) {
     const deploymentInfo = await this.deploymentService.getDeploymentByPath(
       path
     )
@@ -98,7 +98,7 @@ export class DeploymentController {
           {}
         ),
         pluginSrc: plugins.map(
-          pluginConfig => `https://${pluginConfig.plugin.path}`
+          (pluginConfig) => `https://${pluginConfig.plugin.path}`
         )
       })
     }
@@ -139,5 +139,19 @@ export class DeploymentController {
     @Query('end', ParseIntPipe) end: number
   ) {
     return this.deploymentService.getClickEvent(projectId, start, end)
+  }
+
+  @Get(DeploymentApi.DEPLOYMENT_ANALYSIS_BASIC_PATH)
+  getAnalysisBasic(@Param('projectId', ParseIntPipe) projectId: number) {
+    return this.deploymentService.getAnalysisBasic(projectId)
+  }
+
+  @Get(DeploymentApi.DEPLOYMENT_ANALYSIS_PATH)
+  getAnalysis(
+    @Param('projectId', ParseIntPipe) projectId: number,
+    @Query('start', ParseIntPipe) start: number,
+    @Query('end', ParseIntPipe) end: number
+  ) {
+    return this.deploymentService.getAnalysis(projectId, start, end)
   }
 }

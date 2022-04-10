@@ -1,13 +1,17 @@
-import { BehaviorSubject } from 'rxjs'
+import { BehaviorSubject, combineLatestWith, Subscription } from 'rxjs'
 import * as Y from 'yjs'
 import { NodeProxy, StructureProxy } from './yjs.hook'
 import { ComponentFullInfo, createBasicComponentMap } from '../BasicComponents/basicComponentMap'
 import { useParams } from 'react-router-dom'
-import React, { useCallback, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { editorSharedDocument } from './EditorSharedDocument'
 import { ObservableMap } from '../../utils/ObservableMap'
 import { useObservableEagerState } from 'observable-hooks'
-import { zoom } from './index'
+import { useCurrentUser } from '../../hooks/self.hook'
+import { Zoom } from '@glaze/zoom'
+import { GlazeAwarenessState } from './provider/WebsocketProvider'
+import { notEmpty } from '@glaze/common'
+export const zoom = new Zoom()
 
 export interface FullNodeInfo {
   nodeProxy: NodeProxy
@@ -33,7 +37,11 @@ export const AllNodeInfoObservableMap = new ObservableMap<string, FullNodeInfo>(
 
 export const EditorPositionSubject = new BehaviorSubject<DOMRect | null>(null)
 
-export const AllComponentsSubject = new BehaviorSubject<Map<string, ComponentFullInfo>>(createBasicComponentMap())
+export const AllComponentsSubject = new BehaviorSubject<Map<string, ComponentFullInfo>>(
+  createBasicComponentMap()
+)
+
+export const AllCooperateUserState = new BehaviorSubject<GlazeAwarenessState[]>([])
 
 export const refreshEditorState = () => {
   SelectedNodeInfoSubject.next(null)
@@ -45,17 +53,49 @@ export const refreshEditorState = () => {
  * projectId 变化更新状态
  */
 export const useProjectIdChange = () => {
-  const { projectId } = useParams<{projectId: string}>()
+  const { projectId } = useParams<{ projectId: string }>()
+
+  useUserAwareness()
+
   useEffect(() => {
     if (projectId) {
       const projectIdNum = Number(projectId)
-      editorSharedDocument.connect(projectIdNum)
+      editorSharedDocument.connect(projectIdNum, AllCooperateUserState)
     }
     return () => {
       editorSharedDocument.close()
       refreshEditorState()
     }
   }, [projectId])
+}
+
+export const useUserAwareness = () => {
+  const { data: userData } = useCurrentUser()
+  const userInfo = userData?.data
+  useEffect(() => {
+    const subscription = new Subscription()
+    if (userInfo) {
+      subscription.add(
+        SelectedNodeInfoSubject.pipe(
+          combineLatestWith(editorSharedDocument.webSocketProviderSubject)
+        ).subscribe(([selectedNodeId, websocketProvider]) => {
+          if (userInfo) {
+            websocketProvider?.setAwarenessUserState({
+              userInfo,
+              selectedNodeId
+            })
+          }
+
+          if (!notEmpty(websocketProvider)) {
+            AllCooperateUserState.next([])
+          }
+        })
+      )
+    }
+    return () => {
+      subscription.unsubscribe()
+    }
+  }, [userInfo])
 }
 
 export const useNodeInfoObserve = (
@@ -75,9 +115,19 @@ export const useNodeInfoObserve = (
       // 获得节点在画布上的 width 和 height
       const staticWidth = width / zoom.transform.k
       const staticHeight = height / zoom.transform.k
-      const position: StaticPosition = { x: staticX, y: staticY, width: staticWidth, height: staticHeight }
-      AllNodeInfoObservableMap.set(nodeProxy.id,
-        { nodeProxy, parentStructureInfo, structureProxy, wrapper: wrapperRef.current, position })
+      const position: StaticPosition = {
+        x: staticX,
+        y: staticY,
+        width: staticWidth,
+        height: staticHeight
+      }
+      AllNodeInfoObservableMap.set(nodeProxy.id, {
+        nodeProxy,
+        parentStructureInfo,
+        structureProxy,
+        wrapper: wrapperRef.current,
+        position
+      })
     }
   })
 }

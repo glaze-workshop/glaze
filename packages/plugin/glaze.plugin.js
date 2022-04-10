@@ -29,17 +29,34 @@ const config = {
       main: './schema-test/index.ts',
       icon: 'https://glaze-1257788062.cos.ap-nanjing.myqcloud.com/user/kunduin/icon.jpg',
       config: {
-        string: {
+        stringTest: {
           name: '字符串测试',
           type: 'text',
           default: 'string',
         },
-        number: {
+        numberTest: {
           name: '数字测试',
           type: 'number',
           default: 1,
           min: 0,
           max: 10,
+        },
+      },
+    },
+    {
+      id: '@glaze-plugin/cursor',
+      name: '配置光标插件',
+      desc: '配置光标图片',
+      type: 'PUBLIC',
+      main: './cursor/index.ts',
+      icon: 'https://glaze-1257788062.cos.ap-nanjing.myqcloud.com/meme/Nyan_Cat_Cursor.png',
+      config: {
+        url: {
+          name: '光标图片地址',
+          type: 'text',
+          default:
+            'https://glaze-1257788062.cos.ap-nanjing.myqcloud.com/meme/Nyan_Cat_Cursor.png',
+          required: true,
         },
       },
     },

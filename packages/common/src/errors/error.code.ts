@@ -50,5 +50,5 @@ export enum ErrorCode {
   /**
    * 权限不足
    */
-  PermissionDeniedError,
+  PermissionDeniedError
 }

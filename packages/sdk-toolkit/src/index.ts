@@ -9,7 +9,7 @@ export * from './path'
 export * from './configFileReader'
 export * from './upload'
 
-export async function createCommandLine (config: (program: Command) => void) {
+export async function createCommandLine(config: (program: Command) => void) {
   const program = new Command()
   program.version(require('../package.json').version)
   program.command('login').action(loginCommandAction)

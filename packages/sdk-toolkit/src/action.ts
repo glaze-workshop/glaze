@@ -3,20 +3,20 @@ import axios from 'axios'
 import { AuthApi, Entity, GlazeErr, SelfApi } from '@glaze/common'
 import { tokenHandler } from './token'
 
-export async function loginCommandAction () {
+export async function loginCommandAction() {
   const loginDto = await prompts([
     {
       type: 'text',
       name: 'username',
       message: 'Username',
-      validate: value => value.length > 0 ? true : 'Username is required'
+      validate: (value) => (value.length > 0 ? true : 'Username is required'),
     },
     {
       type: 'password',
       name: 'password',
       message: 'Password',
-      validate: value => value.length > 0 ? true : 'Password is required'
-    }
+      validate: (value) => (value.length > 0 ? true : 'Password is required'),
+    },
   ])
   try {
     const loginRes = await AuthApi.login(loginDto)
@@ -35,7 +35,7 @@ export async function loginCommandAction () {
   }
 }
 
-export async function getTeamsAction (): Promise<Entity.TeamEntity> {
+export async function getTeamsAction(): Promise<Entity.TeamEntity> {
   const { data } = await SelfApi.getSelfTeams()
   if (GlazeErr.isGlazeError(data)) {
     console.error(data.message)
@@ -45,7 +45,7 @@ export async function getTeamsAction (): Promise<Entity.TeamEntity> {
       type: 'select',
       name: 'team',
       message: 'Select a team',
-      choices: data.map(team => ({ title: team.name, value: team }))
+      choices: data.map((team) => ({ title: team.name, value: team })),
     })
     return selectedTeam.team
   }

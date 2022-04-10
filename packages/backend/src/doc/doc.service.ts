@@ -10,6 +10,7 @@ import { WSSharedDoc } from './WsSharedDoc'
 import * as ws from 'ws'
 import BidirectionalMap from '../utils/BidirectionalMap'
 import { RedisService } from '../global/redis.service'
+import { ScreenshotService } from '../screenshot/screenshot.service'
 
 @Injectable()
 export class DocService {
@@ -17,7 +18,8 @@ export class DocService {
 
   constructor(
     private prisma: PrismaService,
-    private redisService: RedisService
+    private redisService: RedisService,
+    private screenshotService: ScreenshotService
   ) {}
 
   removeDoc(doc: WSSharedDoc) {
@@ -37,19 +39,22 @@ export class DocService {
     } else {
       const doc = new WSSharedDoc(projectId, this, this.redisService)
       const [fullDocumentUpdate] = await this.getFullDocument(projectId)
-      Y.applyUpdate(doc, fullDocumentUpdate, 'database')
+      doc.applyUpdate(fullDocumentUpdate, 'database')
       this.docMap.set(projectId, doc)
       return doc
     }
   }
 
-  persistUpdate(projectId: number, update: Uint8Array) {
-    return this.prisma.glazeDocumentUpdate.create({
+  async persistUpdate(projectId: number, update: Uint8Array) {
+    const documentUpdate = await this.prisma.glazeDocumentUpdate.create({
       data: {
         project: { connect: { id: projectId } },
         update: Buffer.from(update)
       }
     })
+    this.screenshotService.addPreviewQueue(projectId)
+
+    return documentUpdate
   }
 
   async getFullDocument(projectId: number): Promise<[Uint8Array, Y.Doc]> {
@@ -80,5 +85,33 @@ export class DocService {
       ])
     }
     return [encodedUpdates, dbYDoc]
+  }
+
+  checkUserInProject(projectId: number, userId: number) {
+    return this.prisma.glazeProject.findFirst({
+      where: {
+        id: projectId,
+        projectFolder: {
+          team: {
+            members: {
+              some: {
+                memberId: userId
+              }
+            }
+          }
+        }
+      },
+      include: {
+        projectFolder: {
+          include: {
+            team: {
+              include: {
+                members: true
+              }
+            }
+          }
+        }
+      }
+    })
   }
 }

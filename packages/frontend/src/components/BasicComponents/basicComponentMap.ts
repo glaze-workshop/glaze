@@ -8,6 +8,8 @@ import GlazeScreen from './Screen'
 import ScreenConfig from './Screen/config'
 import GlazeDiv from './Div'
 import GlazeDivConfig from './Div/config'
+import GlazeButton from './Button'
+import GlazeButtonConfig from './Button/config'
 
 export interface ComponentFullInfo {
   config: ComponentConfig
@@ -19,5 +21,6 @@ export const createBasicComponentMap = (): Map<string, ComponentFullInfo> =>
     [FontConfig.id, { config: FontConfig, component: Font }],
     [FrameConfig.id, { config: FrameConfig, component: Frame }],
     [ScreenConfig.id, { config: ScreenConfig, component: GlazeScreen }],
-    [GlazeDivConfig.id, { config: GlazeDivConfig, component: GlazeDiv }]
+    [GlazeDivConfig.id, { config: GlazeDivConfig, component: GlazeDiv }],
+    [GlazeButtonConfig.id, { config: GlazeButtonConfig, component: GlazeButton }]
   ])

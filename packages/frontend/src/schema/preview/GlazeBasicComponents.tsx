@@ -1,8 +1,10 @@
 import React from 'react'
 import GlazeDiv from '../../components/BasicComponents/Div'
+import GlazeButton from '../../components/BasicComponents/Button'
 
 const previewGBCFields = {
-  div: () => <GlazeDiv />
+  Div: () => <GlazeDiv />,
+  Button: () => <GlazeButton />
 }
 
 export default previewGBCFields

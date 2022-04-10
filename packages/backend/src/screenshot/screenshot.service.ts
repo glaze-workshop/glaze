@@ -5,11 +5,16 @@ https://docs.nestjs.com/providers#services
 import { Injectable } from '@nestjs/common'
 import { InjectQueue } from '@nestjs/bull'
 import { Queue } from 'bull'
-import { Entity } from '@glaze/common'
 import { DeploymentScreenshotJob } from './screenshot.types'
+import { BehaviorSubject, debounceTime, of, Subject, throttleTime } from 'rxjs'
 
 @Injectable()
 export class ScreenshotService {
+  private readonly previewDebounceMap = new Map<
+    number,
+    BehaviorSubject<number>
+  >()
+
   constructor(
     @InjectQueue('screenshot') private readonly screenshotQueue: Queue
   ) {}
@@ -18,7 +23,20 @@ export class ScreenshotService {
     return this.screenshotQueue.add('deployment', deployment)
   }
 
-  addPreviewQueue(preview: any) {
-    return this.screenshotQueue.add('preview', preview)
+  addPreviewQueue(projectId: number) {
+    const previewObserver = this.previewDebounceMap.get(projectId)
+    if (previewObserver) {
+      previewObserver.next(projectId)
+    } else {
+      const previewObserver = new BehaviorSubject(projectId)
+      this.previewDebounceMap.set(projectId, previewObserver)
+      const subscriber = previewObserver
+        .pipe(debounceTime(500))
+        .subscribe((projectId) => {
+          this.screenshotQueue.add('preview', projectId)
+          subscriber.unsubscribe()
+          this.previewDebounceMap.delete(projectId)
+        })
+    }
   }
 }

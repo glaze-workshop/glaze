@@ -1,9 +1,10 @@
 import { nanoid } from 'nanoid'
+import { ReplaySubject, Subject } from 'rxjs'
 import * as Y from 'yjs'
 import { ComponentConfig } from '../../schema/config'
 import { LayoutConfig, PositionConfig, PositionType } from '../../schema/layout'
 import { BasicComponentId } from '../BasicComponents/basicComponentInfo'
-import { WebSocketProvider } from './provider/WebsocketProvider'
+import { GlazeAwarenessState, WebSocketProvider } from './provider/WebsocketProvider'
 import { AllComponentsSubject, AllNodeInfoObservableMap, SelectedNodeInfoSubject } from './state'
 import { StructureProxy, createYjsMapProxy, NodeProxy } from './yjs.hook'
 
@@ -26,6 +27,8 @@ export default class EditorSharedDocument {
   nodeList: Y.Map<Y.Map<any>>
   webSocketProvider: WebSocketProvider | null = null
 
+  webSocketProviderSubject = new ReplaySubject<WebSocketProvider | null>(1)
+
   constructor() {
     this.doc = new Y.Doc()
     this.structureTree = this.doc.getArray<Y.Map<any>>('structure')
@@ -37,17 +40,21 @@ export default class EditorSharedDocument {
     })
   }
 
-  connect(projectId: number) {
-    this.webSocketProvider = new WebSocketProvider(
+  connect(projectId: number, listener: Subject<GlazeAwarenessState[]>) {
+    const provider = new WebSocketProvider(
       `ws://localhost:3000/ws-doc?projectId=${projectId}`,
       String(projectId),
-      this.doc
+      this.doc,
+      listener
     )
+    this.webSocketProvider = provider
+    this.webSocketProviderSubject.next(provider)
   }
 
   /** TODO: close websocket */
   close() {
-    this.webSocketProvider?.disconnect()
+    this.webSocketProviderSubject.next(null)
+    this.webSocketProvider?.destroy()
     this.doc = new Y.Doc()
     this.structureTree = this.doc.getArray<Y.Map<any>>('structure')
     this.nodeList = this.doc.getMap<Y.Map<any>>('components')
@@ -137,7 +144,7 @@ export default class EditorSharedDocument {
   ) => {
     const nodeId = nanoid()
     // 创建节点流程:  props -> props, default layout -> layout
-    const { id: componentId, props, defaultSize, name } = componentConfig
+    const { id: componentId, props, defaultSize, name, path, to } = componentConfig
 
     this.doc.transact(() => {
       {
@@ -158,6 +165,8 @@ export default class EditorSharedDocument {
         node.id = nodeId
         node.name = name
         node.componentId = componentId
+        node.path = path
+        node.to = to
 
         const yLayoutMap = new Y.Map()
         const layout = createYjsMapProxy<LayoutConfig>(yLayoutMap)

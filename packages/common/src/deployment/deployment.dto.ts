@@ -4,6 +4,21 @@ export interface BasicDeploymentAnalysis {
   count: number
 }
 
+export interface EachDayDeploymentAnalysis extends Record<string, any> {
+  day: string
+  requestCount: number
+  userCount: number
+  size: number
+}
+
+export interface FullDeploymentAnalysis {
+  totalSize: number
+
+  count: number
+
+  eachDay: EachDayDeploymentAnalysis[]
+}
+
 export interface DeploymentClickEventDto {
   id: string
   deploymentId: number

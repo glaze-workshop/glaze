@@ -12,6 +12,7 @@ import { MessageModule } from '../message/message.module'
 import { ScreenshotProcessor } from './screenshot.processor'
 import { ConfigModule } from '@nestjs/config'
 import { CosModule } from '../cos/cos.module'
+import { ProjectModule } from '../project/project.module'
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { CosModule } from '../cos/cos.module'
     }),
     MessageModule,
     forwardRef(() => DocModule),
+    forwardRef(() => ProjectModule),
     forwardRef(() => DeploymentModule)
   ],
   controllers: [],
