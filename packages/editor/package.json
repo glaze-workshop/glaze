@@ -7,7 +7,11 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon --exec \"ts-node -r dotenv/config ./src/index.ts\"",
     "start": "ts-node -r dotenv/config ./src/index.ts",
-    "build": "echo 'nothing to build right now'"
+    "build": "echo 'nothing to build right now'",
+    "deploy:login": "glaze-plugin login",
+    "deploy:init": "glaze-plugin init",
+    "deploy:build": "glaze-plugin build",
+    "deploy:upload": "glaze-plugin upload"
   },
   "author": "superfree",
   "license": "ISC",
@@ -36,6 +40,7 @@
     "webpack": "^5.67.0"
   },
   "dependencies": {
+    "@glaze/plugin-bundler": "workspace:*",
     "@glaze/common": "workspace:*",
     "chokidar": "^3.5.3",
     "cors": "^2.8.5",
