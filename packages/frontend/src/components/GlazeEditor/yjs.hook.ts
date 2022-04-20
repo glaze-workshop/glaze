@@ -31,6 +31,9 @@ export interface NodeProxy {
   /** 组件的跳转链接 */
   to?: string
 
+  /** 组件路由  */
+  path?: string
+
   /** 原始的 y 节点 */
   readonly yNode: Y.Map<any>
 }

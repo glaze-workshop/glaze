@@ -36,42 +36,30 @@ export enum ControlType {
    */
   MULTI_SELECT = 'multi_select',
 
-  FONT = 'font',
-
-  BACKGROUND = 'background',
+  FONT = 'font'
 }
 
-export interface AbstractControl<
-  T extends ControlType = ControlType,
-  D = unknown
-> {
+export interface AbstractControl<T extends ControlType = ControlType, D = unknown> {
   name: GlazeString
   type: T
   default: D
 }
 
-export interface BackgroundControl
-  extends AbstractControl<ControlType.BACKGROUND, {background: string; backgroundImage: string}> {}
+export interface BooleanControl extends AbstractControl<ControlType.BOOLEAN, boolean> {}
 
-export interface BooleanControl
-  extends AbstractControl<ControlType.BOOLEAN, boolean> {}
-
-export interface NumberControl
-  extends AbstractControl<ControlType.NUMBER, number> {
+export interface NumberControl extends AbstractControl<ControlType.NUMBER, number> {
   min: number
   max: number
 }
 
-export interface TextControl
-  extends AbstractControl<ControlType.TEXT, string> {}
+export interface TextControl extends AbstractControl<ControlType.TEXT, string> {}
 
 export interface Option<T> {
   value: T
   description: GlazeString
 }
 
-export interface SelectControl<T = unknown>
-  extends AbstractControl<ControlType.SELECT, T> {
+export interface SelectControl<T = unknown> extends AbstractControl<ControlType.SELECT, T> {
   options: T[]
 }
 
@@ -109,6 +97,8 @@ export interface ComponentConfig<T = any> {
   props: PropsConfig<T>
   defaultSize: DefaultSizeConfig
   hasChildren?: boolean
+  path?: string
+  to?: string
 }
 
 export interface GlazeComponentProps {
@@ -121,5 +111,5 @@ export interface FieldNode {
   h?: number
   displayName?: string
   module?: string
-  props: Record<string, any>
+  props?: Record<string, any>
 }

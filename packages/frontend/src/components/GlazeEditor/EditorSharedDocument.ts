@@ -144,7 +144,7 @@ export default class EditorSharedDocument {
   ) => {
     const nodeId = nanoid()
     // 创建节点流程:  props -> props, default layout -> layout
-    const { id: componentId, props, defaultSize, name } = componentConfig
+    const { id: componentId, props, defaultSize, name, path, to } = componentConfig
 
     this.doc.transact(() => {
       {
@@ -165,6 +165,8 @@ export default class EditorSharedDocument {
         node.id = nodeId
         node.name = name
         node.componentId = componentId
+        node.path = path
+        node.to = to
 
         const yLayoutMap = new Y.Map()
         const layout = createYjsMapProxy<LayoutConfig>(yLayoutMap)

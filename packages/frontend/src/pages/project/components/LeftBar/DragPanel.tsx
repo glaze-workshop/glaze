@@ -10,8 +10,8 @@ export interface DragPanelProps {
 export const DragPanel: FC<DragPanelProps> = ({ fields }: DragPanelProps) => {
   return (
     <Box position="relative" w="90%" h="100%" margin="0 auto">
-      {fields.map((item) => (
-        <DragItem key={item.type} fieldItem={item} />
+      {fields.map((item, index) => (
+        <DragItem key={item.type} fieldItem={item} index={index} />
       ))}
     </Box>
   )

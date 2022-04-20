@@ -28,7 +28,7 @@ export const createCommonConfig = (env: EnvType): WebpackConfiguration => {
       require.resolve('style-loader'),
       {
         loader: require.resolve('css-loader'),
-        options: cssOptions
+        options: cssOptions,
       },
       {
         // Options for PostCSS as we reference these options twice
@@ -49,33 +49,33 @@ export const createCommonConfig = (env: EnvType): WebpackConfiguration => {
                 'postcss-preset-env',
                 {
                   autoprefixer: {
-                    flexbox: 'no-2009'
+                    flexbox: 'no-2009',
                   },
-                  stage: 3
-                }
+                  stage: 3,
+                },
               ],
               // Adds PostCSS Normalize as the reset css with default options,
               // so that it honors browserslist config in package.json
               // which in turn let's users customize the target behavior as per their needs.
-              'postcss-normalize'
-            ]
-          }
-        }
-      }
+              'postcss-normalize',
+            ],
+          },
+        },
+      },
     ].filter(Boolean)
     if (preProcessor) {
       loaders.push(
         {
           loader: require.resolve('resolve-url-loader'),
           options: {
-            root: FullPath.appPath
-          }
+            root: FullPath.appPath,
+          },
         },
         {
           loader: require.resolve(preProcessor),
           options: {
-            sourceMap: true
-          }
+            sourceMap: true,
+          },
         }
       )
     }
@@ -87,13 +87,13 @@ export const createCommonConfig = (env: EnvType): WebpackConfiguration => {
     plugins: [
       new CleanWebpackPlugin(),
       new webpack.ProvidePlugin({
-        PIXI: 'pixi.js'
+        PIXI: 'pixi.js',
       }),
       new HtmlWebpackPlugin(
         Object.assign(
           {
             template: FullPath.appHtml,
-            inject: true
+            inject: true,
           },
           isEnvProduction
             ? {
@@ -107,8 +107,8 @@ export const createCommonConfig = (env: EnvType): WebpackConfiguration => {
                   keepClosingSlash: true,
                   minifyJS: true,
                   minifyCSS: true,
-                  minifyURLs: true
-                }
+                  minifyURLs: true,
+                },
               }
             : undefined
         )
@@ -122,11 +122,11 @@ export const createCommonConfig = (env: EnvType): WebpackConfiguration => {
             {
               from: FullPath.appPublic,
               globOptions: {
-                ignore: [FullPath.appHtml]
-              }
-            }
-          ]
-        })
+                ignore: [FullPath.appHtml],
+              },
+            },
+          ],
+        }),
     ].filter(Boolean) as any[],
     module: {
       rules: [
@@ -142,29 +142,29 @@ export const createCommonConfig = (env: EnvType): WebpackConfiguration => {
                     '@babel/preset-env',
                     {
                       targets: {
-                        browsers: ['last 2 versions']
+                        browsers: ['last 2 versions'],
                       },
-                      modules: false
-                    }
+                      modules: false,
+                    },
                   ],
                   [
                     '@babel/preset-react',
                     {
-                      runtime: 'automatic'
-                    }
+                      runtime: 'automatic',
+                    },
                   ],
-                  '@babel/preset-typescript'
+                  '@babel/preset-typescript',
                 ],
                 plugins: [
-                  !isEnvProduction && require('react-refresh/babel')
+                  !isEnvProduction && require('react-refresh/babel'),
                 ].filter(Boolean),
                 cacheDirectory: true,
                 // See #6846 for context on why cacheCompression is disabled
                 cacheCompression: false,
-                compact: isEnvProduction
-              }
-            }
-          ]
+                compact: isEnvProduction,
+              },
+            },
+          ],
         },
         // "postcss" loader applies autoprefixer to our CSS.
         // "css" loader resolves paths in CSS and adds assets as dependencies.
@@ -179,14 +179,14 @@ export const createCommonConfig = (env: EnvType): WebpackConfiguration => {
           use: getStyleLoaders({
             importLoaders: 1,
             modules: {
-              mode: 'icss'
-            }
+              mode: 'icss',
+            },
           }),
           // Don't consider CSS imports dead code even if the
           // containing package claims to have no side effects.
           // Remove this when webpack adds a warning or an error for this.
           // See https://github.com/webpack/webpack/issues/6571
-          sideEffects: true
+          sideEffects: true,
         },
         // Adds support for CSS Modules (https://github.com/css-modules/css-modules)
         // using the extension .module.css
@@ -195,9 +195,9 @@ export const createCommonConfig = (env: EnvType): WebpackConfiguration => {
           use: getStyleLoaders({
             importLoaders: 1,
             modules: {
-              mode: 'local'
-            }
-          })
+              mode: 'local',
+            },
+          }),
         },
         // Opt-in support for SASS (using .scss or .sass extensions).
         // By default we support SASS Modules with the
@@ -209,8 +209,8 @@ export const createCommonConfig = (env: EnvType): WebpackConfiguration => {
             {
               importLoaders: 3,
               modules: {
-                mode: 'icss'
-              }
+                mode: 'icss',
+              },
             },
             'sass-loader'
           ),
@@ -218,7 +218,7 @@ export const createCommonConfig = (env: EnvType): WebpackConfiguration => {
           // containing package claims to have no side effects.
           // Remove this when webpack adds a warning or an error for this.
           // See https://github.com/webpack/webpack/issues/6571
-          sideEffects: true
+          sideEffects: true,
         },
         // Adds support for CSS Modules, but using SASS
         // using the extension .module.scss or .module.sass
@@ -228,19 +228,19 @@ export const createCommonConfig = (env: EnvType): WebpackConfiguration => {
             {
               importLoaders: 3,
               modules: {
-                mode: 'local'
-              }
+                mode: 'local',
+              },
             },
             'sass-loader'
-          )
-        }
-      ]
+          ),
+        },
+      ],
     },
     resolve: {
-      extensions: ['.tsx', '.ts', '.js']
+      extensions: ['.tsx', '.ts', '.js'],
     },
     optimization: {
-      usedExports: true
-    }
+      usedExports: true,
+    },
   }
 }

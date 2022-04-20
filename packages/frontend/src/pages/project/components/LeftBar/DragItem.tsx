@@ -8,9 +8,10 @@ import { editorSharedDocument } from '../../../../components/GlazeEditor/EditorS
 
 export interface DragItemProps {
   fieldItem: FieldNode
+  index: number
 }
 
-const DragItem: FC<DragItemProps> = ({ fieldItem }: DragItemProps) => {
+const DragItem: FC<DragItemProps> = ({ fieldItem, index }: DragItemProps) => {
   const [isDragging, setIsDragging] = useState(false)
 
   const handleCreate = (id: BasicComponentId) => {
@@ -21,14 +22,14 @@ const DragItem: FC<DragItemProps> = ({ fieldItem }: DragItemProps) => {
     <Rnd
       default={{
         x: 0,
-        y: 0,
+        y: index * 50 + 10,
         width: '100%',
         height: '40px'
       }}
       onDrag={(e) => e && setIsDragging(true)}
       onDragStop={(e) => {
         setIsDragging(false)
-        handleCreate(BasicComponentId.Div)
+        handleCreate(BasicComponentId[fieldItem.type])
       }}
     >
       <Box

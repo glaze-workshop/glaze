@@ -3,4 +3,5 @@ export enum BasicComponentId {
   Frame = '@glaze-component/frame',
   Font = '@glaze-component/font',
   Div = '@glaze-component/div',
+  Button = '@glaze-component/button'
 }
