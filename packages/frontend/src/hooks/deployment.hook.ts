@@ -4,6 +4,7 @@ import { useProjectInfoUnderParam } from './project.hook'
 import { DeploymentApi, DeploymentDto } from '@glaze/common'
 import dayjs from 'dayjs'
 import {
+  FULL_DEPLOYMENT_ANALYSIS_BASIC_PATH_TO_PATH,
   FULL_DEPLOYMENT_ANALYSIS_PATH_TO_PATH,
   FULL_DEPLOYMENT_CLICK_EVENT_PATH_TO_PATH
 } from '@glaze/common/src/deployment/deployment.api'
@@ -23,7 +24,9 @@ export function useProjectDeploymentInfo() {
 
 export function useProjectAnalysis(projectId: number, start: Date, end: Date) {
   console.log(start, end)
-  const realEnd = dayjs(end).endOf('day').toDate()
+  const realEnd = dayjs(end)
+    .endOf('day')
+    .toDate()
 
   const startNum = start.getTime()
   const endNum = realEnd.getTime()
@@ -43,15 +46,14 @@ export function useProjectAnalysis(projectId: number, start: Date, end: Date) {
     [FULL_DEPLOYMENT_ANALYSIS_PATH_TO_PATH({ projectId }), start, end],
     () => DeploymentApi.getProjectDeploymentAnalysis(projectId, startNum, endNum)
   )
-  const deploymentAnalysis = useMemo(
-    () => deploymentAnalysisQuery.data?.data,
-    [deploymentAnalysisQuery.data]
-  )
+  const deploymentAnalysis = useMemo(() => deploymentAnalysisQuery.data?.data, [
+    deploymentAnalysisQuery.data
+  ])
 
   const chartData = useMemo<DeploymentDto.EachDayDeploymentAnalysis[]>(() => {
     console.log('allDaysBetween', allDaysBetween)
-    return allDaysBetween.map((day) => {
-      const dayDeployment = deploymentAnalysis?.eachDay.find((each) => day.isSame(each.day, 'day'))
+    return allDaysBetween.map(day => {
+      const dayDeployment = deploymentAnalysis?.eachDay.find(each => day.isSame(each.day, 'day'))
       return {
         requestCount: 0,
         userCount: 0,
@@ -66,7 +68,9 @@ export function useProjectAnalysis(projectId: number, start: Date, end: Date) {
 }
 
 export function useQueryClickEvents(projectId: number, start: Date, end: Date) {
-  const realEnd = dayjs(end).endOf('day').toDate()
+  const realEnd = dayjs(end)
+    .endOf('day')
+    .toDate()
 
   const startNum = start.getTime()
   const endNum = realEnd.getTime()
@@ -77,4 +81,16 @@ export function useQueryClickEvents(projectId: number, start: Date, end: Date) {
   )
   const clickEvents = useMemo(() => clickEventsQuery.data?.data, [clickEventsQuery.data])
   return { clickEvents, clickEventsQuery }
+}
+
+export function useBasicDeploymentAnalysis(projectId: number) {
+  const deploymentAnalysisBasicQuery = useQuery(
+    FULL_DEPLOYMENT_ANALYSIS_BASIC_PATH_TO_PATH({ projectId }),
+    () => DeploymentApi.getProjectDeploymentAnalysisBasic(projectId)
+  )
+
+  const deploymentAnalysisBasic = useMemo(() => deploymentAnalysisBasicQuery.data?.data, [
+    deploymentAnalysisBasicQuery.data
+  ])
+  return { deploymentAnalysisBasic, deploymentAnalysisBasicQuery }
 }

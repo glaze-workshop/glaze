@@ -1,4 +1,5 @@
 import { CommonTimestamp } from './time'
+import { UserEntity } from './user'
 
 /**
  * 团队类型
@@ -23,4 +24,6 @@ export interface DeploymentEntity extends CommonTimestamp {
   status: GlazeDeploymentStatus
 
   screenshot?: string | null
+  
+  by?: Partial<UserEntity> | null
 }
