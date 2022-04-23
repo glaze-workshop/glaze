@@ -66,6 +66,10 @@ export const ReactRndEnhance: FC<IReactRndEnhanceProps> = (props: IReactRndEnhan
     return shouldCompareNode
   }
 
+  const rndDragStart = (e) => {
+    e.stopPropagation()
+  }
+
   const rndDrag: DraggableEventHandler = (e, data: DraggableData) => {
     if (displayGuide) {
       const dragF = () => {
@@ -121,6 +125,7 @@ export const ReactRndEnhance: FC<IReactRndEnhanceProps> = (props: IReactRndEnhan
       <Rnd
         {...rndProps}
         position={position}
+        onDragStart={rndDragStart}
         onDrag={rndDrag}
         onDragStop={rndDragStop}
         onResizeStop={(e, dir, ref, delta, position) => {

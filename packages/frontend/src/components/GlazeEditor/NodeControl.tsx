@@ -121,6 +121,7 @@ function NodeControl({ nodeInfo, structureInfo, parentStructureInfo }: NodeContr
           dragUpdate={dragUpdate}
           resizeUpdate={resizeUpdate}
           // bounds={'parent'}
+          style={{ background: 'red' }}
         >
           <componentFullInfo.component {...nodeProxy.props.toJSON()}>
             {structureProxy.children.map((children) => (
