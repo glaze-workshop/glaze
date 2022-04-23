@@ -1,6 +1,5 @@
 import React, { FC, useState, useMemo } from 'react'
 import { GlazeComponentProps } from 'packages/frontend/src/schema/config'
-import { Rnd } from 'react-rnd'
 import { nanoid } from 'nanoid'
 import { ReactRndEnhance } from '../../react-rnd-enhance'
 import { TUpdateHandle } from '../../react-rnd-enhance/type'
@@ -48,7 +47,7 @@ const GlazeDiv: FC<GlazeDivProps> = ({ children }) => {
   const content = useMemo(() => {
     return (
       <>
-        {nodes.map((node) => (
+        {/* {nodes.map((node) => (
           <ReactRndEnhance
             key={node.id}
             id={node.id}
@@ -69,12 +68,30 @@ const GlazeDiv: FC<GlazeDivProps> = ({ children }) => {
               {node.name}
             </div>
           </ReactRndEnhance>
-        ))}
+        ))} */}
+        <div
+          style={{
+            width: '100%',
+            height: '100%',
+            opacity: 0.5
+          }}
+        ></div>
       </>
     )
   }, [nodes])
 
-  return <>{content}</>
+  return (
+    <div
+      style={{
+        width: '100%',
+        height: '100%',
+        opacity: 0.5,
+        color: 'green'
+      }}
+    >
+      {children}
+    </div>
+  )
 }
 
 export default GlazeDiv
