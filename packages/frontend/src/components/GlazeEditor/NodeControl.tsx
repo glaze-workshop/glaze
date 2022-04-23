@@ -39,20 +39,14 @@ function NodeControl({ nodeInfo, structureInfo, parentStructureInfo }: NodeContr
   const tb = layoutProxy.position.type[1] === 'top' ? PositionType.TOP : PositionType.BOTTOM
 
   const nodePosition = {
-    x: layoutProxy.position[lr],
-    y: layoutProxy.position[tb]
+    x: 0,
+    y: 0
   }
 
   const nodeSize = {
     width: layoutProxy.width[1],
     height: layoutProxy.height[1]
   }
-
-  console.log('width here', layoutProxy.width)
-  console.log('height here', layoutProxy.height)
-  console.log('position here', layoutProxy.position)
-  console.log('nodePosition here', nodePosition)
-  console.log('nodeSize here', nodeSize)
 
   const dragUpdate: TUpdateHandle = (id, ref, x, y) => {
     // setNode((pre) => [
@@ -102,6 +96,10 @@ function NodeControl({ nodeInfo, structureInfo, parentStructureInfo }: NodeContr
 
   const layoutStyle = useNodeLayout(layoutProxy)
 
+  console.log('nodePosition here', nodePosition)
+  console.log('nodeSize here', nodeSize)
+  console.log('layoutStyle', layoutStyle)
+
   const handleWrapperClick: React.MouseEventHandler<HTMLDivElement> = useCallback(
     (e) => {
       e.stopPropagation()
@@ -115,26 +113,26 @@ function NodeControl({ nodeInfo, structureInfo, parentStructureInfo }: NodeContr
   return (
     <NodeControlWrapper ref={wrapperRef} style={layoutStyle} onClick={handleWrapperClick}>
       {componentFullInfo && (
-        // <ReactRndEnhance
-        //   key={nodeProxy.id}
-        //   id={nodeProxy.id}
-        //   position={nodePosition as TPosition}
-        //   size={nodeSize as TSize}
-        //   dragUpdate={dragUpdate}
-        //   resizeUpdate={resizeUpdate}
-        //   // bounds={'parent'}
-        // >
-        <componentFullInfo.component {...nodeProxy.props.toJSON()}>
-          {structureProxy.children.map((children) => (
-            <NodeControl
-              key={children.get('nodeId')}
-              nodeInfo={editorSharedDocument.nodeList.get(children.get('nodeId'))!}
-              parentStructureInfo={structureInfo}
-              structureInfo={children}
-            />
-          ))}
-        </componentFullInfo.component>
-        // </ReactRndEnhance>
+        <ReactRndEnhance
+          key={nodeProxy.id}
+          id={nodeProxy.id}
+          position={nodePosition as TPosition}
+          size={nodeSize as TSize}
+          dragUpdate={dragUpdate}
+          resizeUpdate={resizeUpdate}
+          // bounds={'parent'}
+        >
+          <componentFullInfo.component {...nodeProxy.props.toJSON()}>
+            {structureProxy.children.map((children) => (
+              <NodeControl
+                key={children.get('nodeId')}
+                nodeInfo={editorSharedDocument.nodeList.get(children.get('nodeId'))!}
+                parentStructureInfo={structureInfo}
+                structureInfo={children}
+              />
+            ))}
+          </componentFullInfo.component>
+        </ReactRndEnhance>
       )}
     </NodeControlWrapper>
   )
