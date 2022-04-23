@@ -10,13 +10,15 @@ const LeftBar: FC<LeftBarProps> = () => {
   const [type, setType] = useState('GBC')
   const fields = menus.find((menu) => menu.key === type)
 
+  useEffect(() => {
+    console.log('menu type:', type)
+  }, [type])
+
   /**
    * TODO 从这里可以获取本地组件列表
    */
-  const customComponentList = useCustomComponentList()
-  useEffect(() => {
-    console.log('LeftBar: customComponentList', customComponentList)
-  }, [customComponentList])
+  // 预请求列表，渲染已部署定制组件
+  useCustomComponentList()
 
   return (
     <Flex w="250px" className="border-r">

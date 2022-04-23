@@ -18,4 +18,5 @@ export const Log = {
 /**
  * Set DEBUG in browser
  */
-localStorage.debug = `${LogPrefix.Home}*`
+// localStorage.debug = `${LogPrefix.EditorCustomSupport}*`
+localStorage.removeItem('debug') // clear log key

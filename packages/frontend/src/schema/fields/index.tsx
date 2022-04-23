@@ -2,6 +2,7 @@ import React, { ReactElement } from 'react'
 import { icons, IconEnum } from '../../pages/project/components/LeftBar/icon'
 import GBCfields from './GlazeBasicComponents'
 import { DragPanel } from '../../pages/project/components/LeftBar/DragPanel'
+import { CustomDragPanel } from '../../pages/project/components/LeftBar/CustomDragPanel'
 
 export interface menusProps {
   key: string
@@ -14,5 +15,10 @@ export const menus: menusProps[] = [
     key: 'GBC',
     icon: IconEnum.HTML5,
     panel: <DragPanel fields={GBCfields} />
+  },
+  {
+    key: 'GlazeCustomComponents',
+    icon: IconEnum.HTML5,
+    panel: <CustomDragPanel />
   }
 ]
