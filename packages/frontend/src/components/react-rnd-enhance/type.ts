@@ -5,4 +5,9 @@ type TPosition = {
   y: number
 }
 
-export { TUpdateHandle, TPosition }
+type TSize = {
+  width: number | string
+  height: number | string
+}
+
+export { TUpdateHandle, TPosition, TSize }
