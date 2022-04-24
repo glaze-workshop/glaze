@@ -67,11 +67,14 @@ export const ReactRndEnhance: FC<IReactRndEnhanceProps> = (props: IReactRndEnhan
   }
 
   const rndDragStart: DraggableEventHandler = (e) => {
-    e.stopPropagation()
+    // e.stopPropagation()
   }
 
   const rndDrag: DraggableEventHandler = (e, data: DraggableData) => {
     if (displayGuide) {
+      const { x, y, deltaX, deltaY } = data
+      console.log('drag data', deltaX, deltaY)
+      // console.log('drag data', x, y)
       const dragF = () => {
         const shouldCompareNode = getShouldCompareNode()
         const curNode = getPosRelativeParent(data.node)
@@ -108,10 +111,14 @@ export const ReactRndEnhance: FC<IReactRndEnhanceProps> = (props: IReactRndEnhan
   }
 
   const rndDragStop: DraggableEventHandler = (e, data: DraggableData) => {
+    const { x, y, deltaX, deltaY } = data
+    console.log('drag stop data', deltaX, deltaY, x, y)
+    // console.log('drag stop data', x, y)
     const p = { x: data.x, y: data.y }
     const curNode = getPosRelativeParent(data.node)
     const r = detection(curNode, getShouldCompareNode(), p)
-    dragUpdate(id, data.node, r.x, r.y)
+    // dragUpdate(id, data.node, r.x, r.y)
+    dragUpdate(id, data.node, x, y)
   }
 
   const rndProps = { ...props }

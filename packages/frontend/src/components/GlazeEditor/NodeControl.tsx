@@ -15,10 +15,10 @@ import {
 import { editorSharedDocument } from './EditorSharedDocument'
 import { nanoid } from 'nanoid'
 import { ReactRndEnhance } from '../react-rnd-enhance'
-import { TUpdateHandle, TPosition, TSize } from '../react-rnd-enhance/type'
+import { TUpdateHandle, TPosition, TSize, DragType } from '../react-rnd-enhance/type'
 import { PositionType } from '../../schema/layout'
 import { LengthUnit, Length } from '../../schema/length'
-import { layout } from '@chakra-ui/react'
+import { useDrag } from '../react-rnd-enhance/drag.hook'
 
 const NodeControlWrapper = styled.div`
   position: absolute;
@@ -38,9 +38,13 @@ function NodeControl({ nodeInfo, structureInfo, parentStructureInfo }: NodeContr
   const lr = layoutProxy.position.type[0] === 'left' ? PositionType.LEFT : PositionType.RIGHT
   const tb = layoutProxy.position.type[1] === 'top' ? PositionType.TOP : PositionType.BOTTOM
 
+  /**
+   * ? 要控制初始 position 应该也是使用 layoutProxy 的？
+   * 暂时可以先放着不管
+   */
   const nodePosition = {
-    x: 0,
-    y: 0
+    x: layoutProxy.position.left,
+    y: layoutProxy.position.top
   }
 
   const nodeSize = {
@@ -59,6 +63,7 @@ function NodeControl({ nodeInfo, structureInfo, parentStructureInfo }: NodeContr
       [tb]: y
     }
 
+    console.log('drag update', layoutProxy.position, position)
     layoutProxy.position = position
   }
 
@@ -84,6 +89,24 @@ function NodeControl({ nodeInfo, structureInfo, parentStructureInfo }: NodeContr
   useYjsRerender(nodeInfo, nodeProxy.layout, nodeProxy.props, structureProxy.children)
   useNodeInfoObserve(nodeProxy, structureProxy, wrapperRef, parentStructureInfo)
 
+  /**
+   * 自己实现拖拽效果
+   */
+  const dragStartPosition = useRef(layoutProxy.position)
+  const onDragStart = useDrag(wrapperRef, (e, props) => {
+    const { type, deltaX, deltaY } = props
+    console.log('>>> draggggggggggggggging', props)
+    if (type === DragType.MouseDown) {
+      const { left, top } = layoutProxy.position
+      dragStartPosition.current = { type: [PositionType.LEFT, PositionType.TOP], left, top }
+    } else if (type === DragType.MouseMove) {
+      const { left: left0 = 0, top: top0 = 0 } = dragStartPosition.current
+      const [left, top] = [left0 + deltaX, top0 + deltaY]
+
+      layoutProxy.position = { type: [PositionType.LEFT, PositionType.TOP], left, top }
+    }
+  })
+
   const componentObservable = useMemo(
     () => AllComponentsSubject.pipe(map((components) => components.get(nodeProxy.componentId))),
     [nodeProxy.componentId]
@@ -103,29 +126,34 @@ function NodeControl({ nodeInfo, structureInfo, parentStructureInfo }: NodeContr
   )
 
   return (
-    <NodeControlWrapper ref={wrapperRef} style={layoutStyle} onClick={handleWrapperClick}>
+    <NodeControlWrapper
+      ref={wrapperRef}
+      style={layoutStyle}
+      onClick={handleWrapperClick}
+      onMouseDown={onDragStart}
+    >
       {componentFullInfo && (
-        <ReactRndEnhance
-          key={nodeProxy.id}
-          id={nodeProxy.id}
-          position={nodePosition as TPosition}
-          size={nodeSize as TSize}
-          dragUpdate={dragUpdate}
-          resizeUpdate={resizeUpdate}
-          // bounds={'parent'}
-          style={{ background: 'red' }}
-        >
-          <componentFullInfo.component {...nodeProxy.props.toJSON()}>
-            {structureProxy.children.map((children) => (
-              <NodeControl
-                key={children.get('nodeId')}
-                nodeInfo={editorSharedDocument.nodeList.get(children.get('nodeId'))!}
-                parentStructureInfo={structureInfo}
-                structureInfo={children}
-              />
-            ))}
-          </componentFullInfo.component>
-        </ReactRndEnhance>
+        // <ReactRndEnhance
+        //   key={nodeProxy.id}
+        //   id={nodeProxy.id}
+        //   position={nodePosition as TPosition}
+        //   size={nodeSize as TSize}
+        //   dragUpdate={dragUpdate}
+        //   resizeUpdate={resizeUpdate}
+        //   // bounds={'parent'}
+        //   style={{ background: 'red' }}
+        // >
+        <componentFullInfo.component {...nodeProxy.props.toJSON()}>
+          {structureProxy.children.map((children) => (
+            <NodeControl
+              key={children.get('nodeId')}
+              nodeInfo={editorSharedDocument.nodeList.get(children.get('nodeId'))!}
+              parentStructureInfo={structureInfo}
+              structureInfo={children}
+            />
+          ))}
+        </componentFullInfo.component>
+        // </ReactRndEnhance>
       )}
     </NodeControlWrapper>
   )
