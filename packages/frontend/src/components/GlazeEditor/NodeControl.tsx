@@ -35,6 +35,9 @@ function NodeControl({ nodeInfo, structureInfo, parentStructureInfo }: NodeContr
   const structureProxy = useYjsMapProxy<StructureProxy>(structureInfo)
   let layoutProxy = useYjsMapProxy<LayoutConfig>(nodeProxy.layout)
   const wrapperRef = useRef<HTMLDivElement>(null)
+
+  console.log('layoutProxy here', layoutProxy)
+
   const lr = layoutProxy.position.type[0] === 'left' ? PositionType.LEFT : PositionType.RIGHT
   const tb = layoutProxy.position.type[1] === 'top' ? PositionType.TOP : PositionType.BOTTOM
 
@@ -63,7 +66,6 @@ function NodeControl({ nodeInfo, structureInfo, parentStructureInfo }: NodeContr
       [tb]: y
     }
 
-    console.log('drag update', layoutProxy.position, position)
     layoutProxy.position = position
   }
 
@@ -126,36 +128,49 @@ function NodeControl({ nodeInfo, structureInfo, parentStructureInfo }: NodeContr
   )
 
   return (
-    <NodeControlWrapper
-      ref={wrapperRef}
-      style={layoutStyle}
-      onClick={handleWrapperClick}
-      onMouseDown={onDragStart}
-    >
-      {componentFullInfo && (
-        // <ReactRndEnhance
-        //   key={nodeProxy.id}
-        //   id={nodeProxy.id}
-        //   position={nodePosition as TPosition}
-        //   size={nodeSize as TSize}
-        //   dragUpdate={dragUpdate}
-        //   resizeUpdate={resizeUpdate}
-        //   // bounds={'parent'}
-        //   style={{ background: 'red' }}
-        // >
-        <componentFullInfo.component {...nodeProxy.props.toJSON()}>
-          {structureProxy.children.map((children) => (
-            <NodeControl
-              key={children.get('nodeId')}
-              nodeInfo={editorSharedDocument.nodeList.get(children.get('nodeId'))!}
-              parentStructureInfo={structureInfo}
-              structureInfo={children}
-            />
-          ))}
-        </componentFullInfo.component>
-        // </ReactRndEnhance>
-      )}
-    </NodeControlWrapper>
+    // <NodeControlWrapper
+    //   ref={wrapperRef}
+    //   style={layoutStyle}
+    //   onClick={handleWrapperClick}
+    //   onMouseDown={onDragStart}
+    // >
+    <div ref={wrapperRef} onClick={handleWrapperClick}>
+      <ReactRndEnhance
+        key={nodeProxy.id}
+        id={nodeProxy.id}
+        position={nodePosition as TPosition}
+        size={nodeSize as TSize}
+        dragUpdate={dragUpdate}
+        resizeUpdate={resizeUpdate}
+        // bounds={'parent'}
+        style={{ background: 'red' }}
+      >
+        {componentFullInfo && (
+          // <ReactRndEnhance
+          //   key={nodeProxy.id}
+          //   id={nodeProxy.id}
+          //   position={nodePosition as TPosition}
+          //   size={nodeSize as TSize}
+          //   dragUpdate={dragUpdate}
+          //   resizeUpdate={resizeUpdate}
+          //   // bounds={'parent'}
+          //   style={{ background: 'red' }}
+          // >
+          <componentFullInfo.component {...nodeProxy.props.toJSON()}>
+            {structureProxy.children.map((children) => (
+              <NodeControl
+                key={children.get('nodeId')}
+                nodeInfo={editorSharedDocument.nodeList.get(children.get('nodeId'))!}
+                parentStructureInfo={structureInfo}
+                structureInfo={children}
+              />
+            ))}
+          </componentFullInfo.component>
+          // </ReactRndEnhance>
+        )}
+      </ReactRndEnhance>
+    </div>
+    // </NodeControlWrapper>
   )
 }
 export default memo(NodeControl)

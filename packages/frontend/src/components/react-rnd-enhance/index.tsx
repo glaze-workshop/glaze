@@ -67,7 +67,7 @@ export const ReactRndEnhance: FC<IReactRndEnhanceProps> = (props: IReactRndEnhan
   }
 
   const rndDragStart: DraggableEventHandler = (e) => {
-    // e.stopPropagation()
+    e.stopPropagation()
   }
 
   const rndDrag: DraggableEventHandler = (e, data: DraggableData) => {
