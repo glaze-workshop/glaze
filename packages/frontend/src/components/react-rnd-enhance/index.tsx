@@ -66,7 +66,7 @@ export const ReactRndEnhance: FC<IReactRndEnhanceProps> = (props: IReactRndEnhan
     return shouldCompareNode
   }
 
-  const rndDragStart = (e) => {
+  const rndDragStart: DraggableEventHandler = (e) => {
     e.stopPropagation()
   }
 

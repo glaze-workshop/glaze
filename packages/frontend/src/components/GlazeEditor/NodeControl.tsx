@@ -53,13 +53,13 @@ function NodeControl({ nodeInfo, structureInfo, parentStructureInfo }: NodeContr
     //   ...pre.filter((node) => node.id !== id),
     //   { ...pre.filter((node) => node.id === id)[0], position: { x, y } }
     // ])
-    const { width, height } = layoutProxy
     const position = {
       type: [lr, tb],
       [lr]: x,
       [tb]: y
     }
-    layoutProxy = { position, width, height }
+
+    layoutProxy.position = position
   }
 
   const resizeUpdate: TUpdateHandle = (id, ref, x, y) => {
@@ -74,15 +74,11 @@ function NodeControl({ nodeInfo, structureInfo, parentStructureInfo }: NodeContr
     //     }
     //   }
     // ])
-
     const width: Length = [LengthUnit.FIXED, ref.getBoundingClientRect().width]
     const height: Length = [LengthUnit.FIXED, ref.getBoundingClientRect().height]
-    const position = {
-      type: [lr, tb],
-      [lr]: nodePosition.x,
-      [tb]: nodePosition.y
-    }
-    layoutProxy = { position, width, height }
+
+    layoutProxy.width = width
+    layoutProxy.height = height
   }
 
   useYjsRerender(nodeInfo, nodeProxy.layout, nodeProxy.props, structureProxy.children)
@@ -95,10 +91,6 @@ function NodeControl({ nodeInfo, structureInfo, parentStructureInfo }: NodeContr
   const componentFullInfo = useObservableEagerState(componentObservable)
 
   const layoutStyle = useNodeLayout(layoutProxy)
-
-  console.log('nodePosition here', nodePosition)
-  console.log('nodeSize here', nodeSize)
-  console.log('layoutStyle', layoutStyle)
 
   const handleWrapperClick: React.MouseEventHandler<HTMLDivElement> = useCallback(
     (e) => {
