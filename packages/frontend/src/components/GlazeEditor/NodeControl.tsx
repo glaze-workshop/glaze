@@ -13,7 +13,6 @@ import {
   useYjsRerender
 } from './yjs.hook'
 import { editorSharedDocument } from './EditorSharedDocument'
-import { nanoid } from 'nanoid'
 import { ReactRndEnhance } from '../react-rnd-enhance'
 import { TUpdateHandle, TPosition, TSize, DragType } from '../react-rnd-enhance/type'
 import { PositionType } from '../../schema/layout'
@@ -56,10 +55,6 @@ function NodeControl({ nodeInfo, structureInfo, parentStructureInfo }: NodeContr
   }
 
   const dragUpdate: TUpdateHandle = (id, ref, x, y) => {
-    // setNode((pre) => [
-    //   ...pre.filter((node) => node.id !== id),
-    //   { ...pre.filter((node) => node.id === id)[0], position: { x, y } }
-    // ])
     const position = {
       type: [lr, tb],
       [lr]: x,
@@ -70,17 +65,6 @@ function NodeControl({ nodeInfo, structureInfo, parentStructureInfo }: NodeContr
   }
 
   const resizeUpdate: TUpdateHandle = (id, ref, x, y) => {
-    // setNode((pre) => [
-    //   ...pre.filter((node) => node.id !== id),
-    //   {
-    //     ...pre.filter((node) => node.id === id)[0],
-    //     position: { x, y },
-    //     size: {
-    //       width: ref.getBoundingClientRect().width,
-    //       height: ref.getBoundingClientRect().height
-    //     }
-    //   }
-    // ])
     const width: Length = [LengthUnit.FIXED, ref.getBoundingClientRect().width]
     const height: Length = [LengthUnit.FIXED, ref.getBoundingClientRect().height]
 
@@ -146,16 +130,6 @@ function NodeControl({ nodeInfo, structureInfo, parentStructureInfo }: NodeContr
         style={{ background: 'red' }}
       >
         {componentFullInfo && (
-          // <ReactRndEnhance
-          //   key={nodeProxy.id}
-          //   id={nodeProxy.id}
-          //   position={nodePosition as TPosition}
-          //   size={nodeSize as TSize}
-          //   dragUpdate={dragUpdate}
-          //   resizeUpdate={resizeUpdate}
-          //   // bounds={'parent'}
-          //   style={{ background: 'red' }}
-          // >
           <componentFullInfo.component {...nodeProxy.props.toJSON()}>
             {structureProxy.children.map((children) => (
               <NodeControl
