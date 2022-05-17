@@ -22,11 +22,11 @@ html(lang="en")
     link(rel="stylesheet", href="https://render.file.localhost/index.css")
     script(src="https://render.file.localhost/index.js" defer)
 
-    if heatmap 
+    if heatmap
       script(src="https://render.file.localhost/heatmap.js")
 
     each src in pluginSrc.length ? pluginSrc : []
       script(src=src defer)
 
-  body
+  body(style="min-width:1200px;")
     div#root

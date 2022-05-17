@@ -4,7 +4,7 @@ https://docs.nestjs.com/providers#services
 
 import { Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
-import Redis from 'ioredis'
+import Redis, { RedisOptions } from 'ioredis'
 
 @Injectable()
 export class RedisService {
@@ -20,7 +20,7 @@ export class RedisService {
     this.port = Number(this.configService.get('REDIS_PORT')!)
     this.keyPrefix = configService.get('REDIS_PREFIX')!
 
-    const redisConfig: Redis.RedisOptions = {
+    const redisConfig: RedisOptions = {
       host: this.host,
       port: this.port,
       keyPrefix: this.keyPrefix

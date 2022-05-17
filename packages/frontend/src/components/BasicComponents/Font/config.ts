@@ -11,6 +11,10 @@ const FontConfig: ComponentConfig<FontProps> = {
       name: '内容',
       type: ControlType.TEXT,
       default: '请输入'
+    },
+    font: {
+      name: '字体样式',
+      type: ControlType.FONT
     }
   },
   defaultSize: {

@@ -1,6 +1,9 @@
 import React, { FC, memo, useState, useEffect } from 'react'
 import * as Y from 'yjs'
-import { SelectedNodeInfoSubject } from '../../../../components/GlazeEditor/state'
+import {
+  AllComponentsSubject,
+  SelectedNodeInfoSubject
+} from '../../../../components/GlazeEditor/state'
 import { editorSharedDocument } from '../../../../components/GlazeEditor/EditorSharedDocument'
 import { Box, Divider, Flex, Tag } from '@chakra-ui/react'
 import LayoutPanel from './LayoutPanel'
@@ -13,6 +16,7 @@ const RightBar: FC<RightBarProps> = () => {
   const [selectedNode, setSelectedNode] = useState<any>(null)
   const [selectedYMap, setSelectedYMap] = useState<Y.Map<any>>()
   const [idInfo, setIdInfo] = useState<string>('')
+  const [componentIdInfo, setComponentIdInfo] = useState<string>('')
   const [nameInfo, setNameInfo] = useState<any>()
   const [propsInfo, setPropsInfo] = useState<any>()
   const [layoutInfo, setLayoutInfo] = useState<Y.Map<any>>()
@@ -34,6 +38,7 @@ const RightBar: FC<RightBarProps> = () => {
       const layoutInfo = YMap.get('layout')
       const pathInfo = YMap.get('path')
       const toInfo = YMap.get('to')
+      const componentIdInfo = YMap.get('componentId')
       // console.log('[yjsMapExtractor nameInfo]', nameInfo)
       // console.log('[yjsMapExtractor props]', propsInfo)
       // console.log('[yjsMapExtractor layout]', layoutInfo)
@@ -43,6 +48,7 @@ const RightBar: FC<RightBarProps> = () => {
       setLayoutInfo(layoutInfo)
       setPathInfo(pathInfo)
       setToInfo(toInfo)
+      setComponentIdInfo(componentIdInfo)
     }
 
     const subscriber = SelectedNodeInfoSubject.subscribe((node) => {
@@ -64,7 +70,10 @@ const RightBar: FC<RightBarProps> = () => {
           <Divider margin="10px 0" />
           <Flex overflow="scroll" h="500px" flexDirection="column">
             {layoutInfo && <LayoutPanel layoutInfo={layoutInfo} />}
-            <PropsPanel />
+            <PropsPanel
+              propsInfo={propsInfo}
+              componentFullInfo={AllComponentsSubject.value.get(componentIdInfo)}
+            />
             <Tag size="md" variant="solid" colorScheme="teal" margin="10px 0" width="60px">
               Routes
             </Tag>

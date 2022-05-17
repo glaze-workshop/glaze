@@ -14,11 +14,11 @@ const ContentWrapper = styled.div`
   transform-origin: 0 0;
 `
 
-const EditorContent:FC<EditorContentProps> = ({ zoom }) => {
+const EditorContent: FC<EditorContentProps> = ({ zoom }) => {
   const contentRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    const subscriber = zoom.subscribe(transform => {
+    const subscriber = zoom.subscribe((transform) => {
       if (contentRef.current) {
         contentRef.current.style.transform = `translate(${transform.x}px, ${transform.y}px) scale(${transform.k})`
       }
@@ -32,9 +32,15 @@ const EditorContent:FC<EditorContentProps> = ({ zoom }) => {
 
   return (
     <ContentWrapper ref={contentRef}>
-      {editorSharedDocument.structureTree.map(node => {
+      {editorSharedDocument.structureTree.map((node) => {
         const nodeInfo = editorSharedDocument.mapStructureTreeNodeToNode(node)
-        return <NodeControl key={node.get('nodeId')} structureInfo={node} nodeInfo={nodeInfo !}></NodeControl>
+        return (
+          <NodeControl
+            key={node.get('nodeId')}
+            structureInfo={node}
+            nodeInfo={nodeInfo!}
+          ></NodeControl>
+        )
       })}
     </ContentWrapper>
   )

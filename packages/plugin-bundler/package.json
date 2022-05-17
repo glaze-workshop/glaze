@@ -18,8 +18,7 @@
     "@glaze/common": "workspace:*",
     "@glaze/types": "workspace:*",
     "@glaze/sdk-toolkit": "workspace:*",
-    "@types/prompts": "^2.0.14",
-    "lodash": "^4.17.21"
+    "@types/prompts": "^2.0.14"
   },
   "dependencies": {
     "axios": "^0.26.0",

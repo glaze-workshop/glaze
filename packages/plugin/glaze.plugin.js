@@ -5,6 +5,7 @@
  */
 const config = {
   plugins: [
+    //#region [other plugins]
     {
       id: '@glaze-plugin/click-heatmap',
       name: '点击热力图支持插件',
@@ -43,6 +44,7 @@ const config = {
         },
       },
     },
+    //#endregion
     {
       id: '@glaze-plugin/cursor',
       name: '配置光标插件',

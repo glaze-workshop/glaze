@@ -36,13 +36,15 @@ export enum ControlType {
    */
   MULTI_SELECT = 'multi_select',
 
-  FONT = 'font'
+  FONT = 'font',
+
+  BACKGROUND = 'background'
 }
 
 export interface AbstractControl<T extends ControlType = ControlType, D = unknown> {
   name: GlazeString
   type: T
-  default: D
+  default?: D
 }
 
 export interface BooleanControl extends AbstractControl<ControlType.BOOLEAN, boolean> {}
@@ -53,6 +55,23 @@ export interface NumberControl extends AbstractControl<ControlType.NUMBER, numbe
 }
 
 export interface TextControl extends AbstractControl<ControlType.TEXT, string> {}
+
+export interface BackgroundControlProps {
+  backgroundColor?: string
+  backgroundImage?: string
+}
+
+export interface BackgroundControl
+  extends AbstractControl<ControlType.BACKGROUND, BackgroundControlProps> {}
+
+export interface FontControlProps {
+  fontSize?: number
+  fontFamily?: string
+  fontWeight?: string
+  color?: string
+}
+
+export interface FontControl extends AbstractControl<ControlType.FONT, FontControlProps> {}
 
 export interface Option<T> {
   value: T
@@ -77,6 +96,10 @@ export type Control<T> =
       ? NumberControl
       : NonNullable<T> extends string
       ? TextControl
+      : NonNullable<T> extends FontControlProps
+      ? FontControl
+      : NonNullable<T> extends BackgroundControlProps
+      ? BackgroundControl
       : never)
 
 export type PropsConfig<P> = {

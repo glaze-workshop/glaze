@@ -36,6 +36,8 @@ export function useNodeLayout(layoutConfig: LayoutConfig, enableLayout = true) {
             height: lengthToStyle(layoutConfig.height),
             top: `${layoutConfig.position.top}px`,
             left: `${layoutConfig.position.left}px`,
+            right: `${layoutConfig.position.right}px`,
+            bottom: `${layoutConfig.position.bottom}px`,
           }
         : {
             position: 'relative',
@@ -44,7 +46,9 @@ export function useNodeLayout(layoutConfig: LayoutConfig, enableLayout = true) {
     [
       enableLayout,
       layoutConfig.height,
+      layoutConfig.position.bottom,
       layoutConfig.position.left,
+      layoutConfig.position.right,
       layoutConfig.position.top,
       layoutConfig.width,
     ]

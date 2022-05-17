@@ -60,7 +60,7 @@ const Overview: FC<OverviewProps> = () => {
               src={deploymentInfo.screenshot ? `https://${deploymentInfo.screenshot}` : ''}
               fallbackSrc="https://bit.ly/naruto-sage"
               alt="naruto"
-              objectFit="contain"
+              style={{ objectFit: 'contain' }}
             />
           </AspectRatio>
         </Box>
@@ -78,10 +78,9 @@ const Overview: FC<OverviewProps> = () => {
           </Flex>
 
           <Flex>
-            最后由 
-            <Text mx="1">{deploymentInfo.by?.nickname ?? deploymentInfo.by?.username}</Text>
-            在
-            <Text>{dayjs(deploymentInfo.updatedAt).toNow() }</Text>
+            最后由
+            <Text mx="1">{deploymentInfo.by?.nickname ?? deploymentInfo.by?.username}</Text>在
+            <Text>{dayjs(deploymentInfo.updatedAt).toNow()}</Text>
             更新
           </Flex>
 
