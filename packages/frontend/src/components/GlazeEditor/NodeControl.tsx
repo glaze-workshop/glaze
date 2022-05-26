@@ -127,7 +127,9 @@ function NodeControl({ nodeInfo, structureInfo, parentStructureInfo }: NodeContr
         dragUpdate={dragUpdate}
         resizeUpdate={resizeUpdate}
         // bounds={'parent'}
-        style={{ background: 'red' }}
+        // className="hover:bg-sky-700"
+        // className="hover:outline-red"
+        style={{ outline: '1px solid red' }}
       >
         {componentFullInfo && (
           <componentFullInfo.component {...nodeProxy.props.toJSON()}>
