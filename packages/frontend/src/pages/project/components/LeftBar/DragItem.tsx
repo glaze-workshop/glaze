@@ -9,12 +9,13 @@ import { editorSharedDocument } from '../../../../components/GlazeEditor/EditorS
 export interface DragItemProps {
   fieldItem: FieldNode
   index: number
+  componentId?: string
 }
 
-const DragItem: FC<DragItemProps> = ({ fieldItem, index }: DragItemProps) => {
+const DragItem: FC<DragItemProps> = ({ fieldItem, index, componentId }: DragItemProps) => {
   const [isDragging, setIsDragging] = useState(false)
 
-  const handleCreate = (id: BasicComponentId) => {
+  const handleCreate = (id: BasicComponentId | string) => {
     editorSharedDocument.createNodeByComponentId(id)
   }
 
@@ -29,7 +30,7 @@ const DragItem: FC<DragItemProps> = ({ fieldItem, index }: DragItemProps) => {
       onDrag={(e) => e && setIsDragging(true)}
       onDragStop={(e) => {
         setIsDragging(false)
-        handleCreate(BasicComponentId[fieldItem.type])
+        handleCreate(componentId || BasicComponentId[fieldItem.type]) // use default id first
       }}
     >
       <Box

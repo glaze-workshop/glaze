@@ -3,13 +3,14 @@
 import React, { FC, Suspense, useEffect } from 'react'
 import { Log } from '../../utils/log'
 import { useCustomComponent } from '../GlazeEditor/customSupport'
+import ErrorBoundary from './ErrorBoundary'
 
 interface CustomComponentProps {
   componentName: string
 }
 
 const CustomComponent: FC<CustomComponentProps> = ({ componentName }) => {
-  const { loading, error, info, Component } = useCustomComponent(componentName)
+  const { loading, error, errorMsg, info, Component } = useCustomComponent(componentName)
 
   useEffect(() => {
     Log.EditorCustomComponent(`${componentName} info`, info)
@@ -18,9 +19,15 @@ const CustomComponent: FC<CustomComponentProps> = ({ componentName }) => {
   const fallback = `Component ${componentName} loading...`
 
   return error ? (
-    <h1>Something wrong with {componentName}</h1>
+    <h1>{errorMsg || `Request for ${componentName} error`}</h1>
   ) : (
-    <Suspense fallback={fallback}>{Component && <Component />}</Suspense>
+    <Suspense fallback={fallback}>
+      {Component && (
+        <ErrorBoundary errorContent={`Something wrong in ${componentName}`}>
+          <Component />
+        </ErrorBoundary>
+      )}
+    </Suspense>
   )
 }
 

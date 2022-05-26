@@ -107,7 +107,7 @@ export interface GlazeComponentProps {
 }
 
 export interface FieldNode {
-  type: keyof typeof previewFields
+  type: keyof typeof previewFields | string
   h?: number
   displayName?: string
   module?: string

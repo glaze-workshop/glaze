@@ -30,10 +30,7 @@ export const useCustomComponent = (componentName: string) => {
   })
 
   const updateInfo = (info: EditorComponentInfo) => {
-    const loading = [
-      EditorComponentState.Init,
-      EditorComponentState.Updating
-    ].includes(info.state)
+    const loading = [EditorComponentState.Init, EditorComponentState.Updating].includes(info.state)
     const error = [EditorComponentState.Fail].includes(info.state)
 
     setComponentInfo({
@@ -42,7 +39,23 @@ export const useCustomComponent = (componentName: string) => {
       info,
       Component: loading
         ? undefined
-        : React.lazy(() => System.import(info.targetPath))
+        : React.lazy(() => {
+            const c = System.import(info.targetPath)
+            return c.then((res) => {
+              if (!res.default) {
+                setComponentInfo({
+                  loading: false,
+                  error: true,
+                  errorMsg: `Component ${componentName} is Empty...`,
+                  info,
+                  Component: undefined
+                })
+                return {}
+              } else {
+                return res
+              }
+            })
+          })
     })
   }
 
@@ -54,10 +67,7 @@ export const useCustomComponent = (componentName: string) => {
     const client = getEditorClient()
 
     const loadComponent = (componentInfo: EditorComponentInfo) => {
-      Log.EditorCustomSupportHook(
-        `componentInfo of ${componentName}`,
-        componentInfo
-      )
+      Log.EditorCustomSupportHook(`componentInfo of ${componentName}`, componentInfo)
       if (componentInfo) {
         updateInfo(componentInfo)
       }
@@ -70,9 +80,7 @@ export const useCustomComponent = (componentName: string) => {
       })
       .catch((err) => {
         console.error(
-          `[useCustomComponent] subscribe ${EditorRequestType.Component(
-            componentName
-          )} error`,
+          `[useCustomComponent] subscribe ${EditorRequestType.Component(componentName)} error`,
           err
         )
       })
@@ -90,9 +98,7 @@ export const useCustomComponent = (componentName: string) => {
       })
       .catch((err) => {
         console.error(
-          `[useCustomComponent] subscribe ${EditorSubscribeType.Component(
-            componentName
-          )} error`,
+          `[useCustomComponent] subscribe ${EditorSubscribeType.Component(componentName)} error`,
           err
         )
       })
@@ -213,11 +219,7 @@ const updateCustomComponentInfo = (componentNameList: string[]) => {
   })
 
   if (componentsChanged) {
-    Log.EditorCustomSupportHook(
-      'New custom component list',
-      componentNameList,
-      newComponents
-    )
+    Log.EditorCustomSupportHook('New custom component list', componentNameList, newComponents)
     AllComponentsSubject.next(newComponents)
   }
 }
