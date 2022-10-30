@@ -13,22 +13,22 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "path-to-regexp": "^3.0.0",
+    "path-to-regexp": "^6.2.1",
     "tiny-emitter": "^2.1.0",
-    "uuid": "^8.3.2",
-    "ws": "^8.5.0"
+    "uuid": "^9.0.0",
+    "ws": "^8.10.0"
   },
   "devDependencies": {
     "@glaze/bundler": "workspace:*",
     "@glaze/types": "workspace:*",
     "@types/uuid": "^8.3.4",
-    "i18next": "^21.6.7",
+    "i18next": "^22.0.2",
     "yup": "^0.32.11"
   },
   "peerDependencies": {
     "axios": ">=0.26",
     "i18next": ">=21.5.2",
-    "yup": ">=0.32.11",
-    "rxjs": ">=7"
+    "rxjs": ">=7",
+    "yup": ">=0.32.11"
   }
 }

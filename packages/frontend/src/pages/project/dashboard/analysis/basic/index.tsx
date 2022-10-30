@@ -10,7 +10,6 @@ import {
   VStack
 } from '@chakra-ui/react'
 import React, { FC, memo, useState } from 'react'
-import { range } from 'rxjs'
 import FlatPicker from '../../../../../components/FlatPicker'
 import { useProjectAnalysis, useProjectDeploymentInfo } from '../../../../../hooks/deployment.hook'
 import dayjs from 'dayjs'

@@ -1,10 +1,16 @@
 import styled from '@emotion/styled'
-import { Zoom } from '@glaze/zoom'
-import { FC, memo, RefObject, useEffect, useRef } from 'react'
-import { AllCooperateUserState, AllNodeInfoObservableMap, SelectedNodeInfoSubject } from './state'
+import { Transform, Zoom } from '@glaze/zoom'
+import { FC, memo, MouseEventHandler, RefObject, useCallback, useEffect, useRef } from 'react'
+import {
+  AllCooperateUserState,
+  AllNodeInfoObservableMap,
+  SelectedNodeInfoSubject,
+  StaticPosition
+} from './state'
 import { combineLatestWith, filter, from, map, mergeMap, of, switchMap } from 'rxjs'
 import { notEmpty } from '../../utils/null'
 import { difference } from 'lodash'
+import { getNodeIdInStructTree } from './yjs.hook'
 
 export interface EditorUpperProps {
   zoom: Zoom
@@ -19,41 +25,75 @@ const Upper = styled.svg`
   pointer-events: none;
 `
 
+function drawRect(
+  position: StaticPosition,
+  zoom: Zoom,
+  transform: Transform,
+  rectRef: SVGRectElement
+) {
+  const { x: staticX, y: staticY, width: staticWidth, height: staticHeight } = position
+  const { x, y } = zoom.apply({ x: staticX, y: staticY })
+  const width = staticWidth * transform.k
+  const height = staticHeight * transform.k
+
+  rectRef.style.visibility = 'visible'
+  rectRef.setAttribute('x', `${x}px`)
+  rectRef.setAttribute('y', `${y}px`)
+  rectRef.setAttribute('width', `${width}px`)
+  rectRef.setAttribute('height', `${height}px`)
+}
+
 const EditorUpper: FC<EditorUpperProps> = ({ zoom }) => {
   const rectRef = useRef<SVGRectElement>(null)
+  const parentRef = useRef<SVGRectElement>(null)
   const upperRef = useRef<SVGSVGElement>(null)
   useAllCooperatorSelection(upperRef, zoom)
 
   useEffect(() => {
+    const rect = rectRef.current
+    const parent = parentRef.current
     const subscriber = SelectedNodeInfoSubject.pipe(
       switchMap((id) => (notEmpty(id) ? AllNodeInfoObservableMap.observeKey(id) : of(null))),
+      switchMap((nodeInfo) => {
+        if (nodeInfo && nodeInfo.parentStructureInfo) {
+          const parentId = getNodeIdInStructTree(nodeInfo.parentStructureInfo)
+          if (notEmpty(parentId)) {
+            return AllNodeInfoObservableMap.observeKey(parentId).pipe(
+              map((pInfo) => [nodeInfo, pInfo])
+            )
+          }
+        }
+        return of([nodeInfo, null])
+      }),
       combineLatestWith(zoom.subject)
-    ).subscribe(([nodeInfo, transform]) => {
-      if (nodeInfo && rectRef.current) {
-        const {
-          x: staticX,
-          y: staticY,
-          width: staticWidth,
-          height: staticHeight
-        } = nodeInfo.position
-        const { x, y } = zoom.apply({ x: staticX, y: staticY })
-        const width = staticWidth * transform.k
-        const height = staticHeight * transform.k
-
-        rectRef.current.style.visibility = 'visible'
-        rectRef.current.setAttribute('x', `${x}px`)
-        rectRef.current.setAttribute('y', `${y}px`)
-        rectRef.current.setAttribute('width', `${width}px`)
-        rectRef.current.setAttribute('height', `${height}px`)
-      } else if (rectRef.current) {
-        rectRef.current.style.visibility = 'hidden'
+    ).subscribe(([[nodeInfo, pInfo], transform]) => {
+      if (nodeInfo && rect && parent) {
+        drawRect(nodeInfo.position, zoom, transform, rect)
+        if (pInfo) {
+          drawRect(pInfo.position, zoom, transform, parent)
+        }
+      }
+      if (rect && !nodeInfo) {
+        rect.style.visibility = 'hidden'
+      }
+      if (parent && !pInfo) {
+        parent.style.visibility = 'hidden'
       }
     })
-    return () => subscriber.unsubscribe()
+    return () => {
+      subscriber.unsubscribe()
+      if (rect) {
+        rect.style.visibility = 'hidden'
+      }
+      if (parent) {
+        parent.style.visibility = 'hidden'
+      }
+    }
   }, [zoom])
 
   return (
     <Upper ref={upperRef} xmlns="http://www.w3.org/2000/svg">
+      <rect ref={parentRef} fill="none" stroke="yellow" strokeWidth={2} strokeDasharray="4" />
       <rect ref={rectRef} fill="none" stroke="blue" strokeWidth={2} />
     </Upper>
   )

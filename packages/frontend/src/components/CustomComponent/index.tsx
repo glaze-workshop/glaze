@@ -10,25 +10,26 @@ interface CustomComponentProps {
 }
 
 const CustomComponent: FC<CustomComponentProps> = ({ componentName }) => {
-  const { loading, error, errorMsg, info, Component } = useCustomComponent(componentName)
+  // const { loading, error, errorMsg, info, Component } = useCustomComponent(componentName)
 
-  useEffect(() => {
-    Log.EditorCustomComponent(`${componentName} info`, info)
-  }, [info])
-
-  const fallback = `Component ${componentName} loading...`
-
-  return error ? (
-    <h1>{errorMsg || `Request for ${componentName} error`}</h1>
-  ) : (
-    <Suspense fallback={fallback}>
-      {Component && (
-        <ErrorBoundary errorContent={`Something wrong in ${componentName}`}>
-          <Component />
-        </ErrorBoundary>
-      )}
-    </Suspense>
-  )
+  // useEffect(() => {
+  //   Log.EditorCustomComponent(`${componentName} info`, info)
+  // }, [info])
+  //
+  // const fallback = `Component ${componentName} loading...`
+  //
+  // return error ? (
+  //   <h1>{errorMsg || `Request for ${componentName} error`}</h1>
+  // ) : (
+  //   <Suspense fallback={fallback}>
+  //     {Component && (
+  //       <ErrorBoundary errorContent={`Something wrong in ${componentName}`}>
+  //         <Component />
+  //       </ErrorBoundary>
+  //     )}
+  //   </Suspense>
+  // )
+  return <></>
 }
 
 export default CustomComponent

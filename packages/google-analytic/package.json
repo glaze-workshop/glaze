@@ -14,7 +14,7 @@
   "devDependencies": {
     "@glaze/plugin-bundler": "workspace:*",
     "@glaze/types": "workspace:*",
-    "cos-nodejs-sdk-v5": ">=2.11.6",
-    "esbuild": "^0.14.25"
+    "cos-nodejs-sdk-v5": "^2.11.14",
+    "esbuild": "^0.15.12"
   }
 }

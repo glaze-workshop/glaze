@@ -1,6 +1,5 @@
 import { ValidationError } from 'yup'
 import { ErrorCode } from './error.code'
-import { t } from 'i18next'
 /**
  * 错误体
  */
@@ -24,10 +23,13 @@ export interface ErrorInfo {
 /**
  * 抽象
  */
-export abstract class AbstractError<T extends ErrorCode = ErrorCode> extends Error implements ErrorInfo {
+export abstract class AbstractError<T extends ErrorCode = ErrorCode>
+  extends Error
+  implements ErrorInfo
+{
   error: true = true
   status: T
-  constructor (message: string, status: T, name?: string, stack?: string) {
+  constructor(message: string, status: T, name?: string, stack?: string) {
     super(message)
     this.status = status
     if (name) {
@@ -41,7 +43,7 @@ export abstract class AbstractError<T extends ErrorCode = ErrorCode> extends Err
  * 服务器异常
  */
 export class ServerError extends AbstractError<ErrorCode.ServerError> {
-  constructor (error: Error) {
+  constructor(error: Error) {
     super(error.message, ErrorCode.ServerError, error.name, error.stack)
   }
 }
@@ -54,7 +56,7 @@ export class GlazeValidationError extends AbstractError<ErrorCode.ValidationErro
    * 验证的失败信息
    */
   validation: ValidationError
-  constructor (validationError: ValidationError) {
+  constructor(validationError: ValidationError) {
     super(validationError.message, ErrorCode.ValidationError)
     this.validation = validationError
   }

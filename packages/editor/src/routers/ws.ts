@@ -6,7 +6,6 @@ import { server } from '../center'
 const wsRouter = express.Router()
 
 wsRouter.ws('/', (ws, req) => {
-  // @ts-ignore
   const connection = new LCPConnection(ws)
 
   server.addConnection(connection)

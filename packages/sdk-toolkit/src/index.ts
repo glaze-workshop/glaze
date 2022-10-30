@@ -11,6 +11,7 @@ export * from './upload'
 
 export async function createCommandLine(config: (program: Command) => void) {
   const program = new Command()
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
   program.version(require('../package.json').version)
   program.command('login').action(loginCommandAction)
 

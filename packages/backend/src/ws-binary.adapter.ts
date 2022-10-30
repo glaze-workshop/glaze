@@ -144,69 +144,69 @@ export class WsBinaryAdapter extends AbstractWsAdapter {
     }
   }
 
-  public bindErrorHandler(server: ws.Server) {
+  public bindErrorHandler(server: any) {
     server.on(CONNECTION_EVENT, (ws: any) =>
-      ws.on(ERROR_EVENT, (err: any) => this.logger.error(err))
-    )
-    server.on(ERROR_EVENT, (err: any) => this.logger.error(err))
-
-    return server
+      ws.on(ERROR_EVENT, (err: any) => this.logger.error(err)),
+    );
+    server.on(ERROR_EVENT, (err: any) => this.logger.error(err));
+    return server;
   }
 
+  // eslint-disable-next-line @typescript-eslint/ban-types
   public bindClientDisconnect(client: any, callback: Function) {
-    client.on(CLOSE_EVENT, callback)
+    client.on(CLOSE_EVENT, callback);
   }
 
   public async dispose() {
     const closeEventSignals = Array.from(this.httpServersRegistry)
       .filter(([port]) => port !== UNDERLYING_HTTP_SERVER_PORT)
-      .map(([_, server]) => new Promise(resolve => server.close(resolve)))
+      .map(([_, server]) => new Promise(resolve => server.close(resolve)));
 
-    await Promise.all(closeEventSignals)
-    this.httpServersRegistry.clear()
-    this.wsServersRegistry.clear()
+    await Promise.all(closeEventSignals);
+    this.httpServersRegistry.clear();
+    this.wsServersRegistry.clear();
   }
 
   protected ensureHttpServerExists(
     port: number,
-    httpServer = http.createServer()
+    httpServer = http.createServer(),
   ) {
     if (this.httpServersRegistry.has(port)) {
-      return
+      return;
     }
-    this.httpServersRegistry.set(port, httpServer)
+    this.httpServersRegistry.set(port, httpServer);
 
     httpServer.on('upgrade', (request, socket, head) => {
-      const baseUrl = 'ws://' + request.headers.host + '/'
-      const pathname = new URL(request.url!, baseUrl).pathname
-      const wsServersCollection = this.wsServersRegistry.get(port)
+      const baseUrl = 'ws://' + request.headers.host + '/';
+      const pathname = new URL(request.url!, baseUrl).pathname;
+      const wsServersCollection = this.wsServersRegistry.get(port);
 
-      let isRequestDelegated = false
-      for (const wsServer of wsServersCollection ?? []) {
+      let isRequestDelegated = false;
+      for (const wsServer of wsServersCollection??[]) {
         if (pathname === wsServer.path) {
-          wsServer.handleUpgrade(request, socket, head, ws => {
-            wsServer.emit('connection', ws, request)
-          })
-          isRequestDelegated = true
-          break
+          wsServer.handleUpgrade(request, socket, head, (ws: unknown) => {
+            wsServer.emit('connection', ws, request);
+          });
+          isRequestDelegated = true;
+          break;
         }
       }
       if (!isRequestDelegated) {
-        socket.destroy()
+        socket.destroy();
       }
-    })
-    return httpServer
+    });
+    return httpServer;
   }
 
   protected addWsServerToRegistry(
     wsServer: ws.Server,
     port: number,
-    path: string
+    path: string,
   ) {
-    const entries = this.wsServersRegistry.get(port) ?? []
-    entries.push(wsServer)
+    const entries = this.wsServersRegistry.get(port) ?? [];
+    entries.push(wsServer);
 
-    wsServer.path = path
-    this.wsServersRegistry.set(port, entries)
+    wsServer.path = path;
+    this.wsServersRegistry.set(port, entries);
   }
 }

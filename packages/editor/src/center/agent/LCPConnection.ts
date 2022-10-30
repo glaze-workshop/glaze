@@ -10,7 +10,7 @@ class LCPConnection {
   private subscribers: Set<LCPSocketSubscriber> = new Set()
   private closeCallback: Set<() => void> = new Set()
 
-  constructor(ws: WebSocket, handler?: HeartbeatHandler) {
+  constructor (ws: WebSocket, handler?: HeartbeatHandler) {
     this.ws = ws
     this.heartbeatHandler = handler || new SimpleHeartbeatHandler()
 
@@ -18,7 +18,7 @@ class LCPConnection {
     this.setup()
   }
 
-  private setup() {
+  private setup () {
     const ws = this.ws
 
     ws.on('message', (s: string) => {
@@ -46,7 +46,7 @@ class LCPConnection {
     })
   }
 
-  sendMessage(data: any) {
+  sendMessage (data: any) {
     Log.connection('sendMessage', data)
     const raw = tryStringify(data)
 
@@ -57,7 +57,7 @@ class LCPConnection {
     }
   }
 
-  onMessage(subscriber: LCPSocketSubscriber): () => void {
+  onMessage (subscriber: LCPSocketSubscriber): () => void {
     this.subscribers.add(subscriber)
 
     let unsubscribed = false
@@ -71,11 +71,11 @@ class LCPConnection {
     }
   }
 
-  onClose(cb: () => void) {
+  onClose (cb: () => void) {
     this.closeCallback.add(cb)
   }
 
-  close() {
+  close () {
     this.ws.close()
   }
 }

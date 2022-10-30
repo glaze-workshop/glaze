@@ -1,15 +1,23 @@
 import { Box } from '@chakra-ui/react'
-import React, { FC } from 'react'
+import React, { FC, ReactNode } from 'react'
 import { Link } from 'react-router-dom'
 import { useCurrentRouterMatch } from '../../hooks/router.hook'
 
 export interface NavLinkProps {
   to: string
+  children?: ReactNode
 }
-const NavLink:FC<NavLinkProps> = ({ to, children }) => {
+const NavLink: FC<NavLinkProps> = ({ to, children }) => {
   const isMatch = useCurrentRouterMatch(to)
   return (
-    <Box as={Link} to={to} cursor="pointer" bg={isMatch ? 'gray.200' : 'transparent'} p="3px 15px" rounded="base">
+    <Box
+      as={Link}
+      to={to}
+      cursor="pointer"
+      bg={isMatch ? 'gray.200' : 'transparent'}
+      p="3px 15px"
+      rounded="base"
+    >
       {children}
     </Box>
   )

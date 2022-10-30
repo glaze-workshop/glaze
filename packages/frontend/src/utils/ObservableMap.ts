@@ -8,11 +8,15 @@ export class ObservableMap<K, V> {
   }
 
   set = (key: K, value: V) => {
+    this.update(key, () => value)
+  }
+
+  update = (key: K, f: (preValue?: V) => V) => {
     const subject = this.mapSubject.value.get(key)
     if (subject) {
-      subject.next(value)
+      subject.next(f(subject.value))
     } else {
-      this.map.set(key, new BehaviorSubject(value))
+      this.map.set(key, new BehaviorSubject(f()))
       this.mapSubject.next(this.map)
     }
   }
@@ -21,6 +25,8 @@ export class ObservableMap<K, V> {
     return this.map.get(key)
   }
 
+  getValue = (key: K) => this.map.get(key)?.value
+
   delete = (key: K) => {
     this.map.delete(key)
     this.mapSubject.next(this.map)
@@ -28,8 +34,8 @@ export class ObservableMap<K, V> {
 
   observeKey = (key: K) => {
     return this.mapSubject.pipe(
-      map(map => map.get(key)),
-      switchMap(valueSubject => valueSubject || of(null))
+      map((map) => map.get(key)),
+      switchMap((valueSubject) => valueSubject || of(null))
     )
   }
 }

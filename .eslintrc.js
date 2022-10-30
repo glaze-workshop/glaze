@@ -10,7 +10,7 @@ module.exports = {
     'plugin:@typescript-eslint/recommended',
     'plugin:react/jsx-runtime',
     'plugin:react-hooks/recommended',
-    'plugin:prettier/recommended',
+    'prettier',
   ],
   parser: '@typescript-eslint/parser',
   parserOptions: {
@@ -35,25 +35,17 @@ module.exports = {
         },
       },
     ],
+    'space-before-function-paren': 0,
 
     'no-useless-constructor': 0,
     '@typescript-eslint/interface-name-prefix': 'off',
     '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
+    '@typescript-eslint/no-var-requires': 'off',
     'node/no-callback-literal': 'off',
 
     '@typescript-eslint/no-empty-interface': 'off',
     '@typescript-eslint/no-non-null-assertion': 'off',
-    'prettier/prettier': [
-      'error',
-      {
-        singleQuote: true,
-        tabWidth: 2,
-        useTabs: false,
-        endOfLine: 'auto',
-        semi: false,
-      },
-    ],
   },
 }

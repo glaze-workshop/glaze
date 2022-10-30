@@ -11,4 +11,5 @@ export const getUploadCredential = () =>
 export const COS_BASIC_INFO_PATH = 'basic'
 export const FULL_COS_BASIC_INFO_PATH = `${COS_PREFIX}/${COS_BASIC_INFO_PATH}`
 
-export const getCosBasicInfo = () => axios.get<CosBasicInfo>(FULL_COS_BASIC_INFO_PATH)
+export const getCosBasicInfo = () =>
+  axios.get<CosBasicInfo>(FULL_COS_BASIC_INFO_PATH)

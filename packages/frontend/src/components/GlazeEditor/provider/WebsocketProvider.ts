@@ -96,11 +96,15 @@ export class WebSocketProvider {
     websocket.onmessage = (event) => {
       const encoder = this.readMessage(new Uint8Array(event.data))
       if (encoding.length(encoder) > 1) {
-        websocket.send(encoding.toUint8Array(encoder))
+        this.broadcastMessage(encoding.toUint8Array(encoder))
       }
     }
+    websocket.onerror = (e) => {
+      console.log('websocket dead', e)
+    }
 
-    websocket.onclose = () => {
+    websocket.onclose = (e) => {
+      console.log('websocket closed', e)
       this.ws = null
       // update awareness (all users except local left)
       awarenessProtocol.removeAwarenessStates(
@@ -111,7 +115,8 @@ export class WebSocketProvider {
         this
       )
     }
-    websocket.onopen = () => {
+    websocket.onopen = (e) => {
+      console.log('websocket open now', e)
       const encoder = encoding.createEncoder()
       encoding.writeVarUint(encoder, EditorMessageEvent.AUTH)
       const token = getToken()

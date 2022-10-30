@@ -13,7 +13,7 @@
     },
     // nestjs 的 debug 方式
     {
-      "type": "pwa-node",
+      "type": "node",
       "request": "attach",
       "name": "Debug nestjs",
       "port": 9229,

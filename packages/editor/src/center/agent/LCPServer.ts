@@ -13,7 +13,7 @@ import LCPConnection from './LCPConnection'
 
 class LCPServer {
   private controller: LCPServerController
-  private connections: number = 0
+  private connections = 0
   private subscribeMap: Map<string, Set<LCPServerSubscribeInfo>> = new Map()
 
   constructor(controller: LCPServerController) {

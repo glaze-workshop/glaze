@@ -12,6 +12,10 @@ export interface StructureProxy {
   readonly yNode: Y.Map<any>
 }
 
+export const getNodeIdInStructTree = (tree: Y.Map<any>): string => tree?.get('nodeId')
+export const getChildrenInStructTree = (tree: Y.Map<any>): Y.Array<Y.Map<any>> =>
+  tree.get('children')
+
 export interface NodeProxy {
   /** 节点的id */
   id: string
@@ -101,11 +105,11 @@ export function useYjsRerender(...yjsObjects: Y.AbstractType<any>[]) {
   const forceRender = useForceRerender()
   useEffect(() => {
     yjsObjects.forEach((obj) => {
-      obj.observe(forceRender)
+      obj?.observe(forceRender)
     })
     return () => {
       yjsObjects.forEach((obj) => {
-        obj.unobserve(forceRender)
+        obj?.unobserve(forceRender)
       })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

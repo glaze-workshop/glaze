@@ -33,8 +33,7 @@ export class WSSharedDoc {
     redisService.sub
       .subscribe(this.docChannel, this.awarenessChannel)
       .then(() => {
-        redisService.sub.on('messageBuffer', (channel, update, ...other) => {
-          console.log(other)
+        redisService.sub.on('messageBuffer', (channel, update) => {
           const channelId = channel.toString()
           if (channelId === this.docChannel) {
             Y.applyUpdate(this.doc, update, 'redis')
@@ -93,7 +92,7 @@ export class WSSharedDoc {
       this.send(c, buff)
     })
     if (origin !== 'database' && origin !== 'redis') {
-      await this.redisService.pub.publishBuffer(
+      await this.redisService.pub.publish(
         this.docChannel,
         Buffer.from(update)
       )
@@ -103,13 +102,13 @@ export class WSSharedDoc {
 
   destroy = () => {
     this.doc.destroy()
-    this.redisService.sub.unsubscribe([this.docChannel, this.awarenessChannel])
+    this.redisService.sub.unsubscribe(this.docChannel, this.awarenessChannel)
   }
 
   send = (client: ws.WebSocket, message: Uint8Array) => {
     if (client.readyState === WebSocket.OPEN) {
       client.send(message, (err) => {
-        err !== undefined && this.close(client)
+        err && this.close(client)
       })
     }
   }

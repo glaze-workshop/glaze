@@ -17,13 +17,17 @@ export const createFolder = (folderDTO: FolderCreationDTO) =>
 
 export const FOLDER_PATH_WITH_ID = ':id'
 export const FULL_FOLDER_PATH_WITH_ID = `${FOLDER_PREFIX}/${FOLDER_PATH_WITH_ID}`
-export const FULL_FOLDER_PATH_WITH_ID_TO_PATH = compile<{id: number}>(FULL_FOLDER_PATH_WITH_ID)
+export const FULL_FOLDER_PATH_WITH_ID_TO_PATH = compile<{ id: number }>(
+  FULL_FOLDER_PATH_WITH_ID
+)
 
 export const updateFolder = (folderDTO: FolderUpdateDTO) =>
   axios.put(FULL_FOLDER_PATH_WITH_ID_TO_PATH({ id: folderDTO.id }), folderDTO)
 
 export const getFolder = (id: number) =>
-  axios.get<Entity.ProjectFolderEntity>(FULL_FOLDER_PATH_WITH_ID_TO_PATH({ id }))
+  axios.get<Entity.ProjectFolderEntity>(
+    FULL_FOLDER_PATH_WITH_ID_TO_PATH({ id })
+  )
 
 export const deleteFolder = (id: number) =>
   axios.delete(FULL_FOLDER_PATH_WITH_ID_TO_PATH({ id }))

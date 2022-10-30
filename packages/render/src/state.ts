@@ -31,5 +31,5 @@ export function useNodeInfoObserve(
     return () => {
       NodeMap.delete(node.id)
     }
-  })
+  }, [node.id])
 }

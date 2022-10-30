@@ -1,12 +1,36 @@
 import styled from '@emotion/styled'
-import { Point, Transform, Zoom } from '@glaze/zoom'
+import { Point } from '@glaze/zoom'
 import normalizeWheel from 'normalize-wheel'
-import React, { FC, memo, useEffect, useRef } from 'react'
+import React, { FC, memo, MouseEventHandler, useCallback, useEffect, useRef } from 'react'
 import EditorActionDetect from './EditorActionDetect'
 import EditorContent from './EditorContent'
 import EditorUpper from './EditorUpper'
-import { EditorPositionSubject, useProjectIdChange } from './state'
+import {
+  AllNodeInfoObservableMap,
+  DuplicateNodeInfo,
+  DuplicateNodeObservableMap,
+  EditorPositionSubject,
+  FullNodeInfo,
+  getLeftTop,
+  SelectedNodeInfoSubject,
+  useProjectIdChange
+} from './state'
 import { zoom } from './state'
+import {
+  combineLatest,
+  combineLatestWith,
+  filter,
+  fromEvent,
+  map,
+  of,
+  share,
+  Subscription,
+  switchMap
+} from 'rxjs'
+import EditorSharedDocument, { editorSharedDocument } from './EditorSharedDocument'
+import { notEmpty } from '@glaze/common'
+import { getChildrenInStructTree } from './yjs.hook'
+
 export interface GlazeEditorProps {}
 
 const EditorContainer = styled.div`
@@ -33,15 +57,13 @@ const GlazeEditor: FC<GlazeEditorProps> = () => {
         event.preventDefault()
         const e = normalizeWheel(event)
         if (event.ctrlKey) {
-          const k = zoom.transform.k * Math.pow(2, 0.001 * -e.pixelY)
+          const k = zoom.transform.k * Math.pow(2, 0.003 * -e.pixelY)
           const { x = 0, y = 0 } = EditorPositionSubject.value ?? {}
           const p: Point = { x: event.clientX - x, y: event.clientY - y }
           zoom.scaleBy(k, p)
-        } else if (event.shiftKey) {
-          zoom.scrollX(e.pixelY * 0.3)
-        } else {
-          zoom.scrollY(e.pixelY * 0.3)
         }
+        zoom.scrollX(-e.pixelX * 0.3)
+        zoom.scrollY(-e.pixelY * 0.3)
       }
       el.addEventListener('wheel', onWheel)
       return () => {
@@ -50,11 +72,96 @@ const GlazeEditor: FC<GlazeEditorProps> = () => {
     }
   }, [])
 
+  const downSubscription = useRef<Subscription | null>(null)
+  const duplicateSubscription = useRef<Subscription | null>(null)
+  const handleMouseDown = useCallback<MouseEventHandler>((downEvent) => {
+    downEvent.stopPropagation()
+    downEvent.preventDefault()
+    if (container.current) {
+      const { x = 0, y = 0 } = EditorPositionSubject.value ?? {}
+      const rawDownPoint: Point = {
+        x: downEvent.clientX - x,
+        y: downEvent.clientY - y
+      }
+      const rawInvertDownPoint = zoom.invert(rawDownPoint)
+      const id = editorSharedDocument.selectNode(rawInvertDownPoint)
+      if (id) {
+        const node = AllNodeInfoObservableMap.getValue(id)
+        if (node) {
+          const relativePos: Point = {
+            x: rawInvertDownPoint.x - node.position.x,
+            y: rawInvertDownPoint.y - node.position.y
+          }
+
+          downSubscription.current = fromEvent<MouseEvent>(
+            container.current,
+            'mousemove'
+          ).subscribe((e) => {
+            const selectedId = SelectedNodeInfoSubject.value
+            if (selectedId) {
+              const node = AllNodeInfoObservableMap.getValue(selectedId)
+              if (node) {
+                const { x = 0, y = 0 } = EditorPositionSubject.value ?? {}
+                const rawP: Point = { x: e.clientX - x, y: e.clientY - y }
+                const p = zoom.invert(rawP)
+                editorSharedDocument.moveNode(p, node, relativePos)
+              }
+            }
+          })
+
+          // duplicateSubscription.current = SelectedNodeInfoSubject.pipe(
+          //   filter(notEmpty),
+          //   switchMap((id) => DuplicateNodeObservableMap.observeKey(id)),
+          //   filter(notEmpty),
+          //   filter((nodes) => nodes.size > 1)
+          // ).subscribe((nodes) => {
+          //   let leftTopMin = Infinity
+          //   let leftMostNode: DuplicateNodeInfo | null = null
+          //   for (const node of nodes) {
+          //     const leftTop = getLeftTop(node.position)
+          //     const leftTopValue = leftTop.x + leftTop.y
+          //     if (leftTopValue < leftTopMin) {
+          //       leftTopMin = leftTopValue
+          //       leftMostNode = node
+          //     }
+          //   }
+          //   if (leftMostNode) {
+          //     editorSharedDocument.deleteNodeInParent(
+          //       leftMostNode.nodeId,
+          //       leftMostNode.parentStructureInfo
+          //         ? getChildrenInStructTree(leftMostNode.parentStructureInfo)
+          //         : undefined
+          //     )
+          //   }
+          // })
+        }
+      }
+    }
+  }, [])
+
+  const unsubscribeAll = useCallback(() => {
+    downSubscription.current?.unsubscribe()
+    duplicateSubscription.current?.unsubscribe()
+  }, [])
+
+  useEffect(() => {
+    return () => unsubscribeAll()
+  }, [unsubscribeAll])
+
+  const handleMouseUp = useCallback<MouseEventHandler>(() => {
+    unsubscribeAll()
+  }, [unsubscribeAll])
+
   return (
-    <EditorContainer ref={container}>
+    <EditorContainer
+      ref={container}
+      onMouseDown={handleMouseDown}
+      onMouseUp={handleMouseUp}
+      onMouseLeave={handleMouseUp}
+    >
       <EditorContent zoom={zoom} />
       <EditorUpper zoom={zoom} />
-      <EditorActionDetect />
+      {/* <EditorActionDetect /> */}
     </EditorContainer>
   )
 }

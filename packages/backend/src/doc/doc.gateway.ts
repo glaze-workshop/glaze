@@ -2,7 +2,7 @@
 https://docs.nestjs.com/websockets/gateways#gateways
 */
 
-import { EditorMessageEvent, GlazeErr, notEmpty } from '@glaze/common'
+import { EditorMessageEvent, GlazeErr, notEmpty, ProjectApi } from '@glaze/common'
 import {
   MessageBody,
   SubscribeMessage,
@@ -21,7 +21,7 @@ import qs from 'query-string'
 import { DocService } from './doc.service'
 import { AuthService } from '../auth/auth.service'
 
-@WebSocketGateway({ path: '/ws-doc' })
+@WebSocketGateway(3000, { path: '/ws-doc' })
 export class DocGateway
   implements OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit
 {
@@ -102,12 +102,12 @@ export class DocGateway
 
       if (res.query.projectId) {
         const projectId = Number(res.query.projectId)
+        console.log('User connected', projectId)
         this.clientProjectIdMap.set(client, projectId)
         const doc = await this.docService.getDocByProjectId(projectId)
         doc.initClient(client)
       }
     }
-    console.log('User connected')
   }
 
   handleDisconnect(client: ws.WebSocket) {
@@ -116,7 +116,7 @@ export class DocGateway
       this.docService.closeClientByProjectId(projectId, client)
       this.clientProjectIdMap.delete(client)
     }
-    console.log('User disconnected')
+    console.log('User disconnected', projectId)
   }
 
   afterInit(server: ws.WebSocket) {

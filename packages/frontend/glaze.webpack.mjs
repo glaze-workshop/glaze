@@ -6,11 +6,13 @@ const glazeConfig = {
       target: 'http://127.0.0.1:3000'
     },
     '/ws-doc': {
-      target: 'ws://127.0.0.1:3000',
+      target: 'ws://localhost:3000',
+      logLevel: 'debug',
       ws: true
     },
     '/ws-message': {
-      target: 'ws://127.0.0.1:3000',
+      target: 'ws://localhost:3000',
+      logLevel: 'debug',
       ws: true
     }
   }

@@ -19,7 +19,7 @@ import { EditorMessageEvent, GlazeErr } from '@glaze/common'
 import BidirectionalMap from '../utils/BidirectionalMap'
 import { Logger } from '@nestjs/common'
 
-@WebSocketGateway({ path: '/ws-message' })
+@WebSocketGateway(3000, { path: '/ws-message' })
 export class MessageGateway
   implements OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit
 {

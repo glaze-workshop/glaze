@@ -7,7 +7,7 @@ export const EditorRequestType = {
 
 export const EditorSubscribeType = {
   ComponentList: 'EDITOR_SUBSCRIBE_COMPONENTLIST',
-  Component: (componentName: string) =>
+Component: (componentName: string) =>
     `EDITOR_SUBSCRIBE_COMPONENT_${componentName}`
 }
 

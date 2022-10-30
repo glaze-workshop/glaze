@@ -27,6 +27,8 @@ app.get(RouterPrefix.Greeting, (req, res, next) => {
   res.send('Hello editor')
 })
 
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log(`Editor local server listen at http://localhost:${PORT}`)
 })
+
+server.close()

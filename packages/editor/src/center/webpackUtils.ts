@@ -1,5 +1,5 @@
 import path from 'path'
-import { webpack } from 'webpack'
+import { Configuration, webpack } from 'webpack'
 import { CleanWebpackPlugin } from 'clean-webpack-plugin'
 
 import { CompilerCreatorOptions } from './type'
@@ -8,7 +8,7 @@ import { componentStaticPrefix } from './config'
 /**
  * Create base config
  */
-const createWebpackConfigBase = () => {
+const createWebpackConfigBase = (): Configuration => {
   return {
     mode: 'development',
     entry: '', // override
@@ -51,7 +51,6 @@ export const createComponentCompiler = ({ componentName, entry, onUpdate }: Comp
   config.output.filename = `${componentName}-[hash:5].js`
   // console.log('config', config)
 
-  // @ts-ignore
   const compiler = webpack(config)
 
   compiler.watch({}, (_, stats) => {

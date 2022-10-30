@@ -5,6 +5,7 @@ import * as decoding from 'lib0/decoding'
 import { EditorMessageEvent, GlazeErr } from '@glaze/common'
 import { useMatch } from 'react-router-dom'
 import { useQueryClient } from 'react-query'
+import { wsUrl } from '@glaze/common/src/websocket/url'
 
 export function useWebSocketMessage() {
   const matchLogin = useMatch('/login')
@@ -17,7 +18,7 @@ export function useWebSocketMessage() {
 
   useEffect(() => {
     if (enableWebSocket) {
-      client.current = new WebSocket('ws://localhost:3000/ws-message')
+      client.current = new WebSocket(`${wsUrl()}/ws-message`)
       client.current.binaryType = 'arraybuffer'
       client.current.onopen = () => {
         const encoder = encoding.createEncoder()

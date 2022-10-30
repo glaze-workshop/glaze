@@ -4,23 +4,23 @@ https://docs.nestjs.com/providers#services
 
 import { Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
-import Redis from 'ioredis'
+import Redis, { RedisOptions } from 'ioredis'
 
 @Injectable()
 export class RedisService {
-  readonly redis: Redis.Redis
+  readonly redis: Redis
   readonly host: string
   readonly port: number
   readonly keyPrefix: string
-  readonly pub: Redis.Redis
-  readonly sub: Redis.Redis
+  readonly pub: Redis
+  readonly sub: Redis
 
   constructor(private readonly configService: ConfigService) {
     this.host = this.configService.get('REDIS_HOST')!
     this.port = Number(this.configService.get('REDIS_PORT')!)
     this.keyPrefix = configService.get('REDIS_PREFIX')!
 
-    const redisConfig: Redis.RedisOptions = {
+    const redisConfig: RedisOptions = {
       host: this.host,
       port: this.port,
       keyPrefix: this.keyPrefix

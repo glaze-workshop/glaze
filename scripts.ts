@@ -13,17 +13,18 @@ const allFilters = [...frontend, ...type, ...common]
  * Support win
  * @param cmd command line
  */
-function crossEnvCommand (cmd: string) {
+function crossEnvCommand(cmd: string) {
   return /^win/.test(process.platform) ? `${cmd}.cmd` : cmd
 }
 
 const pnpm = crossEnvCommand('pnpm')
 
-function dev () {
-  spawn(pnpm, ['dev', ...allFilters, '--stream', '--parallel'], { stdio: 'inherit' })
+function dev() {
+  spawn(pnpm, [...allFilters, '--stream', '--parallel','dev'], {
+    stdio: 'inherit',
+  })
 }
 
-program
-  .option('-d, --dev', '开发 glaze', dev)
+program.option('-d, --dev', '开发 glaze', dev)
 
 program.parse()

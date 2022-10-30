@@ -12,7 +12,6 @@ import {
   parseFilePathToOutput,
 } from './bundle'
 import type { GlazeConfig } from '@glaze/types'
-import * as _ from 'lodash'
 import { GlazeErr, PluginApi, PluginDto } from '@glaze/common'
 
 export async function generatePluginConfigAction() {
