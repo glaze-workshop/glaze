@@ -2,6 +2,7 @@ import { build } from 'esbuild'
 import { GlazePath } from '@glaze/sdk-toolkit'
 import { GlazeConfig } from '@glaze/types'
 import * as path from 'path'
+import { handleComponentsBuild } from '@glaze/editor'
 
 export function buildFiles(files: string[], watch = false) {
   return build({
@@ -12,13 +13,16 @@ export function buildFiles(files: string[], watch = false) {
     target: 'es2020',
     bundle: true,
     sourcemap: watch,
-    watch,
+    watch: watch,
   })
 }
 
 export async function buildFileWithPanicByConfigFile(configFile: GlazeConfig) {
+  handleComponentsBuild(configFile.components)
   const entries = configFile.plugins.map((plugin) => plugin.main)
+
   const res = await buildFiles(entries)
+  console.log(res)
   if (res.errors.length > 0) {
     process.exit(1)
   }

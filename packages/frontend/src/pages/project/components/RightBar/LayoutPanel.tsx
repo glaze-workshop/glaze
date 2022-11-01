@@ -10,7 +10,7 @@ import {
   AccordionButton
 } from '@chakra-ui/react'
 import { LRpositionOption, TBpositionOption, lengthOption } from './layout.panel'
-import { PositionType } from '../../../../schema/layout'
+import { PositionType } from '@glaze/types'
 import LayoutPanelUnit from './LayoutPanelUnit'
 import { widthUpdater, heightUpdater, positionUpdater } from './yjsMapUpdater'
 

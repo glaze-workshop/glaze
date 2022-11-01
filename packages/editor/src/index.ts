@@ -1,34 +1,49 @@
 import express from 'express'
 import expressWs from 'express-ws'
 import cors from 'cors'
-import path from 'path'
 
 import { PORT, RouterPrefix } from './config'
+import { GlazeComponentConfig } from '@glaze/types'
+import { GlazePath } from '@glaze/sdk-toolkit'
+import { handleStartBuild, handleStartWatch, server } from './center'
+import LCPConnection from './center/agent/LCPConnection'
 
-const app = express()
-const { app: appWs } = expressWs(app)
+export const handleComponentsWatch = (componentsConfigs: GlazeComponentConfig[]) => {
+  componentsConfigs.map(handleStartWatch)
+  const app = express()
+  expressWs(app)
 
-app.use(cors())
+  app.use(cors())
 
-/**
- * WebSocket Router
- */
-app.use(RouterPrefix.Ws, require('./routers/ws').default)
+  const wsRouter = express.Router()
 
-/**
- * (static) Component Resources
- */
-app.use(RouterPrefix.Component, express.static(path.join(__dirname, '../lib/')))
+  wsRouter.ws('/', (ws, req) => {
+    const connection = new LCPConnection(ws)
 
-/**
- * Other http routes
- */
-app.get(RouterPrefix.Greeting, (req, res, next) => {
-  res.send('Hello editor')
-})
+    server.addConnection(connection)
+  })
+  /**
+   * WebSocket Router
+   */
+  app.use(RouterPrefix.Ws, wsRouter)
 
-const server = app.listen(PORT, () => {
-  console.log(`Editor local server listen at http://localhost:${PORT}`)
-})
+  /**
+   * (static) Component Resources
+   */
+  app.use(RouterPrefix.Component, express.static(GlazePath.componentDistPath))
 
-server.close()
+  /**
+   * Other http routes
+   */
+  app.get(RouterPrefix.Greeting, (req, res, next) => {
+    res.send('Hello editor')
+  })
+
+  app.listen(PORT, () => {
+    console.log(`Editor local server listen at http://localhost:${PORT}`)
+  })
+}
+
+export const handleComponentsBuild = (componentsConfigs: GlazeComponentConfig[]) => {
+  componentsConfigs.map(handleStartBuild)
+}

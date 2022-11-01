@@ -34,6 +34,7 @@ export * as Entity from './entity'
 export * as ResType from './res.types'
 
 export * from './websocket/event'
+export * from './websocket/url'
 
 export * from './editor/editor.type'
 export * from './editor/lcp.type'

@@ -88,34 +88,39 @@ async function build(inputOptions: RollupWatchOptions): Promise<unknown> {
 
   const start = Date.now()
   const useStdout = !outputOptions[0].file && !outputOptions[0].dir
-  const bundle = await rollup(inputOptions)
-  if (useStdout) {
-    const output = outputOptions[0]
-    if (output.sourcemap && output.sourcemap !== 'inline') {
-      handleError({
-        code: 'ONLY_INLINE_SOURCEMAPS',
-        message:
-          'Only inline sourcemaps are supported when bundling to stdout.',
-      })
-    }
-    const { output: outputs } = await bundle.generate(output)
-    for (const file of outputs) {
-      let source: string | Uint8Array
-      if (file.type === 'asset') {
-        source = file.source
-      } else {
-        source = file.code
-      }
-      if (outputs.length > 1)
-        process.stdout.write(`\n${cyan(bold(`//→ ${file.fileName}:`))}\n`)
-      process.stdout.write(source as Buffer)
-    }
-    return
-  }
-  stderr(green(`created in ${bold(ms(Date.now() - start))}`))
 
-  await Promise.all(outputOptions.map(bundle.write))
-  await bundle.close()
+  try {
+    const bundle = await rollup(inputOptions)
+    if (useStdout) {
+      const output = outputOptions[0]
+      if (output.sourcemap && output.sourcemap !== 'inline') {
+        handleError({
+          code: 'ONLY_INLINE_SOURCEMAPS',
+          message:
+            'Only inline sourcemaps are supported when bundling to stdout.',
+        })
+      }
+      const { output: outputs } = await bundle.generate(output)
+      for (const file of outputs) {
+        let source: string | Uint8Array
+        if (file.type === 'asset') {
+          source = file.source
+        } else {
+          source = file.code
+        }
+        if (outputs.length > 1)
+          process.stdout.write(`\n${cyan(bold(`//→ ${file.fileName}:`))}\n`)
+        process.stdout.write(source as Buffer)
+      }
+      return
+    }
+    stderr(green(`created in ${bold(ms(Date.now() - start))}`))
+
+    await Promise.all(outputOptions.map(bundle.write))
+    await bundle.close()
+  } catch (e: any) {
+    handleError(e)
+  }
 }
 /**
  * 处理错误

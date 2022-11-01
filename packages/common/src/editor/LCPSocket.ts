@@ -25,7 +25,7 @@ class LCPSocket {
   private interval: number
 
   private ws: WebSocket
-  private openCount: number = 0
+  private openCount = 0
   private state: LCPSocketState = LCPSocketState.Closed
   private subscribers: Set<LCPSocketSubscriber> = new Set()
   private waitingTasks: (() => void)[] = []
@@ -35,7 +35,6 @@ class LCPSocket {
     this.url = url
 
     this.setHeartbeat(heartbeat, heartbeatInterval)
-    this.open()
   }
 
   private setHeartbeat(
@@ -142,7 +141,7 @@ class LCPSocket {
     this.nextHeartbeat()
   }
 
-  close(reopen: boolean = false) {
+  close(reopen = false) {
     clearTimeout(this.heartbeatTimeout) // clear either heartbeat request & timeout
 
     if (this.ws && this.ws.readyState === WebSocket.OPEN) {

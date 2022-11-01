@@ -1,6 +1,5 @@
 import * as Y from 'yjs'
-import { LayoutOption, PositionType } from '../../../../schema/layout'
-import { Length } from '../../../../schema/length'
+import { LayoutOption, PositionType, Length } from '@glaze/types'
 import { findPosArrTargetNoobIndex } from './layout.utils'
 
 export const widthUpdater = (yMap: any, newValue: Length): void => {
@@ -11,10 +10,7 @@ export const heightUpdater = (yMap: any, newValue: Length): void => {
   yMap.set(LayoutOption.HEIGHT, newValue)
 }
 
-export const positionUpdater = (
-  yMap: Y.Map<any>,
-  newValue: [PositionType, number]
-): void => {
+export const positionUpdater = (yMap: Y.Map<any>, newValue: [PositionType, number]): void => {
   const positionData = yMap.get(LayoutOption.POSITION)
   const { type } = positionData
   const targetAttr = newValue[0]

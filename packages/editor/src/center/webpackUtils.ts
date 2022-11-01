@@ -1,24 +1,21 @@
-import path from 'path'
 import { Configuration, webpack } from 'webpack'
-import { CleanWebpackPlugin } from 'clean-webpack-plugin'
-
-import { CompilerCreatorOptions } from './type'
 import { componentStaticPrefix } from './config'
+import { parseComponentFilename, parseComponentFilePathDir, parseComponentTargetPath } from '@glaze/sdk-toolkit'
 
 /**
  * Create base config
  */
-const createWebpackConfigBase = (): Configuration => {
+const createWebpackConfigBase = (entry: string, path: string, filename: string): Configuration => {
   return {
     mode: 'development',
-    entry: '', // override
+    entry, // override
     output: {
-      path: path.join(__dirname, '../../lib'),
+      path, // override
       library: {
         // type: 'umd'
         type: 'system'
       },
-      filename: '' // override
+      filename // override
     },
     devtool: 'source-map',
     resolve: {
@@ -28,11 +25,13 @@ const createWebpackConfigBase = (): Configuration => {
       rules: [
         {
           test: /.(jsx?|tsx?)/,
-          loader: 'babel-loader'
+          loader: 'babel-loader',
+          options: {
+            presets: ['@babel/preset-env', '@babel/preset-react', '@babel/preset-typescript']
+          }
         }
       ]
     },
-    plugins: [new CleanWebpackPlugin()],
     externals: {
       react: 'app:react',
       'react-dom': 'app:react-dom'
@@ -43,25 +42,12 @@ const createWebpackConfigBase = (): Configuration => {
 /**
  * Create compiler for component
  */
-export const createComponentCompiler = ({ componentName, entry, onUpdate }: CompilerCreatorOptions) => {
-  const config = createWebpackConfigBase()
-
-  config.entry = entry
-  config.output.path = `${config.output.path}/${componentName}`
-  config.output.filename = `${componentName}-[hash:5].js`
-  // console.log('config', config)
-
-  const compiler = webpack(config)
-
-  compiler.watch({}, (_, stats) => {
-    onUpdate({ hash: stats.hash.substring(0, 5) })
-  })
-
-  return compiler
+export const createComponentCompiler = (file: string) => {
+  const config = createWebpackConfigBase(file, parseComponentFilePathDir(file), parseComponentFilename(file))
+  return webpack(config)
 }
 
 /**
  * Webpack compiled target component result
  */
-export const componentTargetPath = (componentName: string, hash: string) =>
-  `${componentStaticPrefix}/${componentName}/${componentName}-${hash}.js`
+export const componentTargetPath = (file: string) => `${componentStaticPrefix}/${parseComponentTargetPath(file)}`

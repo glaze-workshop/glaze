@@ -1,14 +1,22 @@
-import { LengthUnit } from '../../../schema/length'
 import { ScreenProps } from '.'
-import { ComponentConfig, ControlType } from '../../../schema/config'
+import { ComponentConfig, ControlType, LengthUnit } from '@glaze/types'
+
 import { BasicComponentId } from '../basicComponentInfo'
 
 const ScreenConfig: ComponentConfig<ScreenProps> = {
   id: BasicComponentId.Screen,
   name: 'Screen',
-  props: {},
+  props: {
+    background: {
+      name: '背景',
+      type: ControlType.BACKGROUND,
+      default: {
+        backgroundColor: 'gray'
+      }
+    }
+  },
   defaultSize: {
-    width: [LengthUnit.FIXED, 375],
+    width: [LengthUnit.FIXED, 875],
     height: [LengthUnit.FIXED, 800]
   },
   hasChildren: true,

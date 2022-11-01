@@ -27,10 +27,7 @@ export const keyboardEventTarget = ({
 }
 
 export class KeyboardCenter {
-  private subscribersMap: Map<
-    KeyboardCenterTarget,
-    Set<KeyboardCenterSubscriber>
-  > = new Map() // target => { target, callback }
+  private subscribersMap: Map<KeyboardCenterTarget, Set<KeyboardCenterSubscriber>> = new Map() // target => { target, callback }
 
   isListening = false
   private teardown = emptyFn
@@ -48,7 +45,7 @@ export class KeyboardCenter {
       this.emit(target, e)
 
       // Delete 事件再触发
-      if (['Delete', 'Backspace'].includes(target)) {
+      if (['delete', 'backspace'].includes(target)) {
         this.emit(KeyboardCenterEvent.Delete, e)
       }
     }
@@ -91,8 +88,7 @@ export class KeyboardCenter {
   ): () => void {
     Log.EditorKeyboardGesture('subscribe', option)
 
-    const target =
-      typeof option === 'string' ? option : keyboardEventTarget(option)
+    const target = typeof option === 'string' ? option : keyboardEventTarget(option)
 
     const subscribers = this.subscribersMap.get(target) || new Set()
     if (!this.subscribersMap.has(target)) {
@@ -119,10 +115,7 @@ export class KeyboardCenter {
   /**
    * 触发事件
    */
-  private emit(
-    target: KeyboardCenterTarget,
-    e: KeyboardEvent | ClipboardEvent
-  ) {
+  private emit(target: KeyboardCenterTarget, e: KeyboardEvent | ClipboardEvent) {
     Log.EditorKeyboardGesture('emit', target, e)
 
     const subscribers = this.subscribersMap.get(target)

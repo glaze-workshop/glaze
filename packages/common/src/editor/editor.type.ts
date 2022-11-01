@@ -1,4 +1,6 @@
 // ========== Component 相关 ==========
+import { GlazeComponentConfig } from '@glaze/types'
+
 export const EditorRequestType = {
   ComponentList: 'EDITOR_REQUEST_COMPONENTLIST',
   Component: (componentName: string) =>
@@ -7,7 +9,7 @@ export const EditorRequestType = {
 
 export const EditorSubscribeType = {
   ComponentList: 'EDITOR_SUBSCRIBE_COMPONENTLIST',
-Component: (componentName: string) =>
+  Component: (componentName: string) =>
     `EDITOR_SUBSCRIBE_COMPONENT_${componentName}`
 }
 
@@ -19,27 +21,9 @@ export enum EditorComponentState {
 }
 
 export interface EditorComponentInfo {
-  name: string
+  id: string
+  name?: string
   state: EditorComponentState
   targetPath: string
-}
-
-export interface EditorComponentInfoInternal extends EditorComponentInfo {
-  sourcePath: string
-  compiler: any
-}
-
-// ...
-
-export enum EditorCenterEventType {
-  ComponentListUpdate = 'componentListUpdate',
-  ComponentCreate = 'componentCreate',
-  ComponentRemove = 'componentRemove',
-  ComponentUpdate = 'componentUpdate'
-}
-
-export interface EditorCenterEvent {
-  type: EditorCenterEventType
-  componentName?: string
-  requestUrl?: string
+  config: GlazeComponentConfig
 }

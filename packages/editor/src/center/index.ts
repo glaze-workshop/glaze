@@ -1,38 +1,32 @@
 import { EditorComponentState, EditorSubscribeType } from '@glaze/common'
-import path from 'path'
 import { debounce } from 'lodash'
 
 import { Log } from '../utils'
-import { ComponentsMonitorEventType } from './type'
-import { componentsRootPath, componentStaticPrefix } from './config'
 import LCPServer from './agent/LCPServer'
 import ComponentsController from './agent/ComponentsController'
-import ComponentsMonitor from './agent/ComponentsMonitor'
-import ComponentsCenter from './agent/ComponentsCenter'
 import { componentTargetPath, createComponentCompiler } from './webpackUtils'
+import { componentsCenter, EditorComponentInfoInternal } from './agent/ComponentsCenter'
+import { GlazeComponentConfig } from '@glaze/types'
 
 export const server = new LCPServer(new ComponentsController())
 
-export const componentsCenter = new ComponentsCenter()
+export const handleStartWatch = (config: GlazeComponentConfig) => {
+  Log.center(`create component: ${config.id}`, config)
 
-const monitor = new ComponentsMonitor(componentsRootPath)
-
-monitor.on(ComponentsMonitorEventType.Create, (e) => {
-  Log.center(`create component: ${e.componentName}`, e)
-
-  const name = e.componentName as string
-
-  const compiler = createComponentCompiler({
-    componentName: name,
-    entry: path.join(monitor.root, name, 'index'),
-    onUpdate: debounce(({ hash }) => {
-      const newInfo = {
+  const compiler = createComponentCompiler(config.main)
+  compiler.watch(
+    {},
+    debounce((err) => {
+      if (err) {
+        console.log('component watch error: ', err)
+      }
+      const newInfo: EditorComponentInfoInternal = {
         ...componentInfo,
         state: EditorComponentState.Ready,
-        targetPath: componentTargetPath(name, hash)
+        targetPath: componentTargetPath(config.main)
       }
 
-      Log.center(`compiler onUpdate: ${name}`, newInfo.targetPath)
+      Log.center(`compiler onUpdate: ${config.id}`, newInfo.targetPath)
 
       componentsCenter.setComponent(newInfo)
 
@@ -41,16 +35,18 @@ monitor.on(ComponentsMonitorEventType.Create, (e) => {
        *   ComponentList
        *   Component_A
        */
-      server.publish(EditorSubscribeType.Component(name), componentsCenter.getComponentInfo(name))
+      server.publish(EditorSubscribeType.Component(config.id), componentsCenter.getComponentInfo(config.id))
       server.publish(EditorSubscribeType.ComponentList, componentsCenter.getComponentsList())
     }, 500) // update delay
-  })
+  )
 
   const componentInfo = {
-    name,
+    id: config.id,
+    name: config.name,
     state: EditorComponentState.Init,
-    sourcePath: path.join(monitor.root, name),
+    sourcePath: config.main,
     targetPath: '',
+    config,
     compiler
   }
 
@@ -61,19 +57,11 @@ monitor.on(ComponentsMonitorEventType.Create, (e) => {
    *   ComponentList
    */
   server.publish(EditorSubscribeType.ComponentList, componentsCenter.getComponentsList())
-})
+}
 
-monitor.on(ComponentsMonitorEventType.Remove, (e) => {
-  Log.center(`remove component: ${e.componentName}`, e)
-
-  const name = e.componentName as string
-
-  componentsCenter.removeComponent(name)
-
-  /**
-   * Update:
-   *   ComponentList
-   *   Component_X
-   */
-  server.publish(EditorSubscribeType.ComponentList, componentsCenter.getComponentsList())
-})
+export const handleStartBuild = (config: GlazeComponentConfig) => {
+  const compiler = createComponentCompiler(config.main)
+  compiler.run((err) => {
+    console.log('Component run error: ', err)
+  })
+}

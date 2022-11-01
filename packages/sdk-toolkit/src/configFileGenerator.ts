@@ -6,6 +6,8 @@ export function renderPluginJsFile(ownerTeamId: number) {
  */
 const config = {
   plugins: [],
+  
+  components: [],
 
   // Never change this object.
   generated: {

@@ -1,7 +1,8 @@
-import React, { Component } from 'react'
+import { Component, ReactNode } from 'react'
 
 interface ErrorBoundaryProps {
   errorContent: string | JSX.Element
+  children?: ReactNode
 }
 
 interface ErrorBoundaryState {

@@ -1,6 +1,5 @@
-import { LengthUnit } from '../../../schema/length'
+import { ComponentConfig, ControlType, LengthUnit } from '@glaze/types'
 import { FontProps } from '.'
-import { ComponentConfig, ControlType } from '../../../schema/config'
 import { BasicComponentId } from '../basicComponentInfo'
 
 const FontConfig: ComponentConfig<FontProps> = {
@@ -11,6 +10,14 @@ const FontConfig: ComponentConfig<FontProps> = {
       name: '内容',
       type: ControlType.TEXT,
       default: '请输入'
+    },
+    font: {
+      name: '字体',
+      type: ControlType.FONT,
+      default: {
+        fontSize: '14',
+        color: 'rgb(196 196 196)'
+      }
     }
   },
   defaultSize: {

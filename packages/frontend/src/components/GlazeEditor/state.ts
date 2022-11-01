@@ -53,11 +53,15 @@ export const AllComponentsSubject = new BehaviorSubject<Map<string, ComponentFul
   createBasicComponentMap()
 )
 
+AllComponentsSubject.subscribe((e) => console.log('[AllComponentsSubject]', e))
+
 /** 所有协作的用户信息 */
 export const AllCooperateUserState = new BehaviorSubject<GlazeAwarenessState[]>([])
 
 /** 重复节点信息 */
 export const DuplicateNodeObservableMap = new ObservableMap<string, Set<DuplicateNodeInfo>>()
+
+export const EnableLocalDebug = new BehaviorSubject<boolean>(false)
 
 export const refreshEditorState = () => {
   SelectedNodeInfoSubject.next(null)
@@ -160,22 +164,23 @@ export const useNodeInfoObserve = (
   useLayoutEffect(() => {
     let duplicateNodeInfo: DuplicateNodeInfo | null = null
     const position = getWrapperPosition()
+    const id = nodeProxy.id
     if (wrapperRef.current && position) {
       duplicateNodeInfo = {
-        nodeId: nodeProxy.id,
+        nodeId: id,
         parentNodeId: parentStructureInfo ? getNodeIdInStructTree(parentStructureInfo) : undefined,
         parentStructureInfo,
         position
       }
-      DuplicateNodeObservableMap.update(nodeProxy.id, (pre = new Set<DuplicateNodeInfo>()) => {
+      DuplicateNodeObservableMap.update(id, (pre = new Set<DuplicateNodeInfo>()) => {
         pre.add(duplicateNodeInfo!)
         return pre
       })
     }
     return () => {
-      AllNodeInfoObservableMap.delete(nodeProxy.id)
+      AllNodeInfoObservableMap.delete(id)
       if (duplicateNodeInfo) {
-        DuplicateNodeObservableMap.update(nodeProxy.id, (pre = new Set<DuplicateNodeInfo>()) => {
+        DuplicateNodeObservableMap.update(id, (pre = new Set<DuplicateNodeInfo>()) => {
           pre.delete(duplicateNodeInfo!)
           return pre
         })

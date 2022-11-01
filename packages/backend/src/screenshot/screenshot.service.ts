@@ -6,7 +6,7 @@ import { Injectable } from '@nestjs/common'
 import { InjectQueue } from '@nestjs/bull'
 import { Queue } from 'bull'
 import { DeploymentScreenshotJob } from './screenshot.types'
-import { BehaviorSubject, debounceTime, of, Subject, throttleTime } from 'rxjs'
+import { BehaviorSubject, debounceTime } from 'rxjs'
 
 @Injectable()
 export class ScreenshotService {

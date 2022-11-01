@@ -7,9 +7,8 @@
     {
       "name": "Launch Chrome",
       "request": "launch",
-      "type": "pwa-chrome",
-      "url": "http://localhost:8888",
-      "webRoot": "${workspaceFolder}"
+      "type": "chrome",
+      "url": "http://localhost:8888"
     },
     // nestjs 的 debug 方式
     {

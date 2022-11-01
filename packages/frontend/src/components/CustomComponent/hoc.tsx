@@ -1,14 +1,14 @@
-import React from 'react'
 import CustomComponent from '.'
+import { CustomComponentInfo } from '../GlazeEditor/customSupport'
+import { BehaviorSubject } from 'rxjs'
+import { useObservableEagerState } from 'observable-hooks'
 
-export interface BoundComponentProps {}
-
-const CustomComponentHOC = (componentName: string) => {
-  const BoundComponent = () => {
-    return <CustomComponent componentName={componentName} />
+const CustomComponentHOC = (componentInfo$: BehaviorSubject<CustomComponentInfo>) => {
+  return (props: any) => {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const component = useObservableEagerState(componentInfo$)
+    return <CustomComponent $componentInfo={component} {...props} />
   }
-
-  return BoundComponent
 }
 
 export default CustomComponentHOC

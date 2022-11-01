@@ -10,7 +10,6 @@ import HtmlWebpackPlugin from 'html-webpack-plugin'
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
 import CopyPlugin from 'copy-webpack-plugin'
 const require = createRequire(import.meta.url)
-const webpack = require('webpack')
 
 // style files regexes
 const cssRegex = /\.css$/
@@ -86,9 +85,6 @@ export const createCommonConfig = (env: EnvType): WebpackConfiguration => {
     devtool: isEnvDevelopment ? 'eval-source-map' : undefined,
     plugins: [
       new CleanWebpackPlugin(),
-      new webpack.ProvidePlugin({
-        PIXI: 'pixi.js',
-      }),
       new HtmlWebpackPlugin(
         Object.assign(
           {

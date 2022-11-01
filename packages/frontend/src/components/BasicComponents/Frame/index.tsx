@@ -1,16 +1,21 @@
-import { GlazeComponentProps } from '../../../schema/config'
-import React, { FC } from 'react'
+import { FC, ReactNode } from 'react'
+import { BackgroundParam, backgroundToStyle } from '@glaze/types'
 
 export interface FrameProps {
-
+  children?: ReactNode
+  background: BackgroundParam
 }
 
-const Frame:FC<FrameProps> = ({ children }) => {
-  return <div style={{
-    height: '100%',
-    background: 'green'
-  }}>
-    {children}
-  </div>
+const Frame: FC<FrameProps> = ({ children, background }) => {
+  return (
+    <div
+      style={{
+        height: '100%',
+        ...backgroundToStyle(background)
+      }}
+    >
+      {children}
+    </div>
+  )
 }
 export default Frame

@@ -1,4 +1,5 @@
-import { GlazeNode } from './component'
+import { ComponentConfig, GlazeNode } from './component'
+import { GlazeString } from './control'
 
 export enum GlazePluginControlType {
   /** a numeric text box input */
@@ -36,7 +37,7 @@ export interface GlazePluginConfig {
   id: string
 
   /** 插件名称 */
-  name: string
+  name: GlazeString
 
   /** 插件描述 */
   desc?: string
@@ -58,8 +59,15 @@ export interface GlazeGeneratedConfig {
   ownerTeamId: number
 }
 
+export interface GlazeComponentConfig<T = any> extends ComponentConfig<T> {
+  /** 插件文件入口 */
+  main: string
+}
+
 export interface GlazeConfig {
   plugins: GlazePluginConfig[]
+
+  components: GlazeComponentConfig[]
 
   /** 不要修改 */
   generated: GlazeGeneratedConfig

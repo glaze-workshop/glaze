@@ -1,15 +1,8 @@
-import { PositionType } from '../../../../schema/layout'
-import { LengthUnit } from '../../../../schema/length'
+import { PositionType, LengthUnit } from '@glaze/types'
 
-export const LRpositionOption: Array<PositionType> = [
-  PositionType.LEFT,
-  PositionType.RIGHT
-]
+export const LRpositionOption: Array<PositionType> = [PositionType.LEFT, PositionType.RIGHT]
 
-export const TBpositionOption: Array<PositionType> = [
-  PositionType.TOP,
-  PositionType.BOTTOM
-]
+export const TBpositionOption: Array<PositionType> = [PositionType.TOP, PositionType.BOTTOM]
 
 export const lengthOption: Array<LengthUnit> = [
   LengthUnit.AUTO,

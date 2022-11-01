@@ -15,7 +15,6 @@
   "dependencies": {
     "path-to-regexp": "^6.2.1",
     "tiny-emitter": "^2.1.0",
-    "uuid": "^9.0.0",
     "ws": "^8.10.0"
   },
   "devDependencies": {

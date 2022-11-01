@@ -13,6 +13,7 @@ import {
 } from './bundle'
 import type { GlazeConfig } from '@glaze/types'
 import { GlazeErr, PluginApi, PluginDto } from '@glaze/common'
+import { handleComponentsBuild, handleComponentsWatch } from '@glaze/editor'
 
 export async function generatePluginConfigAction() {
   const configFile = readPluginConfigFile()
@@ -39,6 +40,7 @@ export async function watchAction() {
   const configFile = readConfigFileWithPanic()
   const entries = configFile.plugins.map((plugin) => plugin.main)
   console.log('Watching for changes...')
+  handleComponentsWatch(configFile.components)
   await buildFiles(entries, true)
 }
 

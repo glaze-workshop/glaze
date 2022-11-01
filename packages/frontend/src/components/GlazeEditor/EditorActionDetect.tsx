@@ -1,11 +1,9 @@
 import React, { FC } from 'react'
 import { Log } from '../../utils/log'
 
-import {
-  KeyboardCenterEvent,
-  useKeyboardCenter,
-  useKeyboardDetect
-} from './gestureSupport'
+import { KeyboardCenterEvent, useKeyboardCenter, useKeyboardDetect } from './gestureSupport'
+import { editorSharedDocument } from './EditorSharedDocument'
+import { SelectedNodeInfoSubject } from './state'
 
 const EditorActionDetect: FC = () => {
   Log.EditorActionDetect('render EditorActionDetect')
@@ -18,6 +16,10 @@ const EditorActionDetect: FC = () => {
 
   useKeyboardDetect(KeyboardCenterEvent.Paste, (target, e) => {
     Log.EditorActionDetect('on paste', target, e)
+  })
+
+  useKeyboardDetect(KeyboardCenterEvent.Delete, () => {
+    editorSharedDocument.deleteNode(SelectedNodeInfoSubject.value)
   })
 
   useKeyboardDetect('c', (target, e) => {

@@ -1,4 +1,4 @@
-import React, { FC, useState, useEffect, ChangeEvent, memo } from 'react'
+import { FC, useState, useEffect, ChangeEvent, memo } from 'react'
 import * as Y from 'yjs'
 import {
   Select,
@@ -8,13 +8,8 @@ import {
   NumberDecrementStepper,
   NumberInputField
 } from '@chakra-ui/react'
-import {
-  LayoutSelectorProps,
-  LayoutNumberCounterProps,
-  YMapUpdater
-} from './layout.interface'
-import { LengthUnit, Length } from '../../../../schema/length'
-import { PositionType } from '../../../../schema/layout'
+import { LayoutSelectorProps, LayoutNumberCounterProps, YMapUpdater } from './layout.interface'
+import { LengthUnit, Length } from '@glaze/types'
 import { useShadowState } from '../../../../hooks/utils.hook'
 
 export interface LayoutPanelUnitProps {
@@ -30,12 +25,8 @@ const LayoutPanelUnit: FC<LayoutPanelUnitProps> = ({
   yjsMapUpdater,
   yMap
 }: LayoutPanelUnitProps) => {
-  const [selectorValue, setSelectorValue] = useShadowState(
-    selectorProps.defaultValue
-  )
-  const [numberValue, setNumberValue] = useShadowState(
-    numberCounterProps.defaultValue
-  )
+  const [selectorValue, setSelectorValue] = useShadowState(selectorProps.defaultValue)
+  const [numberValue, setNumberValue] = useShadowState(numberCounterProps.defaultValue)
 
   useEffect(() => {
     setSelectorValue(selectorProps.defaultValue)
@@ -58,11 +49,7 @@ const LayoutPanelUnit: FC<LayoutPanelUnitProps> = ({
 
   return (
     <>
-      <Select
-        placeholder={selectorValue}
-        value={selectorValue}
-        onChange={handleSelectChange}
-      >
+      <Select placeholder={selectorValue} value={selectorValue} onChange={handleSelectChange}>
         {selectorProps.fullOptions
           .filter((opt) => opt !== selectorValue)
           .map((item) => (
@@ -72,23 +59,11 @@ const LayoutPanelUnit: FC<LayoutPanelUnitProps> = ({
           ))}
       </Select>
       {selectorValue !== LengthUnit.AUTO ? (
-        <NumberInput
-          value={numberValue}
-          onChange={handleNumberCounterChange}
-          marginBottom="10px"
-        >
+        <NumberInput value={numberValue} onChange={handleNumberCounterChange} marginBottom="10px">
           <NumberInputField />
           <NumberInputStepper>
-            <NumberIncrementStepper
-              bg="green.200"
-              _active={{ bg: 'green.300' }}
-              children="+"
-            />
-            <NumberDecrementStepper
-              bg="pink.200"
-              _active={{ bg: 'pink.300' }}
-              children="-"
-            />
+            <NumberIncrementStepper bg="green.200" _active={{ bg: 'green.300' }} children="+" />
+            <NumberDecrementStepper bg="pink.200" _active={{ bg: 'pink.300' }} children="-" />
           </NumberInputStepper>
         </NumberInput>
       ) : null}

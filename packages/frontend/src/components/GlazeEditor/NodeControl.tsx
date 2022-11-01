@@ -1,17 +1,10 @@
 import styled from '@emotion/styled'
 import { useObservableEagerState } from 'observable-hooks'
-import React, { FC, memo, MouseEventHandler, useCallback, useMemo, useRef, useState } from 'react'
-import { fromEvent, map, Subscription } from 'rxjs'
+import { memo, useMemo, useRef } from 'react'
+import { map } from 'rxjs'
 import * as Y from 'yjs'
-import { LayoutConfig } from '../../schema/layout'
-import {
-  AllComponentsSubject,
-  AllNodeInfoObservableMap,
-  EditorPositionSubject,
-  SelectedNodeInfoSubject,
-  useNodeInfoObserve,
-  zoom
-} from './state'
+import { LayoutConfig } from '@glaze/types'
+import { AllComponentsSubject, useNodeInfoObserve } from './state'
 import {
   NodeProxy,
   StructureProxy,

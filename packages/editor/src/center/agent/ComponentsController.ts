@@ -1,7 +1,7 @@
 import { EditorRequestType, LCPClientMessage, LCPServerController } from '@glaze/common'
 
-import { componentsCenter } from '..'
 import { Log } from '../../utils'
+import { componentsCenter } from './ComponentsCenter'
 
 class ComponentsController implements LCPServerController {
   handleRequest(msg: LCPClientMessage): Promise<any> {

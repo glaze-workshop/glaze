@@ -44,7 +44,7 @@ export class WebSocketProvider {
     room: string,
     doc: Y.Doc,
     awarenessListener: Subject<GlazeAwarenessState[]>,
-    resyncInterval = -1
+    resyncInterval = 5000
   ) {
     this.url = serverUrl
     this.room = room

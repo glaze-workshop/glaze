@@ -6,7 +6,7 @@ import json from '@rollup/plugin-json'
 import typescript from 'rollup-plugin-typescript2'
 import sourceMaps from 'rollup-plugin-sourcemaps'
 import resolve, {
-  DEFAULTS as RESOLVE_DEFAULTS
+  DEFAULTS as RESOLVE_DEFAULTS,
 } from '@rollup/plugin-node-resolve'
 import commonjs from '@rollup/plugin-commonjs'
 import { envExtract } from '../utils.js'
@@ -14,7 +14,10 @@ import peerDepsExternal from 'rollup-plugin-peer-deps-external'
 import clean from './plugin/clean.js'
 import { RollupCustomConfig } from '../custom'
 
-export function createRollupFullConfig (config: RollupCustomConfig, env: EnvType): RollupWatchOptions {
+export function createRollupFullConfig(
+  config: RollupCustomConfig,
+  env: EnvType
+): RollupWatchOptions {
   const { isEnvProduction } = envExtract(env)
 
   const outputCommon: OutputOptions = {
@@ -25,36 +28,36 @@ export function createRollupFullConfig (config: RollupCustomConfig, env: EnvType
     name: config.name,
     sourcemap: true,
     globals: { react: 'React', 'react-native': 'ReactNative' },
-    exports: 'named'
+    exports: 'named',
   }
 
   return {
     input: FullPath.appIndex,
-    output: [{
-      ...outputCommon,
-      file: `${FullPath.appBuild}/${config.name}.cjs.js`,
-      format: 'cjs',
-      plugins: (isEnvProduction && config.tenser) ? [terser()] : []
-    }, {
-      ...outputCommon,
-      file: `${FullPath.appBuild}/${config.name}.esm.js`,
-      format: 'esm'
-    }],
+    output: [
+      {
+        ...outputCommon,
+        file: `${FullPath.appBuild}/${config.name}.cjs.js`,
+        format: 'cjs',
+        plugins: isEnvProduction && config.tenser ? [terser()] : [],
+      },
+      {
+        ...outputCommon,
+        file: `${FullPath.appBuild}/${config.name}.esm.js`,
+        format: 'esm',
+      },
+    ],
     plugins: [
       isEnvProduction && clean([FullPath.appBuild]),
       peerDepsExternal(),
       resolve({
-        mainFields: [
-          'module',
-          'main',
-          'browser'
-        ],
-        extensions: [...RESOLVE_DEFAULTS.extensions, '.jsx']
+        mainFields: ['module', 'main', 'browser'],
+        preferBuiltins: true,
+        extensions: [...RESOLVE_DEFAULTS.extensions, '.jsx', '.tsx', '.ts'],
       }),
       // all bundled external modules need to be converted from CJS to ESM
       commonjs({
         // use a regex to make sure to include eventual hoisted packages
-        include: /\/node_modules\//
+        include: /\/node_modules\//,
       }),
       json(),
       typescript({
@@ -71,18 +74,18 @@ export function createRollupFullConfig (config: RollupCustomConfig, env: EnvType
             'node_modules',
             'bower_components',
             'jspm_packages',
-            'example'
+            'example',
           ],
           compilerOptions: {
             sourceMap: true,
             declaration: true,
             declarationMap: true,
-            jsx: 'react'
-          }
+            jsx: 'react',
+          },
         },
-        check: true
+        check: true,
       }),
-      sourceMaps()
-    ].filter(Boolean)
+      sourceMaps(),
+    ].filter(Boolean),
   }
 }

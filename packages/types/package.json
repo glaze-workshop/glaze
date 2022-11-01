@@ -15,7 +15,8 @@
   "license": "ISC",
   "devDependencies": {
     "rimraf": "^3.0.2",
-    "@glaze/bundler": "workspace:*"
+    "@glaze/bundler": "workspace:*",
+    "@types/react": "^18.0.24"
   },
   "peerDependencies": {
     "rxjs": ">=7"

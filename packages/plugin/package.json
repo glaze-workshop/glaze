@@ -9,6 +9,7 @@
     "login": "glaze-plugin login",
     "init": "glaze-plugin init",
     "build": "glaze-plugin build",
+    "watch": "DEBUG=center glaze-plugin watch",
     "upload": "glaze-plugin upload"
   },
   "devDependencies": {
@@ -16,7 +17,19 @@
     "@glaze/plugin-bundler": "workspace:*",
     "@glaze/types": "workspace:*",
     "cos-nodejs-sdk-v5": "^2.11.14",
-    "esbuild": "^0.15.12"
+    "esbuild": "^0.15.12",
+    "@types/react": "^18.0.24",
+    "webpack": "^5.74.0",
+    "clean-webpack-plugin": "^4.0.0",
+    "express": "^4.18.2",
+    "express-ws": "^5.0.2",
+    "ws": "^8.10.0",
+
+    "babel-loader": "^8.2.3",
+    "@babel/core": "^7.19.6",
+    "@babel/preset-env": "^7.19.4",
+    "@babel/preset-react": "^7.16.7",
+    "@babel/preset-typescript": "^7.16.7"
   },
   "dependencies": {
     "nanoid": "^3.3.4"

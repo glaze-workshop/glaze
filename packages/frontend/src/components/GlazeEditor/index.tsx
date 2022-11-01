@@ -1,8 +1,7 @@
 import styled from '@emotion/styled'
 import { Point } from '@glaze/zoom'
 import normalizeWheel from 'normalize-wheel'
-import React, { FC, memo, MouseEventHandler, useCallback, useEffect, useRef } from 'react'
-import EditorActionDetect from './EditorActionDetect'
+import { FC, memo, MouseEventHandler, useCallback, useEffect, useRef } from 'react'
 import EditorContent from './EditorContent'
 import EditorUpper from './EditorUpper'
 import {
@@ -10,26 +9,16 @@ import {
   DuplicateNodeInfo,
   DuplicateNodeObservableMap,
   EditorPositionSubject,
-  FullNodeInfo,
   getLeftTop,
   SelectedNodeInfoSubject,
   useProjectIdChange
 } from './state'
 import { zoom } from './state'
-import {
-  combineLatest,
-  combineLatestWith,
-  filter,
-  fromEvent,
-  map,
-  of,
-  share,
-  Subscription,
-  switchMap
-} from 'rxjs'
-import EditorSharedDocument, { editorSharedDocument } from './EditorSharedDocument'
-import { notEmpty } from '@glaze/common'
+import { filter, fromEvent, Subscription, switchMap } from 'rxjs'
+import { editorSharedDocument } from './EditorSharedDocument'
+import EditorActionDetect from './EditorActionDetect'
 import { getChildrenInStructTree } from './yjs.hook'
+import { notEmpty } from '@glaze/common'
 
 export interface GlazeEditorProps {}
 
@@ -109,31 +98,31 @@ const GlazeEditor: FC<GlazeEditorProps> = () => {
             }
           })
 
-          // duplicateSubscription.current = SelectedNodeInfoSubject.pipe(
-          //   filter(notEmpty),
-          //   switchMap((id) => DuplicateNodeObservableMap.observeKey(id)),
-          //   filter(notEmpty),
-          //   filter((nodes) => nodes.size > 1)
-          // ).subscribe((nodes) => {
-          //   let leftTopMin = Infinity
-          //   let leftMostNode: DuplicateNodeInfo | null = null
-          //   for (const node of nodes) {
-          //     const leftTop = getLeftTop(node.position)
-          //     const leftTopValue = leftTop.x + leftTop.y
-          //     if (leftTopValue < leftTopMin) {
-          //       leftTopMin = leftTopValue
-          //       leftMostNode = node
-          //     }
-          //   }
-          //   if (leftMostNode) {
-          //     editorSharedDocument.deleteNodeInParent(
-          //       leftMostNode.nodeId,
-          //       leftMostNode.parentStructureInfo
-          //         ? getChildrenInStructTree(leftMostNode.parentStructureInfo)
-          //         : undefined
-          //     )
-          //   }
-          // })
+          duplicateSubscription.current = SelectedNodeInfoSubject.pipe(
+            filter(notEmpty),
+            switchMap((id) => DuplicateNodeObservableMap.observeKey(id)),
+            filter(notEmpty),
+            filter((nodes) => nodes.size > 1)
+          ).subscribe((nodes) => {
+            let leftTopMin = Infinity
+            let leftMostNode: DuplicateNodeInfo | null = null
+            for (const node of nodes) {
+              const leftTop = getLeftTop(node.position)
+              const leftTopValue = leftTop.x + leftTop.y
+              if (leftTopValue < leftTopMin) {
+                leftTopMin = leftTopValue
+                leftMostNode = node
+              }
+            }
+            if (leftMostNode) {
+              editorSharedDocument.deleteNodeInParent(
+                leftMostNode.nodeId,
+                leftMostNode.parentStructureInfo
+                  ? getChildrenInStructTree(leftMostNode.parentStructureInfo)
+                  : undefined
+              )
+            }
+          })
         }
       }
     }
@@ -161,7 +150,7 @@ const GlazeEditor: FC<GlazeEditorProps> = () => {
     >
       <EditorContent zoom={zoom} />
       <EditorUpper zoom={zoom} />
-      {/* <EditorActionDetect /> */}
+      <EditorActionDetect />
     </EditorContainer>
   )
 }

@@ -1,35 +1,28 @@
 /* eslint-disable multiline-ternary */
 
-import React, { FC, Suspense, useEffect } from 'react'
-import { Log } from '../../utils/log'
-import { useCustomComponent } from '../GlazeEditor/customSupport'
+import { FC, Suspense } from 'react'
+import { CustomComponentInfo } from '../GlazeEditor/customSupport'
 import ErrorBoundary from './ErrorBoundary'
 
 interface CustomComponentProps {
-  componentName: string
+  $componentInfo: CustomComponentInfo
 }
 
-const CustomComponent: FC<CustomComponentProps> = ({ componentName }) => {
-  // const { loading, error, errorMsg, info, Component } = useCustomComponent(componentName)
-
-  // useEffect(() => {
-  //   Log.EditorCustomComponent(`${componentName} info`, info)
-  // }, [info])
-  //
-  // const fallback = `Component ${componentName} loading...`
-  //
-  // return error ? (
-  //   <h1>{errorMsg || `Request for ${componentName} error`}</h1>
-  // ) : (
-  //   <Suspense fallback={fallback}>
-  //     {Component && (
-  //       <ErrorBoundary errorContent={`Something wrong in ${componentName}`}>
-  //         <Component />
-  //       </ErrorBoundary>
-  //     )}
-  //   </Suspense>
-  // )
-  return <></>
+const CustomComponent: FC<CustomComponentProps> = ({
+  $componentInfo: { loading, error, errorMsg, info, Component },
+  ...props
+}) => {
+  return error ? (
+    <h1>{errorMsg || `Request for ${info?.id} error`}</h1>
+  ) : (
+    <Suspense>
+      {Component && (
+        <ErrorBoundary errorContent={`Something wrong in ${info?.id}`}>
+          <Component {...props} />
+        </ErrorBoundary>
+      )}
+    </Suspense>
+  )
 }
 
 export default CustomComponent

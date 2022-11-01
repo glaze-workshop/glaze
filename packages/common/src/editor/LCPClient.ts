@@ -26,7 +26,7 @@ const REQUEST_TIMEOUT = 60 * 1000 // request timeout in 1min
 class LCPClient {
   private socket: LCPSocket
   private requestMap: Map<string, LCPClientReceiver> = new Map()
-  private subscribeCount: number = 0
+  private subscribeCount = 0
 
   constructor(options: LCPClientOptions | LCPSocket) {
     this.socket = options instanceof LCPSocket ? options : options.socket
@@ -45,6 +45,14 @@ class LCPClient {
         }, 3 * 1000) // reopen in 2s
       }
     })
+  }
+
+  open = () => {
+    this.socket.open()
+  }
+
+  close = () => {
+    this.socket.close()
   }
 
   private dispatchMessage({ uuid, seq, success, data }: LCPServerMessage) {
@@ -110,7 +118,7 @@ class LCPClient {
   }
 
   /**
-   * Subscirbe target
+   * Subscribe target
    * return unsubscribe method
    */
   subscribe<T>(

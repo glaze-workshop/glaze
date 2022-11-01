@@ -147,7 +147,7 @@ class LCPServer {
       return
     }
 
-    const matchSubscribers = []
+    const matchSubscribers: LCPServerSubscribeInfo[] = []
     subscribers.forEach((subscribeInfo) => {
       if (subscribeInfo.connection === connection && subscribeInfo.uuid === uuid) {
         matchSubscribers.push(subscribeInfo)

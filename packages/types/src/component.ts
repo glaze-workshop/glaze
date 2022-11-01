@@ -1,3 +1,6 @@
+import { Control, GlazeString } from './control'
+import { CSSProperties } from 'react'
+
 export enum LengthUnit {
   FIXED = 'fixed',
   PERCENT = 'percent',
@@ -5,9 +8,15 @@ export enum LengthUnit {
 }
 
 export type Length =
-  | [LengthUnit.AUTO]
-  | [LengthUnit.FIXED, number]
-  | [LengthUnit.PERCENT, number]
+  | [`${LengthUnit.AUTO}`]
+  | [`${LengthUnit.FIXED}`, number]
+  | [`${LengthUnit.PERCENT}`, number]
+
+export enum LayoutOption {
+  WIDTH = 'width',
+  HEIGHT = 'height',
+  POSITION = 'position',
+}
 
 export enum PositionType {
   TOP = 'top',
@@ -50,4 +59,29 @@ export interface GlazeNode {
 export interface GlazeStructure {
   nodeId: string
   children: GlazeStructure[]
+}
+
+export type PropsConfig<P> = {
+  [key in keyof P]: Control<P[key]>
+}
+
+export type DefaultSizeConfig = {
+  width: Length
+  height: Length
+}
+
+/**
+ * 每个组件都有的配置信息
+ */
+export interface ComponentConfig<T = any> {
+  id: string
+  name: GlazeString
+  desc?: string
+  /** 插件权限，默认私有 */
+  type?: 'PRIVATE' | 'PUBLIC'
+  props: PropsConfig<T>
+  defaultSize: DefaultSizeConfig
+  hasChildren?: boolean
+  path?: string
+  to?: string
 }

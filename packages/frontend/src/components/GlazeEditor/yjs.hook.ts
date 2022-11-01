@@ -1,9 +1,8 @@
 import { useEffect, useMemo, useState } from 'react'
 import * as Y from 'yjs'
 import { useForceRerender } from '../../hooks/utils.hook'
-import { ControlType } from '../../schema/config'
-import { LayoutConfig, PositionConfig } from '../../schema/layout'
-import { Length, LengthUnit } from '../../schema/length'
+import { LayoutConfig, PositionConfig } from '@glaze/types'
+import { Length, LengthUnit } from '@glaze/types'
 
 export interface StructureProxy {
   nodeId: string // node id
@@ -67,10 +66,6 @@ const lengthToStyle = (length: Length) => {
     case LengthUnit.PERCENT:
       return `${num}%`
   }
-}
-
-export const positionToStyle = (position: PositionConfig) => {
-  const { type, top, left, right, bottom } = position
 }
 
 export function useNodeLayout(layoutProxy: LayoutConfig) {

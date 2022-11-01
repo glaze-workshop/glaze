@@ -1,12 +1,22 @@
-import { GlazeComponentProps } from 'packages/frontend/src/schema/config'
-import React, { FC } from 'react'
+import { FontParam, fontToStyle } from '@glaze/types'
+import { FC } from 'react'
 
-export interface FontProps extends GlazeComponentProps {
+export interface FontProps {
   content: string
+  font: FontParam
 }
 
-const Font:FC<FontProps> = ({ style, className, content }) => {
-  return <div className={className} style={style}>{content}</div>
+const Font: FC<FontProps> = ({ content, font }) => {
+  return (
+    <div
+      style={{
+        height: '100%',
+        ...fontToStyle(font)
+      }}
+    >
+      {content}
+    </div>
+  )
 }
 
 export default Font

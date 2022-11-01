@@ -1,13 +1,17 @@
-import React, { FC } from 'react'
+import { FC, ReactNode } from 'react'
+import { BackgroundParam, backgroundToStyle } from '@glaze/types'
 
-export interface ScreenProps {}
+export interface ScreenProps {
+  children?: ReactNode
+  background: BackgroundParam
+}
 
-const GlazeScreen: FC<ScreenProps> = ({ children }) => {
+const GlazeScreen: FC<ScreenProps> = ({ children, background }) => {
   return (
     <div
       style={{
         height: '100%',
-        background: 'gray'
+        ...backgroundToStyle(background)
       }}
     >
       {children}

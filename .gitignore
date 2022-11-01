@@ -126,3 +126,5 @@ pnpm-lock.yaml
 .DS_Store
 
 .vscode/settings.json
+
+dist.components
