@@ -12,7 +12,7 @@ pnpm dev
 pnpm debug:server
 ```
 
-a `.env` file is needed to run the project. Put it in the `packages/backend` directory.
+A `.env` file is needed to run the project. Put it in the `packages/backend` directory.
 
 ```dotenv
 DATABASE_URL="postgresql://postgres: @127.0.0.1:5432/postgres?schema=glaze"
