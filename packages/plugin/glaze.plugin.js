@@ -23,6 +23,39 @@ const shadowComponent = {
 }
 
 /**
+ * @type {import('@glaze/types').GlazeComponentConfig<import('./good/index').GoodProps>}
+ */
+const goodComponent = {
+  id: '@glaze-custom-component/good',
+  name: 'A Good Component',
+  main: './good/index.tsx',
+  type: 'PUBLIC',
+  props: {
+    background: {
+      name: '背景',
+      type: 'background',
+      default: {
+        backgroundColor: '#c67eb6',
+        backgroundImage: '',
+      },
+    },
+    font: {
+      name: '标题',
+      type: 'font',
+      default: {
+        fontSize: 30,
+        color: '#000000',
+      },
+    },
+  },
+  defaultSize: {
+    width: ['fixed', 500],
+    height: ['fixed', 200],
+  },
+  hasChildren: true,
+}
+
+/**
  * @type {import('@glaze/types').GlazeConfig}
  */
 const config = {
@@ -84,7 +117,7 @@ const config = {
     },
   ],
 
-  components: [shadowComponent],
+  components: [shadowComponent, goodComponent],
 
   // Never change this object.
   generated: {

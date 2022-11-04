@@ -15,13 +15,9 @@ const CustomComponent: FC<CustomComponentProps> = ({
   return error ? (
     <h1>{errorMsg || `Request for ${info?.id} error`}</h1>
   ) : (
-    <Suspense>
-      {Component && (
-        <ErrorBoundary errorContent={`Something wrong in ${info?.id}`}>
-          <Component {...props} />
-        </ErrorBoundary>
-      )}
-    </Suspense>
+    <ErrorBoundary errorContent={`Something wrong in ${info?.id}`}>
+      <Suspense>{Component && <Component {...props} />}</Suspense>
+    </ErrorBoundary>
   )
 }
 

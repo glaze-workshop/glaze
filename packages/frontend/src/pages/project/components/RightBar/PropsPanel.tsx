@@ -34,12 +34,21 @@ const PropsPanel: FC<PropsPanelProps> = ({ propsInfo, componentId }) => {
         switch (prop.type) {
           case ControlType.BACKGROUND:
             return (
-              <BackgroundCtl name={prop.name} value={propsInfo.get(k)} onChange={changeProps} />
+              <BackgroundCtl
+                key={k}
+                name={prop.name}
+                value={propsInfo.get(k)}
+                onChange={changeProps}
+              />
             )
           case ControlType.TEXT:
-            return <TextCtl name={prop.name} value={propsInfo.get(k)} onChange={changeProps} />
+            return (
+              <TextCtl key={k} name={prop.name} value={propsInfo.get(k)} onChange={changeProps} />
+            )
           case ControlType.FONT:
-            return <FontCtl name={prop.name} value={propsInfo.get(k)} onChange={changeProps} />
+            return (
+              <FontCtl key={k} name={prop.name} value={propsInfo.get(k)} onChange={changeProps} />
+            )
         }
       })}
     </FormControl>

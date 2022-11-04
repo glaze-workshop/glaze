@@ -33,7 +33,11 @@ const TopNav: FC<TopNavProps> = () => {
         <Menu>
           <MenuButton as={IconButton} aria-label="更多" icon={<Icon as={FiMenu} />} />
           <MenuList>
-            <MenuItem icon={<Icon as={FiArrowLeft} />} as={Link} to={'/'}>
+            <MenuItem
+              icon={<Icon as={FiArrowLeft} />}
+              as={Link}
+              to={`/folder/${projectInfo?.projectFolder?.id}`}
+            >
               回到主页
             </MenuItem>
             <MenuItem

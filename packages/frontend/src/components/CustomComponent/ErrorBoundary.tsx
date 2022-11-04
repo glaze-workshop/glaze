@@ -1,4 +1,5 @@
 import { Component, ReactNode } from 'react'
+import { Subject } from 'rxjs'
 
 interface ErrorBoundaryProps {
   errorContent: string | JSX.Element
@@ -9,7 +10,11 @@ interface ErrorBoundaryState {
   hasError: boolean
 }
 
-export default class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
+export default class ErrorBoundary extends Component<
+  ErrorBoundaryProps,
+  ErrorBoundaryState,
+  { hasError: boolean } | null
+> {
   constructor(props: ErrorBoundaryProps) {
     super(props)
     this.state = { hasError: false }
@@ -18,6 +23,24 @@ export default class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBo
   static getDerivedStateFromError(error: Error) {
     // Update state so the next render will show the fallback UI.
     return { hasError: true }
+  }
+
+  getSnapshotBeforeUpdate(prevProps: ErrorBoundaryProps) {
+    if (prevProps.children !== this.props.children) {
+      console.log('getSnapshotBeforeUpdate')
+      return { hasError: false }
+    }
+    return null
+  }
+
+  componentDidUpdate(
+    prevProps: Readonly<ErrorBoundaryProps>,
+    prevState: Readonly<ErrorBoundaryState>,
+    snapshot: { hasError: boolean } | null | undefined
+  ) {
+    if (snapshot) {
+      this.setState(snapshot)
+    }
   }
 
   componentDidCatch(error: Error, errorInfo: any) {

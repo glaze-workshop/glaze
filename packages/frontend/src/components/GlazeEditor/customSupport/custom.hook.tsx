@@ -119,7 +119,7 @@ const createCustomComponentInfo = async (
                   info,
                   Component: undefined
                 })
-                return { default: {} }
+                return { default: () => <></> }
               } else {
                 return res as SetRequired<Module, 'default'>
               }

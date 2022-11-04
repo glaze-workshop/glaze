@@ -7,7 +7,7 @@ const Cooperator: FC = () => {
   const cooperatorList = useObservableEagerState(AllCooperateUserState)
 
   return (
-    <HStack w="200px" justifyContent="end">
+    <HStack w="200px" justifyContent="end" overflowX="auto">
       {cooperatorList
         .filter(({ userInfo }) => userInfo)
         .map(({ userInfo, clientId, color }) => (
