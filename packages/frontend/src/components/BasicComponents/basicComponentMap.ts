@@ -10,7 +10,7 @@ import ScreenConfig from './Screen/config'
 export enum ComponentType {
   BUILTIN = 'builtin',
   CUSTOM = 'custom',
-  RELEASED = 'released'
+  SHARED = 'shared'
 }
 
 export interface ComponentFullInfo {

@@ -1,3 +1,4 @@
+import { ComponentModule } from './component/component.module'
 import { PluginModule } from './plugin/plugin.module'
 import { CosModule } from './cos/cos.module'
 import { ScreenshotModule } from './screenshot/screenshot.module'
@@ -18,9 +19,15 @@ import { AppController } from './app.controller'
 import { AppService } from './app.service'
 import { ConfigModule, ConfigService } from '@nestjs/config'
 import { BullModule } from '@nestjs/bull'
-
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+BigInt.prototype['toJSON'] = function () {
+  return this.toString()
+}
 @Module({
   imports: [
+    ComponentModule,
+
     PluginModule,
     ScreenshotModule,
     MessageModule,

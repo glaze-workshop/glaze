@@ -12,7 +12,7 @@ import {
   MenuItem,
   MenuList
 } from '@chakra-ui/react'
-import { FiEye, FiMenu, FiSettings } from 'react-icons/fi'
+import { FiArrowLeft, FiEye, FiMenu, FiSettings } from 'react-icons/fi'
 import { BasicComponentId } from '../../../../components/BasicComponents/basicComponentInfo'
 import { editorSharedDocument } from '../../../../components/GlazeEditor/EditorSharedDocument'
 import { Link } from 'react-router-dom'
@@ -33,6 +33,9 @@ const TopNav: FC<TopNavProps> = () => {
         <Menu>
           <MenuButton as={IconButton} aria-label="更多" icon={<Icon as={FiMenu} />} />
           <MenuList>
+            <MenuItem icon={<Icon as={FiArrowLeft} />} as={Link} to={'/'}>
+              回到主页
+            </MenuItem>
             <MenuItem
               icon={<Icon as={FiEye} />}
               as="a"

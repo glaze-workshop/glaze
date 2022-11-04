@@ -16,7 +16,8 @@
   "devDependencies": {
     "rimraf": "^3.0.2",
     "@glaze/bundler": "workspace:*",
-    "@types/react": "^18.0.24"
+    "@types/react": "^18.0.24",
+    "rxjs": "^7.5.7"
   },
   "peerDependencies": {
     "rxjs": ">=7"

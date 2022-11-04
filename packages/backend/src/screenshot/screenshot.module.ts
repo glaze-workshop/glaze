@@ -21,7 +21,7 @@ import { ProjectModule } from '../project/project.module'
     BullModule.registerQueue({
       name: 'screenshot'
     }),
-    MessageModule,
+    forwardRef(() => MessageModule),
     forwardRef(() => DocModule),
     forwardRef(() => ProjectModule),
     forwardRef(() => DeploymentModule)

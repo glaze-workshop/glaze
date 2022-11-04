@@ -1,7 +1,5 @@
-import { useEffect } from 'react'
-import { ObservableMap } from '../../types/src'
-import { GlazeNodeMap } from '../../types/src/listener'
-import { GlazeNode } from '@glaze/types'
+import React, { useEffect } from 'react'
+import { ObservableMap, GlazeNodeMap, GlazeNode } from '@glaze/types'
 
 export const NodeMap: GlazeNodeMap = new ObservableMap()
 

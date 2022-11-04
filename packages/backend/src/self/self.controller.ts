@@ -2,8 +2,8 @@
 https://docs.nestjs.com/controllers#controllers
 */
 
-import { Entity, Prefix, SelfApi } from '@glaze/common'
-import { Controller, Get, UseGuards } from '@nestjs/common'
+import { Entity, Prefix, SelfApi, SelfDto } from '@glaze/common'
+import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common'
 import { JwtGuard } from '../auth/jwt.guard'
 import { CurrentUser } from '../auth/user.decorator'
 import { ProjectService } from '../project/project.service'
@@ -26,5 +26,14 @@ export class SelfController {
   @Get(SelfApi.SELF_TEAMS_PATH)
   getSelfTeams(@CurrentUser() user: Entity.UserEntity) {
     return this.teamService.getTeams(user.id)
+  }
+
+  @UseGuards(JwtGuard)
+  @Post(SelfApi.SELF_TEAMS_PATH)
+  joinTeam(
+    @CurrentUser() user: Entity.UserEntity,
+    @Body() join: SelfDto.JoinTeamDTO
+  ) {
+    return this.teamService.joinTeam(join.teamId, user.id)
   }
 }

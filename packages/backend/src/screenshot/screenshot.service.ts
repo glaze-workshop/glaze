@@ -31,7 +31,7 @@ export class ScreenshotService {
       const previewObserver = new BehaviorSubject(projectId)
       this.previewDebounceMap.set(projectId, previewObserver)
       const subscriber = previewObserver
-        .pipe(debounceTime(500))
+        .pipe(debounceTime(3000))
         .subscribe((projectId) => {
           this.screenshotQueue.add('preview', projectId)
           subscriber.unsubscribe()

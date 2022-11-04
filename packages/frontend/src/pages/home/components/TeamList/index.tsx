@@ -9,15 +9,10 @@ import {
   Button,
   Flex,
   Icon,
-  Text,
-  Menu,
-  IconButton,
-  MenuButton,
-  MenuItem,
-  MenuList
+  Text
 } from '@chakra-ui/react'
 import { Entity } from '@glaze/common'
-import React, { FC, memo, useCallback, useEffect, useMemo, useState } from 'react'
+import { FC, memo, useEffect, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { FiPlus } from 'react-icons/fi'
 
@@ -46,13 +41,17 @@ const TeamList: FC = () => {
 
   const navigate = useNavigate()
   useEffect(() => {
-    if (selfAllFolderId !== undefined) {
+    if (selfAllFolderId !== undefined && location.pathname === '/') {
       navigate(`/folder/${selfAllFolderId}`)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selfAllFolderId])
 
-  const { isOpen, handleModalClose: handleModelClose, handleModalOpen: handleModelOpen } = useModalState()
+  const {
+    isOpen,
+    handleModalClose: handleModelClose,
+    handleModalOpen: handleModelOpen
+  } = useModalState()
 
   return (
     <Flex direction="column" flex="1" overflowY="hidden">

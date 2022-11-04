@@ -6,10 +6,7 @@ export interface NameIdPanelProps {
   idInfo: string
 }
 
-const NameIdPanel: FC<NameIdPanelProps> = ({
-  nameInfo,
-  idInfo
-}: NameIdPanelProps) => {
+const NameIdPanel: FC<NameIdPanelProps> = ({ nameInfo, idInfo }: NameIdPanelProps) => {
   return (
     <>
       <Tag size="lg" variant="solid" colorScheme="teal" marginBottom="10px">

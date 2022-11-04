@@ -99,8 +99,7 @@ export default class EditorSharedDocument {
         }, 0)
       this.createNode(config, null, {
         left: leftMax + 100,
-        top: 100,
-        type: [PositionType.LEFT, PositionType.TOP]
+        top: 100
       })
       return
     }
@@ -133,8 +132,7 @@ export default class EditorSharedDocument {
             }, 0)
           return {
             left: 0,
-            top: maxTop,
-            type: [PositionType.LEFT, PositionType.TOP]
+            top: maxTop
           }
         }
         this.createNode(
@@ -151,8 +149,7 @@ export default class EditorSharedDocument {
     inParent?: Y.Map<any> | null,
     position: PositionConfig = {
       left: 0,
-      top: 0,
-      type: [PositionType.LEFT, PositionType.TOP]
+      top: 0
     }
   ) => {
     const nodeId = nanoid()
@@ -245,9 +242,8 @@ export default class EditorSharedDocument {
         layout.set('width', [LengthUnit.FIXED, width])
         layout.set('height', [LengthUnit.FIXED, height])
         layout.set('position', {
-          left: nextPos.x - leftTop.x - relativePos.x,
-          top: nextPos.y - leftTop.y - relativePos.y,
-          type: [PositionType.LEFT, PositionType.TOP]
+          left: Math.floor(nextPos.x - leftTop.x - relativePos.x),
+          top: Math.floor(nextPos.y - leftTop.y - relativePos.y)
         })
       }
     })

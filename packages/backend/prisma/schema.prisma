@@ -147,7 +147,8 @@ model GlazeProjectLogInfo {
   id           Int                    @id @default(autoincrement())
   deployInfo   GlazeProjectDeployInfo @relation(fields: [deployInfoId], references: [id])
   deployInfoId Int
-  remoteAddr   String                 @db.Text
+  remoteIp     String                 @db.Text
+  remotePort   String                 @db.Text
   protocol     String                 @db.Text
   method       String                 @db.Text
   host         String                 @db.Text
@@ -167,13 +168,16 @@ model GlazeComponent {
   id                 String          @id
   name               String?         @unique @db.Text /// 组件名称
   icon               String?         @db.Text /// 图标
+  desc               String?         @db.Text /// 组件描述
   path               String          @db.Text /// 组件资源地址
   type               GlazePluginType @default(PRIVATE)
+  props              Json?
+  defaultSize        Json
+  hasChildren        Boolean
   ownerTeam          GlazeTeam       @relation(fields: [ownerTeamId], references: [id])
   ownerTeamId        Int
   lastUpdateBy       GlazeUser       @relation(fields: [lastUpdateByUserId], references: [id])
   lastUpdateByUserId Int
-  configSchema       Json?
   createdAt          DateTime        @default(now()) @db.Timestamp(6) /// 创建时间
   updatedAt          DateTime        @updatedAt @db.Timestamp(6) /// 更新时间
 }

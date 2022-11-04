@@ -54,16 +54,22 @@ const Overview: FC<OverviewProps> = () => {
   return notEmpty(deploymentInfo) ? (
     <div>
       <Flex>
-        <Box flexShrink={0} w="300px" borderRadius="xl" overflow="hidden" borderWidth={1}>
-          <AspectRatio ratio={16 / 9}>
-            <Image
-              src={deploymentInfo.screenshot ? `https://${deploymentInfo.screenshot}` : ''}
-              fallbackSrc="https://bit.ly/naruto-sage"
-              alt="naruto"
-              objectFit="contain"
-            />
-          </AspectRatio>
-        </Box>
+        <Image
+          flexShrink={0}
+          w="300px"
+          borderRadius="xl"
+          overflow="hidden"
+          borderWidth={1}
+          borderStyle={'solid'}
+          h="150px"
+          src={
+            deploymentInfo.screenshot
+              ? `https://${deploymentInfo.screenshot}?_glaze=${Date.now()}`
+              : ''
+          }
+          alt="naruto"
+          objectFit="contain"
+        />
         <VStack flexGrow={1} px="4" align="start">
           <Flex alignItems="baseline">
             <Badge colorScheme="green">Running</Badge>
@@ -78,10 +84,9 @@ const Overview: FC<OverviewProps> = () => {
           </Flex>
 
           <Flex>
-            最后由 
-            <Text mx="1">{deploymentInfo.by?.nickname ?? deploymentInfo.by?.username}</Text>
-            在
-            <Text>{dayjs(deploymentInfo.updatedAt).toNow() }</Text>
+            最后由
+            <Text mx="1">{deploymentInfo.by?.nickname ?? deploymentInfo.by?.username}</Text>在
+            <Text>{dayjs(deploymentInfo.updatedAt).toNow()}</Text>
             更新
           </Flex>
 

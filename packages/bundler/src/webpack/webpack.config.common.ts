@@ -151,9 +151,9 @@ export const createCommonConfig = (env: EnvType): WebpackConfiguration => {
                   ],
                   '@babel/preset-typescript',
                 ],
-                plugins: [
-                  !isEnvProduction && require('react-refresh/babel'),
-                ].filter(Boolean),
+                // plugins: [
+                //   !isEnvProduction && require('react-refresh/babel'),
+                // ].filter(Boolean),
                 cacheDirectory: true,
                 // See #6846 for context on why cacheCompression is disabled
                 cacheCompression: false,

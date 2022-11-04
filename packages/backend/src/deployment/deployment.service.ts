@@ -217,7 +217,7 @@ export class DeploymentService {
       >`
           select date_trunc('day', "GlazeProjectLogInfo".time) as      "day",
                  count(*) as                                           "requestCount",
-                 count(DISTINCT "GlazeProjectLogInfo"."remoteAddr") as "userCount",
+                 count(DISTINCT "GlazeProjectLogInfo"."remoteIp") as "userCount",
                  sum("GlazeProjectLogInfo".size) as                    "size"
           from "GlazeProjectLogInfo"
           where "GlazeProjectLogInfo"."deployInfoId" = ${deployInfo.id}

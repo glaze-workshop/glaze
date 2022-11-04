@@ -1,4 +1,4 @@
-import { memo, useMemo, useRef } from 'react'
+import React, { memo, useMemo, useRef, Suspense, CSSProperties } from 'react'
 import { BasicComponents } from './BasicComponents'
 import {
   GlazeNode,
@@ -27,28 +27,31 @@ const lengthToStyle = (length: Length) => {
   }
 }
 export function useNodeLayout(layoutConfig: LayoutConfig, enableLayout = true) {
-  return useMemo<React.CSSProperties>(
-    () =>
-      enableLayout
-        ? {
-            position: 'absolute',
-            width: lengthToStyle(layoutConfig.width),
-            height: lengthToStyle(layoutConfig.height),
-            top: `${layoutConfig.position.top}px`,
-            left: `${layoutConfig.position.left}px`,
-          }
-        : {
-            position: 'relative',
-            height: lengthToStyle(layoutConfig.height),
-          },
-    [
-      enableLayout,
-      layoutConfig.height,
-      layoutConfig.position.left,
-      layoutConfig.position.top,
-      layoutConfig.width,
-    ]
-  )
+  return useMemo<React.CSSProperties>(() => {
+    const {
+      position: { top, right, bottom, left },
+      width,
+      height,
+    } = layoutConfig
+
+    const style: CSSProperties = {
+      position: 'absolute',
+      width: lengthToStyle(width),
+      height: lengthToStyle(height),
+    }
+    top && (style.top = `${top}px`)
+    left && (style.left = `${left}px`)
+    right && (style.right = `${right}px`)
+    bottom && (style.bottom = `${bottom}px`)
+
+    return enableLayout
+      ? style
+      : {
+          position: 'relative',
+          minWidth: lengthToStyle(layoutConfig.width),
+          height: lengthToStyle(layoutConfig.height),
+        }
+  }, [enableLayout, layoutConfig])
 }
 
 function GlazeNodeWrapper({
@@ -67,16 +70,18 @@ function GlazeNodeWrapper({
   return (
     <div ref={nodeRef} data-glaze-id={nodeInfo.id} style={layoutStyle}>
       {
-        <CurrentComponent {...nodeInfo.props}>
-          {structureInfo.children.map((child) => (
-            <GlazeNodeWrapper
-              key={child.nodeId}
-              nodeInfo={window.GLAZE_NODES[child.nodeId]}
-              structureInfo={child}
-              enableLayout
-            />
-          ))}
-        </CurrentComponent>
+        <Suspense>
+          <CurrentComponent {...nodeInfo.props}>
+            {structureInfo.children.map((child) => (
+              <GlazeNodeWrapper
+                key={child.nodeId}
+                nodeInfo={window.GLAZE_NODES[child.nodeId]}
+                structureInfo={child}
+                enableLayout
+              />
+            ))}
+          </CurrentComponent>
+        </Suspense>
       }
     </div>
   )

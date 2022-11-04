@@ -27,7 +27,6 @@
   },
   "dependencies": {
     "@glaze/common": "workspace:*",
-    "@glaze/plugin-bundler": "workspace:*",
     "@glaze/types": "workspace:*",
     "@glaze/sdk-toolkit": "workspace:*",
     "@types/cors": "^2.8.12",

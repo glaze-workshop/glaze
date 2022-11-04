@@ -61,7 +61,14 @@ export const handleStartWatch = (config: GlazeComponentConfig) => {
 
 export const handleStartBuild = (config: GlazeComponentConfig) => {
   const compiler = createComponentCompiler(config.main)
-  compiler.run((err) => {
-    console.log('Component run error: ', err)
+
+  return new Promise((resolve, reject) => {
+    compiler.run((err, stats) => {
+      if (err) {
+        reject(err)
+      } else {
+        resolve(stats)
+      }
+    })
   })
 }

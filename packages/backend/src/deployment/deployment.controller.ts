@@ -22,6 +22,7 @@ import { JwtGuard } from '../auth/jwt.guard'
 import { ScreenshotService } from '../screenshot/screenshot.service'
 import { RenderService } from '../global/render.service'
 import { PluginService } from '../plugin/plugin.service'
+import { ComponentService } from '../component/component.service'
 
 @Controller(Prefix.DEPLOYMENT_PREFIX)
 export class DeploymentController {
@@ -29,7 +30,8 @@ export class DeploymentController {
     private readonly deploymentService: DeploymentService,
     private readonly screenshotService: ScreenshotService,
     private readonly renderService: RenderService,
-    private readonly pluginService: PluginService
+    private readonly pluginService: PluginService,
+    private readonly componentService: ComponentService
   ) {}
 
   @Get(DeploymentApi.DEPLOYMENT_PATH)
@@ -82,9 +84,12 @@ export class DeploymentController {
     if (deploymentInfo) {
       const yDoc = new Y.Doc()
       Y.applyUpdate(yDoc, deploymentInfo.info)
-      const plugins = await this.pluginService.getAllProjectUsedPluginConfig(
-        deploymentInfo.projectId
-      )
+      const [plugins, components] = await Promise.all([
+        this.pluginService.getAllProjectUsedPluginConfig(
+          deploymentInfo.projectId
+        ),
+        this.componentService.getComponentsByProjectId(deploymentInfo.projectId)
+      ])
       const nodesRaw = yDoc.getMap('components').toJSON()
       const structureRaw = yDoc.getArray('structure').toJSON()
       return this.renderService.generateTemplateConfig({
@@ -93,6 +98,7 @@ export class DeploymentController {
         deploymentId: deploymentInfo.id,
         nodes: nodesRaw,
         structure: structureRaw,
+        componentConfig: components,
         pluginConfig: plugins.reduce(
           (pre, cur) => ({ ...pre, [cur.plugin.id]: cur.config }),
           {}
@@ -114,6 +120,9 @@ export class DeploymentController {
     if (deploymentInfo) {
       const yDoc = new Y.Doc()
       Y.applyUpdate(yDoc, deploymentInfo.info)
+      const components = await this.componentService.getComponentsByProjectId(
+        deploymentInfo.projectId
+      )
       const nodesRaw = yDoc.getMap('components').toJSON()
       const structureRaw = yDoc.getArray('structure').toJSON()
       return this.renderService.generateTemplateConfig({
@@ -122,7 +131,8 @@ export class DeploymentController {
         deploymentId: deploymentInfo.id,
         nodes: nodesRaw,
         structure: structureRaw,
-        heatmap: true
+        heatmap: true,
+        componentConfig: components
       })
     }
     return this.renderService.generateTemplateConfig({ projectId: -1 })

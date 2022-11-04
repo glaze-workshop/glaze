@@ -6,26 +6,29 @@
   "module": "dist/index.esm.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "dev:render": "esbuild src/index.tsx --bundle --sourcemap --watch --inject:./react-shim.js --outfile=dist/index.js ",
-    "build:render": "esbuild src/index.tsx --bundle --sourcemap --minify --inject:./react-shim.js --outfile=dist/index.js",
+    "dev:render": "esbuild src/index.tsx --bundle --sourcemap --watch --target=es2020 --outfile=dist/index.js ",
+    "build:render": "esbuild src/index.tsx --bundle --sourcemap --minify --target=es2020 --outfile=dist/index.js",
     "prepare": "npm run build",
     "build": "npm run build:render && npm run build:heatmap",
     "dev:heatmap": "esbuild heatmap/index.tsx --bundle --sourcemap --watch --outfile=dist/heatmap.js ",
     "build:heatmap": "esbuild heatmap/index.tsx --bundle --sourcemap --minify --outfile=dist/heatmap.js",
     "dev": "concurrently \"npm run dev:render\" \"npm run dev:heatmap\""
   },
-  "peerDependencies": {
-    "rxjs": ">7"
-  },
   "dependencies": {
     "@emotion/react": "^11.10.4",
     "@emotion/styled": "^11.10.4",
+    "@glaze/common": "workspace:*",
     "@glaze/types": "workspace:*",
+    "@types/react": "^18.0.24",
+    "@types/react-dom": "^18.0.7",
+    "@types/systemjs": "^6.1.1",
     "heatmap.js": "^2.0.5",
     "normalize.css": "^8.0.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "wouter": "^2.8.0-alpha.2"
+    "systemjs": "^6.13.0",
+    "wouter": "^2.7.5",
+    "rxjs": "^7.5.7"
   },
   "devDependencies": {
     "@types/heatmap.js": "^2.0.37"

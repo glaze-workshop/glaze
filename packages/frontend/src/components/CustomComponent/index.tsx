@@ -9,7 +9,7 @@ interface CustomComponentProps {
 }
 
 const CustomComponent: FC<CustomComponentProps> = ({
-  $componentInfo: { loading, error, errorMsg, info, Component },
+  $componentInfo: { error, errorMsg, info, Component },
   ...props
 }) => {
   return error ? (

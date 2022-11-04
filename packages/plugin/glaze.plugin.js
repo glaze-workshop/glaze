@@ -19,7 +19,7 @@ const shadowComponent = {
     width: ['fixed', 300],
     height: ['fixed', 200],
   },
-  hasChildren: 'true',
+  hasChildren: true,
 }
 
 /**
@@ -88,7 +88,7 @@ const config = {
 
   // Never change this object.
   generated: {
-    ownerTeamId: 14,
+    ownerTeamId: 2,
   },
 }
 

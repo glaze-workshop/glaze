@@ -1,4 +1,4 @@
-import { GlazePluginType } from '../entity/plugin'
+import { GlazePluginType } from '../entity'
 import type { GlazePluginControl } from '@glaze/types'
 
 export interface GlazePluginDto {

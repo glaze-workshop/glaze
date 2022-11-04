@@ -1,4 +1,3 @@
-
 export interface Log {
   level: string
   ts: number
@@ -14,7 +13,8 @@ export interface Log {
 }
 
 export interface Request {
-  remote_addr: string
+  remote_ip: string
+  remote_port: string
   proto: string
   method: string
   host: string

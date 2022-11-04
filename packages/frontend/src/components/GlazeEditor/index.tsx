@@ -14,11 +14,12 @@ import {
   useProjectIdChange
 } from './state'
 import { zoom } from './state'
-import { filter, fromEvent, Subscription, switchMap } from 'rxjs'
+import { filter, finalize, fromEvent, Subscription, switchMap } from 'rxjs'
 import { editorSharedDocument } from './EditorSharedDocument'
 import EditorActionDetect from './EditorActionDetect'
 import { getChildrenInStructTree } from './yjs.hook'
 import { notEmpty } from '@glaze/common'
+import { triggerRightLayoutChange } from '../../pages/project/components/RightBar/LayoutPanel'
 
 export interface GlazeEditorProps {}
 
@@ -82,21 +83,20 @@ const GlazeEditor: FC<GlazeEditorProps> = () => {
             y: rawInvertDownPoint.y - node.position.y
           }
 
-          downSubscription.current = fromEvent<MouseEvent>(
-            container.current,
-            'mousemove'
-          ).subscribe((e) => {
-            const selectedId = SelectedNodeInfoSubject.value
-            if (selectedId) {
-              const node = AllNodeInfoObservableMap.getValue(selectedId)
-              if (node) {
-                const { x = 0, y = 0 } = EditorPositionSubject.value ?? {}
-                const rawP: Point = { x: e.clientX - x, y: e.clientY - y }
-                const p = zoom.invert(rawP)
-                editorSharedDocument.moveNode(p, node, relativePos)
+          downSubscription.current = fromEvent<MouseEvent>(container.current, 'mousemove')
+            .pipe(finalize(() => triggerRightLayoutChange()))
+            .subscribe((e) => {
+              const selectedId = SelectedNodeInfoSubject.value
+              if (selectedId) {
+                const node = AllNodeInfoObservableMap.getValue(selectedId)
+                if (node) {
+                  const { x = 0, y = 0 } = EditorPositionSubject.value ?? {}
+                  const rawP: Point = { x: e.clientX - x, y: e.clientY - y }
+                  const p = zoom.invert(rawP)
+                  editorSharedDocument.moveNode(p, node, relativePos)
+                }
               }
-            }
-          })
+            })
 
           duplicateSubscription.current = SelectedNodeInfoSubject.pipe(
             filter(notEmpty),

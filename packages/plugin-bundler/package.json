@@ -9,16 +9,13 @@
     "glaze-plugin": "./dist/index.cjs.js"
   },
   "scripts": {
+    "tsc": "tsc --noEmit",
     "dev": "glaze-bundle -d -r",
     "build": "glaze-bundle -b -r",
     "prepare": "npm run build"
   },
   "devDependencies": {
     "@glaze/bundler": "workspace:*",
-    "@glaze/common": "workspace:*",
-    "@glaze/sdk-toolkit": "workspace:*",
-    "@glaze/types": "workspace:*",
-    "@glaze/editor": "workspace:*",
     "@types/prompts": "^2.4.1"
   },
   "dependencies": {
@@ -26,6 +23,10 @@
     "commander": "^9.4.1",
     "cos-nodejs-sdk-v5": "^2.11.14",
     "esbuild": "^0.15.12",
+    "@glaze/common": "workspace:*",
+    "@glaze/sdk-toolkit": "workspace:*",
+    "@glaze/types": "workspace:*",
+    "@glaze/editor": "workspace:*",
     "prompts": ">=2.4.2"
   },
   "peerDependencies": {

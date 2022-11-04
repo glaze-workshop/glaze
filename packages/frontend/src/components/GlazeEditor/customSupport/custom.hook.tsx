@@ -6,7 +6,7 @@ import {
   EditorRequestType,
   EditorSubscribeType
 } from '@glaze/common'
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
 import { Log } from '../../../utils/log'
 import { AllComponentsSubject } from '../state'

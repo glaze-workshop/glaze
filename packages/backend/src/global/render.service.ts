@@ -13,6 +13,7 @@ export interface RenderConfig {
   structure?: unknown
   pluginSrc?: string[]
   heatmap?: boolean
+  componentConfig?: unknown[]
 }
 
 @Injectable()
@@ -25,7 +26,8 @@ export class RenderService {
     nodes = {},
     structure = [],
     pluginSrc = [],
-    heatmap = false
+    heatmap = false,
+    componentConfig = []
   }: RenderConfig) {
     return {
       heatmap,
@@ -35,7 +37,8 @@ export class RenderService {
       pluginConfig: JSON.stringify(pluginConfig),
       nodes: JSON.stringify(nodes),
       structure: JSON.stringify(structure),
-      pluginSrc
+      pluginSrc,
+      componentConfig: JSON.stringify(componentConfig)
     }
   }
 }

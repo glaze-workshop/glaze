@@ -2,13 +2,15 @@ import React, { FC, memo, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { useProjectDeploymentInfo } from '../../../../hooks/deployment.hook'
 import {
+  Box,
   Button,
-  Flex,
+  VStack,
   FormControl,
   FormErrorMessage,
   FormLabel,
   HStack,
-  Input, Link,
+  Input,
+  Link,
   Spacer,
   useToast
 } from '@chakra-ui/react'
@@ -16,11 +18,9 @@ import { useMutation } from 'react-query'
 import { DeploymentApi, GlazeErr } from '@glaze/common'
 import { DevTool } from '@hookform/devtools'
 
-export interface SettingProps {
-
-}
-const Setting:FC<SettingProps> = () => {
-  const { register, handleSubmit, setValue, control } = useForm<{path: string}>()
+export interface SettingProps {}
+const Setting: FC<SettingProps> = () => {
+  const { register, handleSubmit, setValue, control } = useForm<{ path: string }>()
   const { deploymentInfo, deploymentQueryInfo, projectId } = useProjectDeploymentInfo()
   const toast = useToast()
 
@@ -55,20 +55,22 @@ const Setting:FC<SettingProps> = () => {
   })
 
   return (
-    <div>
-      <form onSubmit={onSubmit} >
-        <HStack>
+    <Box maxW={400}>
+      <form onSubmit={onSubmit}>
+        <VStack>
           <FormControl>
             <FormLabel>路径</FormLabel>
-            <Input {...register('path')}/>
+            <Input {...register('path')} />
           </FormControl>
           <FormControl>
-            <Button isLoading={pathMutation.isLoading} type='submit'>修改</Button>
+            <Button isLoading={pathMutation.isLoading} type="submit">
+              修改
+            </Button>
           </FormControl>
-        </HStack>
+        </VStack>
       </form>
       <DevTool control={control} />
-    </div>
+    </Box>
   )
 }
 export default memo(Setting)

@@ -1,5 +1,5 @@
 import React, { FC, Suspense } from 'react'
-import { BrowserRouter, Navigate, Route, Router, Routes } from 'react-router-dom'
+import { Route, Routes } from 'react-router-dom'
 import { useAxiosConfig } from '../hooks/axios'
 import Folder from './folder'
 import Home from './home'
@@ -16,6 +16,7 @@ import TeamPlugin from './teamPlugin'
 import PluginMarket from './project/dashboard/analysis/plugin-market'
 import Heatmap from './project/dashboard/analysis/heatmap'
 import PluginConfig from './project/dashboard/analysis/plugin/config'
+import TeamComponent from './teamComponent'
 
 const LazyEditor = React.lazy(() => import('./project/index'))
 
@@ -28,6 +29,7 @@ const RootPage: FC = () => {
       <Route path="/" element={<Home />}>
         <Route path="folder/:folderId" element={<Folder />} />
         <Route path="team-plugin/:teamId" element={<TeamPlugin />} />
+        <Route path="team-component/:teamId" element={<TeamComponent />} />
       </Route>
       <Route
         path="/project/:projectId"

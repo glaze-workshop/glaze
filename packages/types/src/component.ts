@@ -26,11 +26,10 @@ export enum PositionType {
 }
 
 export interface PositionConfig {
-  type: PositionType[]
-  left?: number
-  top?: number
-  right?: number
-  bottom?: number
+  left?: number | null
+  top?: number | null
+  right?: number | null
+  bottom?: number | null
 }
 
 export interface LayoutConfig {
@@ -76,7 +75,7 @@ export type DefaultSizeConfig = {
 export interface ComponentConfig<T = any> {
   id: string
   name: GlazeString
-  desc?: string
+  desc?: string | null
   /** 插件权限，默认私有 */
   type?: 'PRIVATE' | 'PUBLIC'
   props: PropsConfig<T>

@@ -1,13 +1,13 @@
 import styled from '@emotion/styled'
 import { Transform, Zoom } from '@glaze/zoom'
-import { FC, memo, MouseEventHandler, RefObject, useCallback, useEffect, useRef } from 'react'
+import { FC, memo, RefObject, useEffect, useRef } from 'react'
 import {
   AllCooperateUserState,
   AllNodeInfoObservableMap,
   SelectedNodeInfoSubject,
   StaticPosition
 } from './state'
-import { combineLatestWith, filter, from, map, mergeMap, of, switchMap } from 'rxjs'
+import { combineLatestWith, map, mergeMap, of, Subscription, switchMap } from 'rxjs'
 import { notEmpty } from '../../utils/null'
 import { difference } from 'lodash'
 import { getNodeIdInStructTree } from './yjs.hook'
@@ -94,7 +94,9 @@ const EditorUpper: FC<EditorUpperProps> = ({ zoom }) => {
   return (
     <Upper ref={upperRef} xmlns="http://www.w3.org/2000/svg">
       <rect ref={parentRef} fill="none" stroke="yellow" strokeWidth={2} strokeDasharray="4" />
-      <rect ref={rectRef} fill="none" stroke="blue" strokeWidth={2} />
+      <g>
+        <rect ref={rectRef} fill="none" stroke="blue" strokeWidth={2} />
+      </g>
     </Upper>
   )
 }
@@ -102,6 +104,7 @@ export default memo(EditorUpper)
 
 export function useAllCooperatorSelection(upperRef: RefObject<SVGSVGElement>, zoom: Zoom) {
   const rectsRef = useRef<Map<number, SVGRectElement>>(new Map())
+  const subscriptionMap = useRef<Map<number, [string | null, Subscription | null]>>(new Map())
 
   useEffect(() => {
     const rectMap = rectsRef.current
@@ -118,58 +121,72 @@ export function useAllCooperatorSelection(upperRef: RefObject<SVGSVGElement>, zo
         })
         return stateList
       }),
-      mergeMap((stateList) => from(stateList)),
-      filter((state) => notEmpty(state.clientId)),
-      switchMap(({ selectedNodeId, clientId, userInfo, color }) => {
-        const nodeObservable = notEmpty(selectedNodeId)
-          ? AllNodeInfoObservableMap.observeKey(selectedNodeId)
-          : of(null)
-        return nodeObservable.pipe(
-          map((nodeInfo) => ({ nodeInfo, clientId, userInfo, color })),
-          combineLatestWith(zoom.subject)
-        )
-      })
-    ).subscribe(([{ nodeInfo, clientId, color }, transform]) => {
-      function setNodePosition(rect: SVGRectElement) {
-        if (nodeInfo) {
-          const {
-            x: staticX,
-            y: staticY,
-            width: staticWidth,
-            height: staticHeight
-          } = nodeInfo.position
-          const { x, y } = zoom.apply({ x: staticX, y: staticY })
-          const width = staticWidth * transform.k
-          const height = staticHeight * transform.k
-          rect.style.visibility = 'visible'
-          rect.setAttribute('x', `${x}px`)
-          rect.setAttribute('y', `${y}px`)
-          rect.setAttribute('width', `${width}px`)
-          rect.setAttribute('height', `${height}px`)
-        } else {
-          rect.style.visibility = 'hidden'
-        }
-      }
+      mergeMap((stateList) => stateList)
+    ).subscribe(({ selectedNodeId, clientId, userInfo, color }) => {
       if (notEmpty(clientId)) {
-        const rect = rectMap.get(clientId)
-        if (!rect) {
-          const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect')
-          rect.setAttribute('fill', 'none')
-          rect.setAttribute('stroke', color!)
-          rect.setAttribute('stroke-width', '2')
-          rect.style.visibility = 'hidden'
-          upperRef.current?.appendChild(rect)
-          rectMap.set(clientId, rect)
-          setNodePosition(rect)
+        const subInfo = subscriptionMap.current.get(clientId)
+        if (subInfo?.[0] === selectedNodeId) {
+          return
+        }
+
+        subInfo?.[1]?.unsubscribe()
+        if (notEmpty(selectedNodeId)) {
+          const subscription = AllNodeInfoObservableMap.observeKey(selectedNodeId)
+            .pipe(combineLatestWith(zoom.subject))
+            .subscribe(([nodeInfo, transform]) => {
+              function setNodePosition(rect: SVGRectElement) {
+                if (nodeInfo) {
+                  const {
+                    x: staticX,
+                    y: staticY,
+                    width: staticWidth,
+                    height: staticHeight
+                  } = nodeInfo.position
+                  const { x, y } = zoom.apply({ x: staticX, y: staticY })
+                  const width = staticWidth * transform.k
+                  const height = staticHeight * transform.k
+                  rect.style.visibility = 'visible'
+                  rect.setAttribute('x', `${x}px`)
+                  rect.setAttribute('y', `${y}px`)
+                  rect.setAttribute('width', `${width}px`)
+                  rect.setAttribute('height', `${height}px`)
+                } else {
+                  rect.style.visibility = 'hidden'
+                }
+              }
+
+              const rect = rectMap.get(clientId)
+              if (!rect) {
+                const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect')
+                rect.setAttribute('fill', 'none')
+                rect.setAttribute('stroke', color!)
+                rect.setAttribute('stroke-width', '2')
+                rect.style.visibility = 'hidden'
+                upperRef.current?.appendChild(rect)
+                rectMap.set(clientId, rect)
+                setNodePosition(rect)
+              } else {
+                setNodePosition(rect)
+              }
+            })
+          subscriptionMap.current.set(clientId, [selectedNodeId, subscription])
         } else {
-          setNodePosition(rect)
+          subscriptionMap.current.set(clientId, [null, null])
+          // 未选中则方块消失
+          const clientRect = rectMap.get(clientId)
+          if (clientRect) {
+            clientRect.style.visibility = 'hidden'
+          }
         }
       }
     })
 
+    const subscriptionMapRef = subscriptionMap.current
     return () => {
       AllCooperateUserState.next([])
       subscription.unsubscribe()
+      subscriptionMapRef.forEach((sub) => sub?.[1]?.unsubscribe())
+      subscriptionMapRef.clear()
     }
   }, [upperRef, zoom])
 }

@@ -11,6 +11,7 @@ server.on('connection', (socket) => {
     try {
       const parsed: Log = JSON.parse(raw)
       const host = parsed.request.host
+
       const path = host.split('.')[0]
       if (parsed.request.uri !== '/favicon.ico') {
         insertLogByPath(path, parsed)
@@ -31,8 +32,13 @@ async function insertLogByPath(path: string, log: Log) {
   if (deployInfo) {
     await prisma.glazeProjectLogInfo.create({
       data: {
-        deployInfoId: deployInfo.id,
-        remoteAddr: log.request.remote_addr,
+        deployInfo: {
+          connect: {
+            id: deployInfo.id
+          }
+        },
+        remoteIp: log.request.remote_ip,
+        remotePort: log.request.remote_port,
         protocol: log.request.proto,
         method: log.request.method,
         host: log.request.host,

@@ -58,6 +58,7 @@
     "react-icons": "^4.3.1",
     "react-query": "^3.34.15",
     "react-router-dom": "^6.4.2",
-    "systemjs": "6.13.0"
+    "systemjs": "6.13.0",
+    "rxjs": "^7.5.7"
   }
 }

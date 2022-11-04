@@ -39,6 +39,10 @@ export class KeyboardCenter {
     Log.EditorKeyboardGesture('KeyboardCenter setup')
 
     const onKeydown = (e: KeyboardEvent) => {
+      if (e.target instanceof HTMLSelectElement || e.target instanceof HTMLInputElement) {
+        return
+      }
+
       const target = keyboardEventTarget(e)
 
       // 触发主事件

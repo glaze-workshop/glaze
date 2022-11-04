@@ -12,6 +12,7 @@ export interface EditorContentProps {
 
 const ContentWrapper = styled.div`
   transform-origin: 0 0;
+  will-change: transform;
 `
 
 const EditorContent: FC<EditorContentProps> = ({ zoom }) => {

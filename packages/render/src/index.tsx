@@ -1,14 +1,17 @@
-import { FC } from 'react'
-import { render } from 'react-dom'
+import React, { FC } from 'react'
 import { BasicComponentId } from './BasicComponents'
 import GlazeNodeWrapper from './GlazeNodeWrapper'
 import { Switch } from 'wouter'
 import { registerEvents } from './event'
 
 import 'normalize.css'
+import 'systemjs'
 import { useNodeListener } from './state'
+import { createRoot } from 'react-dom/client'
 
 registerEvents()
+
+System.set('app:react', { default: React, __useDefault: true })
 
 const App: FC = () => {
   useNodeListener()
@@ -33,4 +36,4 @@ const App: FC = () => {
   )
 }
 
-render(<App />, document.getElementById('root'))
+createRoot(document.getElementById('root')!).render(<App />)

@@ -37,7 +37,7 @@ export class HeatmapControl {
 
   setData(data: DataType[]) {
     this.heatmap.setData({
-      max: 5,
+      max: 1,
       min: 0,
       data,
     })

@@ -20,6 +20,7 @@ export * as FolderDto from './folder/folder.dto'
 export * as FolderApi from './folder/folder.api'
 
 export * as SelfApi from './self/self.api'
+export * as SelfDto from './self/self.dto'
 
 export * as DeploymentApi from './deployment/deployment.api'
 export * as DeploymentDto from './deployment/deployment.dto'

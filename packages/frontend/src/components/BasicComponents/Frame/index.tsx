@@ -11,6 +11,8 @@ const Frame: FC<FrameProps> = ({ children, background }) => {
     <div
       style={{
         height: '100%',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
         ...backgroundToStyle(background)
       }}
     >

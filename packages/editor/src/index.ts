@@ -45,5 +45,5 @@ export const handleComponentsWatch = (componentsConfigs: GlazeComponentConfig[])
 }
 
 export const handleComponentsBuild = (componentsConfigs: GlazeComponentConfig[]) => {
-  componentsConfigs.map(handleStartBuild)
+  return Promise.all(componentsConfigs.map(handleStartBuild))
 }

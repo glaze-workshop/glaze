@@ -19,12 +19,19 @@ export class PuppeteerService implements OnModuleDestroy {
   async getPageInstance(url: string) {
     const browser = await this.getBrowserInstance()
     const page = await browser.newPage()
-    await page.goto(url)
+    await page.goto(url, {
+      waitUntil: 'networkidle0'
+    })
     return page
   }
 
   async takeScreenshot(url: string) {
     const page = await this.getPageInstance(url)
+    page.setViewport({
+      width: 1920,
+      height: 1080,
+      deviceScaleFactor: 1
+    })
     const pageScreenshot = await page.screenshot({
       fullPage: true,
       type: 'webp'
